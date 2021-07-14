@@ -1,0 +1,3965 @@
+#!/usr/bin/bash
+
+#_                   _ _ _  _ _____ _  _
+#| | _______   ____ _| | | || |___  | || |
+#| |/ / _ \ \ / / _` | | | || |_ / /| || |_
+#|   <  __/\ V / (_| | | |__   _/ / |__   _|
+#|_|\_\___| \_/ \__,_|_|_|  |_|/_/     |_|
+
+configure(){
+  plain ""
+  plain "#########################################"
+  plain "Set module SIG level"
+  read -rp "`echo $' > 1.SHA1\n > 2.SHA224\n > 3.SHA256\n > 4.SHA384\n > 5.SHA512\n > Default (SHA512)\nchoice[1-5]: '`" _sig;
+  if [[ $_sig = "1" ]]; then
+    msg2 "Set SIG level to SHA1"
+    scripts/config --undefine MODULE_SIG_FORCE
+    scripts/config --disable MODULE_SIG_FORCE
+    scripts/config --enable CONFIG_MODULE_SIG
+    scripts/config --enable CONFIG_MODULE_SIG_ALL
+    scripts/config --disable CONFIG_MODULE_SIG_SHA224
+    scripts/config --disable CONFIG_MODULE_SIG_SHA256
+    scripts/config --disable CONFIG_MODULE_SIG_SHA384
+    scripts/config --disable CONFIG_MODULE_SIG_SHA512
+    scripts/config --enable CONFIG_MODULE_SIG_SHA1
+    scripts/config  --set-val CONFIG_MODULE_SIG_HASH "sha1"
+  elif [[ $_sig = "2" ]]; then
+    msg2 "Set SIG level to SHA224"
+    scripts/config --undefine MODULE_SIG_FORCE
+    scripts/config --disable MODULE_SIG_FORCE
+    scripts/config --enable CONFIG_MODULE_SIG
+    scripts/config --enable CONFIG_MODULE_SIG_ALL
+    scripts/config --disable CONFIG_MODULE_SIG_SHA1
+    scripts/config --disable CONFIG_MODULE_SIG_SHA256
+    scripts/config --disable CONFIG_MODULE_SIG_SHA384
+    scripts/config --disable CONFIG_MODULE_SIG_SHA512
+    scripts/config --enable CONFIG_MODULE_SIG_SHA224
+    scripts/config  --set-val CONFIG_MODULE_SIG_HASH "sha224"
+  elif [[ $_sig = "3" ]]; then
+    msg2 "Set SIG level to SHA256"
+    scripts/config --undefine MODULE_SIG_FORCE
+    scripts/config --disable MODULE_SIG_FORCE
+    scripts/config --enable CONFIG_MODULE_SIG
+    scripts/config --enable CONFIG_MODULE_SIG_ALL
+    scripts/config --disable CONFIG_MODULE_SIG_SHA1
+    scripts/config --disable CONFIG_MODULE_SIG_SHA224
+    scripts/config --disable CONFIG_MODULE_SIG_SHA384
+    scripts/config --disable CONFIG_MODULE_SIG_SHA512
+    scripts/config --enable CONFIG_MODULE_SIG_SHA256
+    scripts/config  --set-val CONFIG_MODULE_SIG_HASH "sha256"
+  elif [[ $_sig = "4" ]]; then
+    msg2 "Set SIG level to SHA384"
+    scripts/config --undefine MODULE_SIG_FORCE
+    scripts/config --disable MODULE_SIG_FORCE
+    scripts/config --enable CONFIG_MODULE_SIG
+    scripts/config --enable CONFIG_MODULE_SIG_ALL
+    scripts/config --disable CONFIG_MODULE_SIG_SHA1
+    scripts/config --disable CONFIG_MODULE_SIG_SHA224
+    scripts/config --disable CONFIG_MODULE_SIG_SHA256
+    scripts/config --disable CONFIG_MODULE_SIG_SHA512
+    scripts/config --enable CONFIG_MODULE_SIG_SHA384
+    scripts/config  --set-val CONFIG_MODULE_SIG_HASH "sha384"
+  elif [[ $_sig = "5" ]]; then
+    msg2 "Set SIG level to SHA512"
+    scripts/config --undefine MODULE_SIG_FORCE
+    scripts/config --disable MODULE_SIG_FORCE
+    scripts/config --enable CONFIG_MODULE_SIG
+    scripts/config --enable CONFIG_MODULE_SIG_ALL
+    scripts/config --disable CONFIG_MODULE_SIG_SHA1
+    scripts/config --disable CONFIG_MODULE_SIG_SHA224
+    scripts/config --disable CONFIG_MODULE_SIG_SHA256
+    scripts/config --disable CONFIG_MODULE_SIG_SHA384
+    scripts/config --enable CONFIG_MODULE_SIG_SHA512
+    scripts/config  --set-val CONFIG_MODULE_SIG_HASH "sha512"
+  else
+    msg2 "Set SIG level to SHA512"
+    scripts/config --undefine MODULE_SIG_FORCE
+    scripts/config --disable MODULE_SIG_FORCE
+    scripts/config --enable CONFIG_MODULE_SIG
+    scripts/config --enable CONFIG_MODULE_SIG_ALL
+    scripts/config --disable CONFIG_MODULE_SIG_SHA1
+    scripts/config --disable CONFIG_MODULE_SIG_SHA224
+    scripts/config --disable CONFIG_MODULE_SIG_SHA256
+    scripts/config --disable CONFIG_MODULE_SIG_SHA384
+    scripts/config --enable CONFIG_MODULE_SIG_SHA512
+    scripts/config  --set-val CONFIG_MODULE_SIG_HASH "sha512"
+  fi
+
+  sleep 2s
+
+  plain ""
+  plain "#########################################"
+  plain "Set module compression"
+  read -rp "`echo $' > 1.GZIP\n > 2.XZ\n > 3.ZSTD\n > Default (ZSTD)\nchoice[1-3]: '`" _compression;
+  if [[ $_compression = "1" ]]; then
+    msg2 "Set module compression to GZIP"
+    scripts/config --enable CONFIG_MODULE_COMPRESS
+    scripts/config --disable CONFIG_MODULE_COMPRESS_XZ
+    scripts/config --disable CONFIG_MODULE_COMPRESS_ZSTD
+    scripts/config --enable CONFIG_MODULE_COMPRESS_GZIP
+  elif [[ $_compression = "2" ]]; then
+    msg2 "Set module compression to XZ"
+    scripts/config --enable CONFIG_MODULE_COMPRESS
+    scripts/config --disable CONFIG_MODULE_COMPRESS_ZSTD
+    scripts/config --disable CONFIG_MODULE_COMPRESS_GZIP
+    scripts/config --enable CONFIG_MODULE_COMPRESS_XZ
+  elif [[ $_compression = "3" ]]; then
+    msg2 "Set module compression to ZSTD"
+    scripts/config --enable CONFIG_MODULE_COMPRESS
+    scripts/config --disable CONFIG_MODULE_COMPRESS_GZIP
+    scripts/config --disable CONFIG_MODULE_COMPRESS_XZ
+    scripts/config --enable CONFIG_MODULE_COMPRESS_ZSTD
+  else
+    msg2 "Set module compression to ZSTD"
+    scripts/config --enable CONFIG_MODULE_COMPRESS
+    scripts/config --disable CONFIG_MODULE_COMPRESS_GZIP
+    scripts/config --disable CONFIG_MODULE_COMPRESS_XZ
+    scripts/config --enable CONFIG_MODULE_COMPRESS_ZSTD
+  fi
+
+  sleep 2s
+
+  plain ""
+  plain "#########################################"
+  plain "Enable/disable CONFIG_STACK_VALIDATION"
+  plain "Gives better stack traces. Also is enabled in all official kernel"
+  plain "packages by Archlinux team"
+  read -rp "`echo $' > 1.Enable\n > 2.Disable\n > Default (Enable)\nchoice[1-2]: '`" _config_stack;
+  if [[ $_config_stack = "1" ]]; then
+    msg2 "Enable CONFIG_STACK_VALIDATION"
+    scripts/config --enable CONFIG_STACK_VALIDATION
+  elif [[ $_config_stack = "2" ]]; then
+    msg2 "Disable CONFIG_STACK_VALIDATION"
+    scripts/config --disable CONFIG_STACK_VALIDATION
+  else
+    msg2 "Enable CONFIG_STACK_VALIDATION"
+    scripts/config --enable CONFIG_STACK_VALIDATION
+  fi
+
+  sleep 2s
+
+  plain ""
+  plain "#########################################"
+  plain "Enable/disable IKCONFIG"
+  plain "Enable access to the kernel configuration file through /proc/config.gz"
+  read -rp "`echo $' > 1.Enable\n > 2.Disable\n > Default (Enable)\nchoice[1-2]: '`" _ikconfig;
+  if [[ $_ikconfig = "1" ]]; then
+    msg2 "Enable IKCONFIG"
+    scripts/config --enable CONFIG_IKCONFIG
+    scripts/config --enable CONFIG_IKCONFIG_PROC
+  elif [[ $_ikconfig = "2" ]]; then
+    msg2 "Disable IKCONFIG"
+    scripts/config --disable CONFIG_IKCONFIG
+    scripts/config --disable CONFIG_IKCONFIG_PROC
+  else
+    msg2 "Enable IKCONFIG"
+    scripts/config --enable CONFIG_IKCONFIG
+    scripts/config --enable CONFIG_IKCONFIG_PROC
+  fi
+
+  sleep 2s
+
+  plain ""
+  plain "#########################################"
+  plain "Enable/disable NUMA"
+  plain "Better option is to disable NUMA since most users do not have multiple"
+  plain "processors... Breaks CUDA/NvEnc..."
+  read -rp "`echo $' > 1.Enable\n > 2.Disable (possibly increase performance)\n > Default (Disable)\nchoice[1-2]: '`" _numa;
+  if [[ $_numa = "1" ]]; then
+    msg2 "Enable NUMA"
+    scripts/config --enable CONFIG_NUMA
+    scripts/config --enable CONFIG_NUMA
+    scripts/config --enable CONFIG_AMD_NUMA
+    scripts/config --enable CONFIG_X86_64_ACPI_NUMA
+    scripts/config --enable CONFIG_NODES_SPAN_OTHER_NODES
+    scripts/config --enable CONFIG_NUMA_EMU
+    scripts/config --enable CONFIG_NEED_MULTIPLE_NODES
+    scripts/config --enable CONFIG_USE_PERCPU_NUMA_NODE_ID
+    scripts/config --enable CONFIG_ACPI_NUMA
+    scripts/config --enable CONFIG_ARCH_SUPPORTS_NUMA_BALANCING
+    scripts/config --set-val CONFIG_NODES_SHIFT 5
+    scripts/config --enable CONFIG_NEED_MULTIPLE_NODES
+  elif [[ $_numa = "2" ]]; then
+    msg2 "Disable NUMA"
+    scripts/config --disable CONFIG_NUMA
+    scripts/config --disable CONFIG_AMD_NUMA
+    scripts/config --disable CONFIG_X86_64_ACPI_NUMA
+    scripts/config --disable CONFIG_NODES_SPAN_OTHER_NODES
+    scripts/config --disable CONFIG_NUMA_EMU
+    scripts/config --disable CONFIG_NEED_MULTIPLE_NODES
+    scripts/config --disable CONFIG_USE_PERCPU_NUMA_NODE_ID
+    scripts/config --disable CONFIG_ACPI_NUMA
+    scripts/config --disable CONFIG_ARCH_SUPPORTS_NUMA_BALANCING
+    scripts/config --disable CONFIG_NODES_SHIFT
+    scripts/config --undefine CONFIG_NODES_SHIFT
+    scripts/config --disable CONFIG_NEED_MULTIPLE_NODES
+  else
+    msg2 "Disable NUMA"
+    scripts/config --disable CONFIG_NUMA
+    scripts/config --disable CONFIG_AMD_NUMA
+    scripts/config --disable CONFIG_X86_64_ACPI_NUMA
+    scripts/config --disable CONFIG_NODES_SPAN_OTHER_NODES
+    scripts/config --disable CONFIG_NUMA_EMU
+    scripts/config --disable CONFIG_NEED_MULTIPLE_NODES
+    scripts/config --disable CONFIG_USE_PERCPU_NUMA_NODE_ID
+    scripts/config --disable CONFIG_ACPI_NUMA
+    scripts/config --disable CONFIG_ARCH_SUPPORTS_NUMA_BALANCING
+    scripts/config --disable CONFIG_NODES_SHIFT
+    scripts/config --undefine CONFIG_NODES_SHIFT
+    scripts/config --disable CONFIG_NEED_MULTIPLE_NODES
+  fi
+
+  sleep 2s
+
+  plain ""
+  plain "#########################################"
+  plain "Enable/disable FUNCTION_TRACER/GRAPH_TRACER"
+  plain "Limits debugging and analyzing of the kernel"
+  read -rp "`echo $' > 1.Enable\n > 2.Disable (possibly increase performance)\n > Default (Disable)\nchoice[1-2]: '`" _tracer;
+  if [[ $_tracer = "1" ]]; then
+    msg2 "Enable FUNCTION_TRACER/GRAPH_TRACER"
+    scripts/config --enable CONFIG_FUNCTION_TRACER
+    scripts/config --enable CONFIG_STACK_TRACER
+  elif [[ $_tracer = "2" ]]; then
+    msg2 "Disable FUNCTION_TRACER/GRAPH_TRACER"
+    scripts/config --disable CONFIG_FUNCTION_TRACER
+    scripts/config --disable CONFIG_STACK_TRACER
+  else
+    msg2 "Disable FUNCTION_TRACER/GRAPH_TRACER"
+    scripts/config --disable CONFIG_FUNCTION_TRACER
+    scripts/config --disable CONFIG_STACK_TRACER
+  fi
+
+  sleep 2s
+
+  plain ""
+  plain "#########################################"
+  plain "Enable/Disable CONFIG_USER_NS_UNPRIVILEGED"
+  plain ""
+  plain "Allow unprivileged users to create namespaces"
+  plain "When disabled, unprivileged users will not be able to create"
+  plain "new namespaces. Allowing users to create their own namespaces"
+  plain "has been part of several recent local privilege escalation"
+  plain "exploits, so if you need user namespaces but are"
+  plain "paranoid^Wsecurity-conscious you want to disable this."
+  plain "This setting can be overridden at runtime via the"
+  plain "kernel.unprivileged_userns_clone sysctl."
+  plain ""
+  read -rp "`echo $' > 1.Enable\n > 2.Disable\n > Default (Disable)\nchoice[1-2]: '`" _ns;
+  if [[ $_ns = "1" ]]; then
+    msg2 "Enable CONFIG_USER_NS_UNPRIVILEGED"
+    scripts/config --disable CONFIG_USER_NS_UNPRIVILEGED
+  elif [[ $_ns = "2" ]]; then
+    msg2 "Disable CONFIG_USER_NS_UNPRIVILEGED"
+    scripts/config --disable CONFIG_USER_NS_UNPRIVILEGED
+  else
+    msg2 "Disable CONFIG_USER_NS_UNPRIVILEGED"
+    scripts/config --disable CONFIG_USER_NS_UNPRIVILEGED
+  fi
+
+  sleep 2s
+
+  plain ""
+  plain "#########################################"
+  plain "Set CPU Frequency scaling"
+  plain ""
+  plain "performance : When attached to a policy object, this governor causes"
+  plain "the highest frequency, within the scaling_max_freq policy limit, to be"
+  plain "requested for that policy. The request is made once at that time the"
+  plain "governor for the policy is set to performance and whenever the"
+  plain "scaling_max_freq or scaling_min_freq policy limits change after that."
+  plain ""
+  plain "powersave : When attached to a policy object, this governor causes the"
+  plain "lowest frequency, within the scaling_min_freq policy limit, to be"
+  plain "requested for that policy.The request is made once at that time the"
+  plain "governor for the policy is set to powersave and whenever the"
+  plain "scaling_max_freq or scaling_min_freq policy limits change after that."
+  plain ""
+  plain "userspace : This governor does not do anything by itself. Instead, it"
+  plain "allows user space to set the CPU frequency for the policy it is"
+  plain "attached to by writing to the scaling_setspeed attribute of that policy."
+  plain ""
+  plain "schedutil : This governor uses CPU utilization data available from the"
+  plain "CPU scheduler. It generally is regarded as a part of th CPU scheduler,"
+  plain "so it can access the scheduler’s internal data structures directly."
+  plain ""
+  plain "ondemand : This governor uses CPU load as a CPU frequency selection"
+  plain "metric. In order to estimate the current CPU load, it measures the time"
+  plain "elapsed between consecutive invocations of its worker routine and computes"
+  plain "the fraction of that time in which the given CPU was not idle. The"
+  plain "ratio of the non-idle (active) time to the total CPU time is"
+  plain "taken as an estimate of the load."
+  plain ""
+  plain "conservative : This governor uses CPU load as a CPU frequency selection"
+  plain "metric. It estimates the CPU load in the same way as the"
+  plain "ondemand governor described above, but the CPU frequency selection"
+  plain "algorithm implemented by it is different."
+  plain ""
+  plain "Full documentation at : https://www.kernel.org/doc/html/v4.14/admin-guide/pm/cpufreq.html"
+  plain ""
+  read -rp "`echo $' > 1.Powersave\n > 2.Userspace\n > 3.Ondemand\n > 4.Conservative\n > 5.Schedutil\n > 6.Performance\n > 7.Default(zen-kernel)\n > Default (Performance)\nchoice[1-7]: '`" _cpu_freq;
+  if [[ $_cpu_freq = "1" ]]; then
+    msg2 "Set CPU Frequency scaling CONFIG_CPU_FREQ_DEFAULT_GOV/CONFIG_CPU_FREQ_GOV for powersave"
+    scripts/config --enable CONFIG_CPU_FREQ_DEFAULT_GOV_POWERSAVE
+    scripts/config --enable CONFIG_CPU_FREQ_GOV_POWERSAVE
+    scripts/config --disable CONFIG_CPU_FREQ_DEFAULT_GOV_USERSPACE
+    scripts/config --disable CONFIG_CPU_FREQ_GOV_USERSPACE
+    scripts/config --disable CONFIG_CPU_FREQ_DEFAULT_GOV_ONDEMAND
+    scripts/config --disable CONFIG_CPU_FREQ_GOV_ONDEMAND
+    scripts/config --disable CONFIG_CPU_FREQ_DEFAULT_GOV_CONSERVATIVE
+    scripts/config --disable CONFIG_CPU_FREQ_GOV_CONSERVATIVE
+    scripts/config --disable CONFIG_CPU_FREQ_DEFAULT_GOV_SCHEDUTIL
+    scripts/config --disable CONFIG_CPU_FREQ_GOV_SCHEDUTIL
+    scripts/config --disable CONFIG_CPU_FREQ_DEFAULT_GOV_PERFORMANCE
+    scripts/config --disable CONFIG_CPU_FREQ_GOV_PERFORMANCE
+  elif [[ $_cpu_freq = "2" ]]; then
+    msg2 "Set CPU Frequency scaling CONFIG_CPU_FREQ_DEFAULT_GOV/CONFIG_CPU_FREQ_GOV for userspace"
+    scripts/config --disable CONFIG_CPU_FREQ_DEFAULT_GOV_POWERSAVE
+    scripts/config --disable CONFIG_CPU_FREQ_GOV_POWERSAVE
+    scripts/config --enable CONFIG_CPU_FREQ_DEFAULT_GOV_USERSPACE
+    scripts/config --enable CONFIG_CPU_FREQ_GOV_USERSPACE
+    scripts/config --disable CONFIG_CPU_FREQ_DEFAULT_GOV_ONDEMAND
+    scripts/config --disable CONFIG_CPU_FREQ_GOV_ONDEMAND
+    scripts/config --disable CONFIG_CPU_FREQ_DEFAULT_GOV_CONSERVATIVE
+    scripts/config --disable CONFIG_CPU_FREQ_GOV_CONSERVATIVE
+    scripts/config --disable CONFIG_CPU_FREQ_DEFAULT_GOV_SCHEDUTIL
+    scripts/config --disable CONFIG_CPU_FREQ_GOV_SCHEDUTIL
+    scripts/config --disable CONFIG_CPU_FREQ_DEFAULT_GOV_PERFORMANCE
+    scripts/config --disable CONFIG_CPU_FREQ_GOV_PERFORMANCE
+  elif [[ $_cpu_freq = "3" ]]; then
+    msg2 "Set CPU Frequency scaling CONFIG_CPU_FREQ_DEFAULT_GOV/CONFIG_CPU_FREQ_GOV for ondemand"
+    scripts/config --disable CONFIG_CPU_FREQ_DEFAULT_GOV_POWERSAVE
+    scripts/config --disable CONFIG_CPU_FREQ_GOV_POWERSAVE
+    scripts/config --disable CONFIG_CPU_FREQ_DEFAULT_GOV_USERSPACE
+    scripts/config --disable CONFIG_CPU_FREQ_GOV_USERSPACE
+    scripts/config --enable CONFIG_CPU_FREQ_DEFAULT_GOV_ONDEMAND
+    scripts/config --enable CONFIG_CPU_FREQ_GOV_ONDEMAND
+    scripts/config --disable CONFIG_CPU_FREQ_DEFAULT_GOV_CONSERVATIVE
+    scripts/config --disable CONFIG_CPU_FREQ_GOV_CONSERVATIVE
+    scripts/config --disable CONFIG_CPU_FREQ_DEFAULT_GOV_SCHEDUTIL
+    scripts/config --disable CONFIG_CPU_FREQ_GOV_SCHEDUTIL
+    scripts/config --disable CONFIG_CPU_FREQ_DEFAULT_GOV_PERFORMANCE
+    scripts/config --disable CONFIG_CPU_FREQ_GOV_PERFORMANCE
+  elif [[ $_cpu_freq = "4" ]]; then
+    msg2 "Set CPU Frequency scaling CONFIG_CPU_FREQ_DEFAULT_GOV/CONFIG_CPU_FREQ_GOV for conservative"
+    scripts/config --disable CONFIG_CPU_FREQ_DEFAULT_GOV_POWERSAVE
+    scripts/config --disable CONFIG_CPU_FREQ_GOV_POWERSAVE
+    scripts/config --disable CONFIG_CPU_FREQ_DEFAULT_GOV_USERSPACE
+    scripts/config --disable CONFIG_CPU_FREQ_GOV_USERSPACE
+    scripts/config --disable CONFIG_CPU_FREQ_DEFAULT_GOV_ONDEMAND
+    scripts/config --disable CONFIG_CPU_FREQ_GOV_ONDEMAND
+    scripts/config --enable CONFIG_CPU_FREQ_DEFAULT_GOV_CONSERVATIVE
+    scripts/config --enable CONFIG_CPU_FREQ_GOV_CONSERVATIVE
+    scripts/config --disable CONFIG_CPU_FREQ_DEFAULT_GOV_SCHEDUTIL
+    scripts/config --disable CONFIG_CPU_FREQ_GOV_SCHEDUTIL
+    scripts/config --disable CONFIG_CPU_FREQ_DEFAULT_GOV_PERFORMANCE
+    scripts/config --disable CONFIG_CPU_FREQ_GOV_PERFORMANCE
+  elif [[ $_cpu_freq = "5" ]]; then
+    msg2 "Set CPU Frequency scaling CONFIG_CPU_FREQ_DEFAULT_GOV/CONFIG_CPU_FREQ_GOV for schedutil"
+    scripts/config --disable CONFIG_CPU_FREQ_DEFAULT_GOV_POWERSAVE
+    scripts/config --disable CONFIG_CPU_FREQ_GOV_POWERSAVE
+    scripts/config --disable CONFIG_CPU_FREQ_DEFAULT_GOV_USERSPACE
+    scripts/config --disable CONFIG_CPU_FREQ_GOV_USERSPACE
+    scripts/config --disable CONFIG_CPU_FREQ_DEFAULT_GOV_ONDEMAND
+    scripts/config --disable CONFIG_CPU_FREQ_GOV_ONDEMAND
+    scripts/config --disable CONFIG_CPU_FREQ_DEFAULT_GOV_CONSERVATIVE
+    scripts/config --disable CONFIG_CPU_FREQ_GOV_CONSERVATIVE
+    scripts/config --enable CONFIG_CPU_FREQ_DEFAULT_GOV_SCHEDUTIL
+    scripts/config --enable CONFIG_CPU_FREQ_GOV_SCHEDUTIL
+    scripts/config --disable CONFIG_CPU_FREQ_DEFAULT_GOV_PERFORMANCE
+    scripts/config --disable CONFIG_CPU_FREQ_GOV_PERFORMANCE
+  elif [[ $_cpu_freq = "6" ]]; then
+    msg2 "Set CPU Frequency scaling CONFIG_CPU_FREQ_DEFAULT_GOV/CONFIG_CPU_FREQ_GOV for performance"
+    scripts/config --disable CONFIG_CPU_FREQ_DEFAULT_GOV_POWERSAVE
+    scripts/config --disable CONFIG_CPU_FREQ_GOV_POWERSAVE
+    scripts/config --disable CONFIG_CPU_FREQ_DEFAULT_GOV_USERSPACE
+    scripts/config --disable CONFIG_CPU_FREQ_GOV_USERSPACE
+    scripts/config --disable CONFIG_CPU_FREQ_DEFAULT_GOV_ONDEMAND
+    scripts/config --disable CONFIG_CPU_FREQ_GOV_ONDEMAND
+    scripts/config --disable CONFIG_CPU_FREQ_DEFAULT_GOV_CONSERVATIVE
+    scripts/config --disable CONFIG_CPU_FREQ_GOV_CONSERVATIVE
+    scripts/config --disable CONFIG_CPU_FREQ_DEFAULT_GOV_SCHEDUTIL
+    scripts/config --disable CONFIG_CPU_FREQ_GOV_SCHEDUTIL
+    scripts/config --enable CONFIG_CPU_FREQ_DEFAULT_GOV_PERFORMANCE
+    scripts/config --enable CONFIG_CPU_FREQ_GOV_PERFORMANCE
+  elif [[ $_cpu_freq = "7" ]]; then
+    msg2 "Set CPU Frequency scaling default from zen kernel"
+    scripts/config --disable CONFIG_CPU_FREQ_DEFAULT_GOV_POWERSAVE
+    scripts/config --enable CONFIG_CPU_FREQ_GOV_POWERSAVE
+    scripts/config --disable CONFIG_CPU_FREQ_DEFAULT_GOV_USERSPACE
+    scripts/config --enable CONFIG_CPU_FREQ_GOV_USERSPACE
+    scripts/config --disable CONFIG_CPU_FREQ_DEFAULT_GOV_ONDEMAND
+    scripts/config --enable CONFIG_CPU_FREQ_GOV_ONDEMAND
+    scripts/config --disable CONFIG_CPU_FREQ_DEFAULT_GOV_CONSERVATIVE
+    scripts/config --enable CONFIG_CPU_FREQ_GOV_CONSERVATIVE
+    scripts/config --enable CONFIG_CPU_FREQ_DEFAULT_GOV_SCHEDUTIL
+    scripts/config --enable CONFIG_CPU_FREQ_GOV_SCHEDUTIL
+    scripts/config --disable CONFIG_CPU_FREQ_DEFAULT_GOV_PERFORMANCE
+    scripts/config --enable CONFIG_CPU_FREQ_GOV_PERFORMANCE
+  else
+    msg2 "Set CPU Frequency scaling CONFIG_CPU_FREQ_DEFAULT_GOV/CONFIG_CPU_FREQ_GOV for performance"
+    scripts/config --disable CONFIG_CPU_FREQ_DEFAULT_GOV_POWERSAVE
+    scripts/config --disable CONFIG_CPU_FREQ_GOV_POWERSAVE
+    scripts/config --disable CONFIG_CPU_FREQ_DEFAULT_GOV_USERSPACE
+    scripts/config --disable CONFIG_CPU_FREQ_GOV_USERSPACE
+    scripts/config --disable CONFIG_CPU_FREQ_DEFAULT_GOV_ONDEMAND
+    scripts/config --disable CONFIG_CPU_FREQ_GOV_ONDEMAND
+    scripts/config --disable CONFIG_CPU_FREQ_DEFAULT_GOV_CONSERVATIVE
+    scripts/config --disable CONFIG_CPU_FREQ_GOV_CONSERVATIVE
+    scripts/config --disable CONFIG_CPU_FREQ_DEFAULT_GOV_SCHEDUTIL
+    scripts/config --disable CONFIG_CPU_FREQ_GOV_SCHEDUTIL
+    scripts/config --enable CONFIG_CPU_FREQ_DEFAULT_GOV_PERFORMANCE
+    scripts/config --enable CONFIG_CPU_FREQ_GOV_PERFORMANCE
+  fi
+
+  sleep 2s
+
+  plain ""
+  plain "#########################################"
+  plain "Set CPU DEVFREQ Governor"
+  plain ""
+  plain "Simple Ondemand : Chooses frequency based on the recent load on the"
+  plain "device. Works similar as ONDEMAND governor of CPUFREQ does. A device"
+  plain "with Simple-Ondemand should be able to provide busy/total counter"
+  plain "values that imply the usage rate. A device may provide tuned values"
+  plain "to the governor with data field at devfreq_add_device()."
+  plain ""
+  plain "Performance : Sets the frequency at the maximum available frequency."
+  plain "This governor always returns UINT_MAX as frequency so that the DEVFREQ"
+  plain "framework returns the highest frequency available at any time."
+  plain ""
+  plain "Powersave : Sets the frequency at the minimum available frequency."
+  plain "This governor always returns 0 as frequency so that the DEVFREQ"
+  plain "framework returns the lowest frequency available at any time."
+  plain ""
+  plain "Userspace : Sets the frequency at the user specified one. This"
+  plain "governor returns the user configured frequency if there has been an"
+  plain "input to /sys/devices/.../power/devfreq_set_freq. Otherwise, the"
+  plain "governor does not change the frequency given at the initialization."
+  plain ""
+  plain "Passive : Sets the frequency based on the frequency of its parent"
+  plain "devfreq device. This governor does not change the frequency by itself"
+  plain "through sysfs entries. The passive governor recommends that devfreq"
+  plain "device uses the OPP table to get the frequency/voltage."
+  plain ""
+  read -rp "`echo $' > 1.Simple Ondemand\n > 2.Powersave\n > 3.Userspace\n > 4.Passive\n > 5.Performance\n > 6.Default(zen kernel : all)\n > Default (Performance)\nchoice[1-6]: '`" _devfreq
+  if [[ $_devfreq = "1" ]]; then
+    msg2 "Set CPU DEVFREQ GOV CONFIG_DEVFREQ_GOV for simple ondemand"
+    scripts/config --enable CONFIG_DEVFREQ_GOV_SIMPLE_ONDEMAND
+    scripts/config --disable CONFIG_DEVFREQ_GOV_POWERSAVE
+    scripts/config --disable CONFIG_DEVFREQ_GOV_USERSPACE
+    scripts/config --disable CONFIG_DEVFREQ_GOV_PASSIVE
+    scripts/config --disable CONFIG_DEVFREQ_GOV_PERFORMANCE
+  elif [[ $_devfreq = "2" ]]; then
+    msg2 "Set CPU DEVFREQ GOV CONFIG_DEVFREQ_GOV for powersave"
+    scripts/config --disable CONFIG_DEVFREQ_GOV_SIMPLE_ONDEMAND
+    scripts/config --undefine CONFIG_DEVFREQ_GOV_SIMPLE_ONDEMAND
+    scripts/config --enable CONFIG_DEVFREQ_GOV_POWERSAVE
+    scripts/config --disable CONFIG_DEVFREQ_GOV_USERSPACE
+    scripts/config --disable CONFIG_DEVFREQ_GOV_PASSIVE
+    scripts/config --disable CONFIG_DEVFREQ_GOV_PERFORMANCE
+  elif [[ $_devfreq = "3" ]]; then
+    msg2 "Set CPU DEVFREQ GOV CONFIG_DEVFREQ_GOV for userspace"
+    scripts/config --disable CONFIG_DEVFREQ_GOV_SIMPLE_ONDEMAND
+    scripts/config --undefine CONFIG_DEVFREQ_GOV_SIMPLE_ONDEMAND
+    scripts/config --disable CONFIG_DEVFREQ_GOV_POWERSAVE
+    scripts/config --enable CONFIG_DEVFREQ_GOV_USERSPACE
+    scripts/config --disable CONFIG_DEVFREQ_GOV_PASSIVE
+    scripts/config --disable CONFIG_DEVFREQ_GOV_PERFORMANCE
+  elif [[ $_devfreq = "4" ]]; then
+    msg2 "Set CPU DEVFREQ GOV CONFIG_DEVFREQ_GOV for passive"
+    scripts/config --disable CONFIG_DEVFREQ_GOV_SIMPLE_ONDEMAND
+    scripts/config --undefine CONFIG_DEVFREQ_GOV_SIMPLE_ONDEMAND
+    scripts/config --disable CONFIG_DEVFREQ_GOV_POWERSAVE
+    scripts/config --disable CONFIG_DEVFREQ_GOV_USERSPACE
+    scripts/config --enable CONFIG_DEVFREQ_GOV_PASSIVE
+    scripts/config --disable CONFIG_DEVFREQ_GOV_PERFORMANCE
+  elif [[ $_devfreq = "5" ]]; then
+    msg2 "Set CPU DEVFREQ GOV CONFIG_DEVFREQ_GOV for performance"
+    scripts/config --disable CONFIG_DEVFREQ_GOV_SIMPLE_ONDEMAND
+    scripts/config --undefine CONFIG_DEVFREQ_GOV_SIMPLE_ONDEMAND
+    scripts/config --disable CONFIG_DEVFREQ_GOV_POWERSAVE
+    scripts/config --disable CONFIG_DEVFREQ_GOV_USERSPACE
+    scripts/config --disable CONFIG_DEVFREQ_GOV_PASSIVE
+    scripts/config --enable CONFIG_DEVFREQ_GOV_PERFORMANCE
+  elif [[ $_devfreq = "6" ]]; then
+    msg2 "Set CPU DEVFREQ GOV CONFIG_DEVFREQ_GOV default from zen kernel"
+    scripts/config --enable CONFIG_DEVFREQ_GOV_SIMPLE_ONDEMAND
+    scripts/config --enable CONFIG_DEVFREQ_GOV_POWERSAVE
+    scripts/config --enable CONFIG_DEVFREQ_GOV_USERSPACE
+    scripts/config --enable CONFIG_DEVFREQ_GOV_PASSIVE
+    scripts/config --enable CONFIG_DEVFREQ_GOV_PERFORMANCE
+  else
+    msg2 "Set CPU DEVFREQ GOV CONFIG_DEVFREQ_GOV for performance"
+    scripts/config --disable CONFIG_DEVFREQ_GOV_SIMPLE_ONDEMAND
+    scripts/config --undefine CONFIG_DEVFREQ_GOV_SIMPLE_ONDEMAND
+    scripts/config --disable CONFIG_DEVFREQ_GOV_POWERSAVE
+    scripts/config --disable CONFIG_DEVFREQ_GOV_USERSPACE
+    scripts/config --disable CONFIG_DEVFREQ_GOV_PASSIVE
+    scripts/config --enable CONFIG_DEVFREQ_GOV_PERFORMANCE
+  fi
+
+  sleep 2s
+
+  plain ""
+  plain "#########################################"
+  plain "Set PCIEASPM driver"
+  plain ""
+  plain "BIOS default : Use the BIOS defaults for PCI Express ASPM."
+  plain ""
+  plain "Powersave : Enable PCI Express ASPM L0s and L1 where possible, even if"
+  plain "the BIOS did not."
+  plain ""
+  plain "Power Supersave : Same as PCIEASPM_POWERSAVE, except it also enables L1"
+  plain "substates where possible. This would result in higher power savings while"
+  plain "staying in L1 where the components support it."
+  plain ""
+  plain "Performance : Disable PCI Express ASPM L0s and L1, even if the BIOS enabled them."
+  plain ""
+  read -rp "`echo $' > 1.Default\n > 2.Powersave\n > 3.Supersave\n > 4.Performance\n > Default (Performance)\nchoice[1-4]: '`" _pcieaspm
+  if [[ $_pcieaspm = "1" ]]; then
+    msg2 "Set PCIEASPM DRIVER to default"
+    scripts/config --enable CONFIG_PCIEASPM
+    scripts/config --enable CONFIG_PCIEASPM_DEFAULT
+  elif [[ $_pcieaspm = "2" ]]; then
+    msg2 "Set PCIEASPM DRIVER to powersave"
+    scripts/config --enable CONFIG_PCIEASPM
+    scripts/config --enable CONFIG_PCIEASPM_POWERSAVE
+  elif [[ $_pcieaspm = "3" ]]; then
+    msg2 "Set PCIEASPM DRIVER to supersave"
+    scripts/config --enable CONFIG_PCIEASPM
+    scripts/config --enable CONFIG_PCIEASPM_SUPERSAVE
+  elif [[ $_pcieaspm = "4" ]]; then
+    msg2 "Set PCIEASPM DRIVER to performance"
+    scripts/config --enable CONFIG_PCIEASPM
+    scripts/config --enable CONFIG_PCIEASPM_PERFORMANCE
+  else
+    msg2 "Set PCIEASPM DRIVER to performance"
+    scripts/config --enable CONFIG_PCIEASPM
+    scripts/config --enable CONFIG_PCIEASPM_PERFORMANCE
+  fi
+
+  sleep 2s
+
+  plain ""
+  plain "#########################################"
+  plain "Set PCIE_BUS driver"
+  plain ""
+  plain "Tune Off : Use the BIOS defaults; don't touch MPS at all.  This is the"
+  plain "same as booting with 'pci=pcie_bus_tune_off'."
+  plain ""
+  plain "Default : Default choice; ensure that the MPS matches upstream bridge."
+  plain ""
+  plain "Safe : Use largest MPS that boot-time devices support. If you have a closed"
+  plain "system with no possibility of adding new devices,"
+  plain "this will use the largest MPS that's supported by all devices. This is"
+  plain "the same as booting with 'pci=pcie_bus_safe'."
+  plain ""
+  plain "Performance : Use MPS and MRRS for best performance.  Ensure that a given"
+  plain "device's MPS is no larger than its parent MPS, which allows us to"
+  plain "keep all switches/bridges to the max MPS supported by their parent."
+  plain "This is the same as booting with 'pci=pcie_bus_perf'."
+  plain ""
+  plain "Peer2peer : Set MPS = 128 for all devices.  MPS configuration effected by"
+  plain "the other options could cause the MPS on one root port to"
+  plain "be different than that of the MPS on another, which may cause hot-added"
+  plain "devices or peer-to-peer DMA to fail.  Set MPS to the"
+  plain "smallest possible value (128B) system-wide to avoid these issues. This is"
+  plain "the same as booting with 'pci=pcie_bus_peer2peer'."
+  plain ""
+  read -rp "`echo $' > 1.Tune off\n > 2.Default\n > 3.Safe\n > 4.Performance\n > 5.Peer2peer\n > Default (Performance)\nchoice[1-5]: '`" _pcie_bus
+  if [[ $_pcie_bus = "1" ]]; then
+    msg2 "Set CONFIG_PCIE_BUS for tune off"
+    scripts/config --enable CONFIG_PCIE_BUS_TUNE_OFF
+  elif [[ $_pcie_bus = "2" ]] || [[ $_pcie_bus = "6" ]]; then
+    msg2 "Set CONFIG_PCIE_BUS for default"
+    scripts/config --enable CONFIG_PCIE_BUS_DEAULT
+  elif [[ $_pcie_bus = "3" ]]; then
+    msg2 "Set CONFIG_PCIE_BUS for safe"
+    scripts/config --enable CONFIG_PCIE_BUS_SAFE
+  elif [[ $_pcie_bus = "4" ]]; then
+    msg2 "Set CONFIG_PCIE_BUS for performance"
+    scripts/config --enable CONFIG_PCIE_BUS_PERFORMANCE
+  elif [[ $_pcie_bus = "5" ]]; then
+    msg2 "Set CONFIG_PCIE_BUS for peerpeer"
+    scripts/config --enable CONFIG_PCIE_BUS_PEER2PEER
+  else
+    msg2 "Set CONFIG_PCIE_BUS for performance"
+    scripts/config --enable CONFIG_PCIE_BUS_PERFORMANCE
+  fi
+
+  sleep 2s
+
+  plain ""
+  plain "#########################################"
+  plain "Set Optimization"
+  plain ""
+  plain "Optimize for performance (-O1) : Choosing this option will pass -O1"
+  plain "to your compiler resulting in basal optimization, possibly speeding"
+  plain "up compilation."
+  plain ""
+  plain "Optimize for performance (-O2) : This is the default optimization level"
+  plain "for the kernel, building with the "-O2""
+  plain "compiler flag for best performance and most helpful compile-time warnings."
+  plain ""
+  plain "Optimize more for performance (-O3) : Choosing this option will pass \"-O3"
+  plain "to your compiler to optimize the kernel yet more for performance."
+  plain ""
+  plain "Optimize for size (-Os) : Choosing this option will pass "-Os" to your"
+  plain "compiler resulting in a smaller kernel."
+  plain ""
+  read -rp "`echo $' > 1.Optimize for performance (-O1)\n > 2.Optimize for performance(-O2)\n > 3.Optimize for performance(-O3)\n > 4.Optimize for size(-Os)\n > Default (Optimize for performance (-O3))\nchoice[1-4]: '`" _optimize
+  if [[ "$_optimize" = "1" ]]; then
+    msg2 "Enable CC_OPTIMIZE_BASAL"
+    scripts/config --disable CONFIG_CC_OPTIMIZE_FOR_PERFORMANCE
+    scripts/config --disable CONFIG_CC_OPTIMIZE_FOR_PERFORMANCE_O3
+    scripts/config --disable CONFIG_CC_OPTIMIZE_FOR_SIZE
+    scripts/config --enable CONFIG_CC_OPTIMIZE_BASAL
+  elif [[ "$_optimize" = "2" ]]; then
+    msg2 "Enable CONFIG_CC_OPTIMIZE_FOR_PERFORMANCE"
+    scripts/config --disable CONFIG_CC_OPTIMIZE_BASAL
+    scripts/config --disable CONFIG_CC_OPTIMIZE_FOR_SIZE
+    scripts/config --disable CONFIG_CC_OPTIMIZE_FOR_PERFORMANCE_O3
+    scripts/config --enable CONFIG_CC_OPTIMIZE_FOR_PERFORMANCE
+  elif [[ "$_optimize" = "3" ]]; then
+    msg2 "Enable CONFIG_CC_OPTIMIZE_FOR_PERFORMANCE_O3"
+    scripts/config --disable CONFIG_CC_OPTIMIZE_BASAL
+    scripts/config --disable CONFIG_CC_OPTIMIZE_FOR_PERFORMANCE
+    scripts/config --disable CONFIG_CC_OPTIMIZE_FOR_SIZE
+    scripts/config --enable CONFIG_CC_OPTIMIZE_FOR_PERFORMANCE_O3
+  elif [[ "$_optimize" = "4" ]]; then
+    msg2 "Enable CONFIG_CC_OPTIMIZE_FOR_SIZE"
+    scripts/config --disable CONFIG_CC_OPTIMIZE_BASAL
+    scripts/config --disable CONFIG_CC_OPTIMIZE_FOR_PERFORMANCE
+    scripts/config --disable CONFIG_CC_OPTIMIZE_FOR_PERFORMANCE_O3
+    scripts/config --enable CONFIG_CC_OPTIMIZE_FOR_SIZE
+  else
+    msg2 "Enable CONFIG_CC_OPTIMIZE_FOR_PERFORMANCE_O3"
+    scripts/config --disable CONFIG_CC_OPTIMIZE_FOR_PERFORMANCE
+    scripts/config --disable CONFIG_CC_OPTIMIZE_FOR_SIZE
+    scripts/config --enable CONFIG_CC_OPTIMIZE_FOR_PERFORMANCE_O3
+  fi
+
+  sleep 2s
+
+  plain ""
+  plain "#########################################"
+  plain "Set timer frequency"
+  plain ""
+  plain "100 HZ : 100 Hz is a typical choice for servers, SMP and NUMA systems"
+  plain "with lots of processors that may show reduced performance if"
+  plain "too many timer interrupts are occurring."
+  plain ""
+  plain "250 HZ : 250 Hz is a good compromise choice allowing server performance"
+  plain "while also showing good interactive responsiveness even"
+  plain "on SMP and NUMA systems. If you are going to be using NTSC video"
+  plain "or multimedia, selected 300Hz instead."
+  plain ""
+  plain "300 HZ : 300 Hz is a good compromise choice allowing server performance"
+  plain "while also showing good interactive responsiveness even"
+  plain "on SMP and NUMA systems and exactly dividing by both PAL and"
+  plain "NTSC frame rates for video and multimedia work."
+  plain ""
+  plain "750 HZ : 750 Hz is a balanced timer frequency. Provides fast interactivity"
+  plain "on desktops with good smoothness without increasing CPU power"
+  plain "consumption and sacrificing the battery life on laptops."
+  plain ""
+  plain "1000 HZ : 1000 Hz is the preferred choice for desktop systems and other"
+  plain "systems requiring fast interactive responses to events."
+  plain ""
+  read -rp "`echo $' > 1.100\n > 2.250\n > 3.300\n > 4.750\n > 5.1000\n > Default (1000)\nchoice[1-6]: '`" _timer_freq
+  if [[ "$_timer_freq" = "1" ]]; then
+    msg2 "Set timer frequency to 100HZ"
+    scripts/config --enable CONFIG_HZ_100
+    scripts/config --set-val CONFIG_HZ 100
+  elif [[ "$_timer_freq" = "2" ]]; then
+    msg2 "Set timer frequency to 250HZ"
+    scripts/config --enable CONFIG_HZ_250
+    scripts/config --set-val CONFIG_HZ 250
+  elif [[ "$_timer_freq" = "3" ]]; then
+    msg2 "Set timer frequency to 300HZ"
+    scripts/config --enable CONFIG_HZ_300
+    scripts/config --set-val CONFIG_HZ 300
+  elif [[ "$_timer_freq" = "4" ]]; then
+    msg2 "Set timer frequency to 750HZ"
+    scripts/config --enable CONFIG_HZ_750
+    scripts/config --set-val CONFIG_HZ 750
+  elif [[ "$_timer_freq" = "5" ]]; then
+    msg2 "Set timer frequency to 1000HZ"
+    scripts/config --enable CONFIG_HZ_1000
+    scripts/config --set-val CONFIG_HZ 1000
+  else
+    msg2 "Set timer frequency to 1000HZ"
+    scripts/config --enable CONFIG_HZ_1000
+    scripts/config --set-val CONFIG_HZ 1000
+  fi
+
+  sleep 2s
+
+  plain ""
+  plain "#########################################"
+  plain "Set Preemption Model"
+  plain ""
+  plain "PREEMPT_NONE (No Forced Preemption (Server)) :"
+  plain ""
+  plain "This is the traditional Linux preemption model, geared towards"
+  plain "throughput. It will still provide good latencies most of the"
+  plain "time, but there are no guarantees and occasional longer delays"
+  plain "are possible."
+  plain "Select this option if you are building a kernel for a server or"
+  plain "scientific/computation system, or if you want to maximize the"
+  plain "raw processing power of the kernel, irrespective of scheduling"
+  plain "latencies."
+  plain ""
+  plain "PREEMPT_VOLUNTARY (Voluntary Kernel Preemption (Desktop)) :"
+  plain ""
+  plain "This option reduces the latency of the kernel by adding more"
+  plain "(explicit preemption points) to the kernel code. These new"
+  plain "preemption points have been selected to reduce the maximum"
+  plain "latency of rescheduling, providing faster application reactions,"
+  plain "at the cost of slightly lower throughput."
+  plain "This allows reaction to interactive events by allowing a"
+  plain "low priority process to voluntarily preempt itself even if it"
+  plain "is in kernel mode executing a system call. This allows"
+  plain "applications to run more 'smoothly' even when the system is"
+  plain "under load."
+  plain "Select this if you are building a kernel for a desktop system."
+  plain ""
+  plain "PREEMPT (Preemptible Kernel (Low-Latency Desktop)) :"
+  plain ""
+  plain "This option reduces the latency of the kernel by making"
+  plain "all kernel code (that is not executing in a critical section)"
+  plain "preemptible.  This allows reaction to interactive events by"
+  plain "permitting a low priority process to be preempted involuntarily"
+  plain "even if it is in kernel mode executing a system call and would"
+  plain "otherwise not be about to reach a natural preemption point."
+  plain "This allows applications to run more 'smoothly' even when the"
+  plain "system is under load, at the cost of slightly lower throughput"
+  plain "and a slight runtime overhead to kernel code."
+  plain "Select this if you are building a kernel for a desktop or"
+  plain "embedded system with latency requirements in the milliseconds"
+  plain "range."
+  plain ""
+  read -rp "`echo $' > 1.PREEMPT_NONE\n > 2.PREEMPT_VOLUNTARY\n > 3.PREEMPT\n > Default (PREEMPT)\nchoice[1-3]: '`" _preempt
+  if [[ "$_preempt" = "1" ]]; then
+    msg2 "Enable PREEMPT_NONE"
+    scripts/config --enable CONFIG_PREEMPT_NONE
+    scripts/config --disable CONFIG_PREEMPT_VOLUNTARY
+    scripts/config --disable CONFIG_PREEMPT
+    scripts/config --enable CONFIG_PREEMPT_COUNT
+    scripts/config --enable CONFIG_PREEMPTION
+  elif [[ "$_preempt" = "2" ]]; then
+    msg2 "Enable PREEMPT_VOLUNTARY"
+    scripts/config --disable CONFIG_PREEMPT_NONE
+    scripts/config --enable CONFIG_PREEMPT_VOLUNTARY
+    scripts/config --disable CONFIG_PREEMPT
+    scripts/config --enable CONFIG_PREEMPT_COUNT
+    scripts/config --enable CONFIG_PREEMPTION
+  elif [[ "$_preempt" = "3" ]]; then
+    msg2 "Enable PREEMPT"
+    scripts/config --disable CONFIG_PREEMPT_NONE
+    scripts/config --disable CONFIG_PREEMPT_VOLUNTARY
+    scripts/config --enable CONFIG_PREEMPT
+    scripts/config --enable CONFIG_PREEMPT_COUNT
+    scripts/config --enable CONFIG_PREEMPTION
+  else
+    msg2 "Enable PREEMPT"
+    scripts/config --disable CONFIG_PREEMPT_NONE
+    scripts/config --disable CONFIG_PREEMPT_VOLUNTARY
+    scripts/config --enable CONFIG_PREEMPT
+    scripts/config --enable CONFIG_PREEMPT_COUNT
+    scripts/config --enable CONFIG_PREEMPTION
+  fi
+
+  sleep 2s
+
+  plain ""
+  plain "#########################################"
+  plain "Enable/disable CONFIG_IRQ_FORCE_THREADING"
+  read -rp "`echo $' > 1.Enable\n > 2.Disable\n > Default (Enable)\nchoice[1-2]: '`" _irq
+  if [[ "$_irq" = "1" ]]; then
+    msg2 "Enable CONFIG_IRQ_FORCE_THREADING"
+    scripts/config --enable CONFIG_IRQ_FORCE_THREADING
+  elif [[ "$_irq" = "2" ]]; then
+    msg2 "Disable CONFIG_IRQ_FORCE_THREADING"
+    scripts/config --disable CONFIG_IRQ_FORCE_THREADING
+  else
+    msg2 "Enable CONFIG_IRQ_FORCE_THREADING"
+    scripts/config --enable CONFIG_IRQ_FORCE_THREADING
+  fi
+
+  sleep 2s
+
+  plain ""
+  plain "#########################################"
+  plain "Use CattaRappa mode (Tickless/Dynticks) ?"
+  plain "Can give higher performances in many cases but lower consistency on"
+  plain "some hardware."
+  plain "Just tickless idle can perform better with some platforms (mostly AMD)"
+  plain "or CPU schedulers (mostly MuQSS)."
+  plain ""
+  read -rp "`echo $' > 1.Periodic ticks\n > 2.Full tickless\n > 3.Tickless idle\n > Default (Full tickless)\nchoice[1-3]: '`" _tick
+  if [[ "$_tick" = "1" ]]; then
+    msg2 "Set to periodic ticks"
+    scripts/config --enable CONFIG_HZ_PERIODIC
+    scripts/config --disable CONFIG_NO_HZ_IDLE
+    scripts/config --disable CONFIG_NO_HZ_FULL
+    scripts/config --disable CONFIG_NO_HZ
+    scripts/config --disable CONFIG_NO_HZ_COMMON
+  elif [[ "$_tick" = "2" ]]; then
+    msg2 "Set to full tickless"
+    scripts/config --disable CONFIG_HZ_PERIODIC
+    scripts/config --disable CONFIG_NO_HZ_IDLE
+    scripts/config --enable CONFIG_NO_HZ_FULL
+    scripts/config --enable CONFIG_NO_HZ
+    scripts/config --enable CONFIG_NO_HZ_COMMON
+    #scripts/config --enable CONFIG_CONTEXT_TRACKING
+    #scripts/config --disable CONFIG_CONTEXT_TRACKING_FORCE
+  elif [[ "$_tick" = "3" ]]; then
+    msg2 "Set to tickless idle"
+    scripts/config --disable CONFIG_HZ_PERIODIC
+    scripts/config --enable CONFIG_NO_HZ_IDLE
+    scripts/config --disable CONFIG_NO_HZ_FULL
+    scripts/config --enable CONFIG_NO_HZ
+    scripts/config --enable CONFIG_NO_HZ_COMMON
+  else
+    msg2 "Set to full tickless"
+    scripts/config --disable CONFIG_HZ_PERIODIC
+    scripts/config --disable CONFIG_NO_HZ_IDLE
+    scripts/config --enable CONFIG_NO_HZ_FULL
+    scripts/config --enable CONFIG_NO_HZ
+    scripts/config --enable CONFIG_NO_HZ_COMMON
+    #scripts/config --enable CONFIG_CONTEXT_TRACKING
+    #scripts/config --disable CONFIG_CONTEXT_TRACKING_FORCE
+  fi
+
+  sleep 2s
+
+  plain ""
+  plain "#########################################"
+  plain "Enable/disable Device Tree and Open Firmware support"
+  read -rp "`echo $' > 1.Enable\n > 2.Disable\n > Default (Disable)\nchoice[1-2]: '`" _of
+  if [[ "$_of" = "1" ]]; then
+    msg2 "Enable Device Tree and Open Firmware support"
+    scripts/config --enable CONFIG_OF
+  elif [[ "$_of" = "1" ]]; then
+    msg2 "Disable Device Tree and Open Firmware support"
+    scripts/config --disable CONFIG_OF
+  else
+    msg2 "Disable Device Tree and Open Firmware support"
+    scripts/config --disable CONFIG_OF
+  fi
+
+  sleep 2s
+
+  plain ""
+  plain "#########################################"
+  plain "Enable/disable tristate V4L2 loopback device"
+  read -rp "`echo $' > 1.Enable\n > 2.Disable\n > Default (Enable)\nchoice[1-2]: '`" _loopback
+  if [[ "$_loopback" = "1" ]]; then
+    msg2 "Enable tristate V4L2 loopback device"
+    scripts/config --module CONFIG_V4L2_LOOPBACK
+  elif [[ "$_loopback" = "2" ]]; then
+    msg2 "Disable tristate V4L2 loopback device"
+    scripts/config --disable CONFIG_V4L2_LOOPBACK
+  else
+    msg2 "Enable tristate V4L2 loopback device"
+    scripts/config --module CONFIG_V4L2_LOOPBACK
+  fi
+
+  sleep 2s
+
+  plain ""
+  plain "#########################################"
+  plain "Enable/disable NTFS/NTFS3"
+  plain ""
+  plain "NTFS :"
+  plain "Linux-NTFS comes with a number of user-space programs known as ntfsprogs."
+  plain "These include mkntfs, a full-featured ntfs filesystem format utility,"
+  plain "ntfsundelete used for recovering files that were unintentionally deleted"
+  plain "from an NTFS volume and ntfsresize which is used to resize an NTFS partition."
+  plain "See the web site for more information."
+  plain "To mount an NTFS 1.2/3.x (Windows NT4/2000/XP/2003) volume, use the file"
+  plain "system type 'ntfs'.  The driver currently supports read-only mode (with no"
+  plain "fault-tolerance, encryption or journalling) and very limited, but safe, write"
+  plain "support."
+  plain "For fault tolerance and raid support (i.e. volume and stripe sets), you can"
+  plain "use the kernel's Software RAID / MD driver.  See section Using Software RAID"
+  plain "with NTFS for details."
+  plain ""
+  plain "NTFS3 :"
+  plain "NTFS3 is fully functional NTFS Read-Write driver. The driver works with"
+  plain "NTFS versions up to 3.1, normal/compressed/sparse files"
+  plain "and journal replaying. File system type to use on mount is 'ntfs3'."
+  plain "- This driver implements NTFS read/write support for normal, sparse and compressed files."
+  plain "- Supports native journal replaying;"
+  plain "- Supports extended attributes"
+  plain "Predefined extended attributes:"
+  plain "- 'system.ntfs_security' gets/sets security descriptor (SECURITY_DESCRIPTOR_RELATIVE)"
+  plain "- 'system.ntfs_attrib' gets/sets ntfs file/dir attributes."
+  plain "Note: applied to empty files, this allows to switch type between sparse(0x200), compressed(0x800) and normal;"
+  plain "- Supports NFS export of mounted NTFS volumes."
+  plain ""
+  read -rp "`echo $' > 1.Enable\n > 2.Disable\n > Default (Enable)\nchoice[1-2]: '`" _ntfs
+  if [[ "$_ntfs" = "1" ]]; then
+    msg2 "Enable ntfs"
+    scripts/config --module CONFIG_NTFS_FS
+    scripts/config --enable CONFIG_NTFS_RW
+    msg2 "Enable ntfs3"
+    scripts/config --module CONFIG_NTFS3_FS
+    scripts/config --enable CONFIG_NTFS3_64BIT_CLUSTER
+    scripts/config --enable CONFIG_NTFS3_LZX_XPRESS
+    scripts/config --enable CONFIG_NTFS3_FS_POSIX_ACL
+  elif [[ "$_ntfs" = "2" ]]; then
+    msg2 "Disable ntfs"
+    scripts/config --disable CONFIG_NTFS_FS
+    scripts/config --disable CONFIG_NTFS_RW
+    msg2 "Disable ntfs3"
+    scripts/config --disable CONFIG_NTFS3_FS
+    scripts/config --disable CONFIG_NTFS3_64BIT_CLUSTER
+    scripts/config --disable CONFIG_NTFS3_LZX_XPRESS
+    scripts/config --disable CONFIG_NTFS3_FS_POSIX_ACL
+  else
+    msg2 "Enable ntfs"
+    scripts/config --module CONFIG_NTFS_FS
+    scripts/config --enable CONFIG_NTFS_RW
+    msg2 "Enable ntfs3"
+    scripts/config --module CONFIG_NTFS3_FS
+    scripts/config --enable CONFIG_NTFS3_64BIT_CLUSTER
+    scripts/config --enable CONFIG_NTFS3_LZX_XPRESS
+    scripts/config --enable CONFIG_NTFS3_FS_POSIX_ACL
+  fi
+
+  sleep 2s
+
+  plain ""
+  plain "#########################################"
+  plain "Enable/disable BBR/BBR2 TCP"
+  plain ""
+  plain "BBR :"
+  plain "BBR (Bottleneck Bandwidth and RTT) TCP congestion control aims to"
+  plain "maximize network utilization and minimize queues. It builds an explicit"
+  plain "model of the bottleneck delivery rate and path round-trip propagation"
+  plain "delay. It tolerates packet loss and delay unrelated to congestion. It"
+  plain "can operate over LAN, WAN, cellular, wifi, or cable modem links. It can"
+  plain "coexist with flows that use loss-based congestion control, and can"
+  plain "operate with shallow buffers, deep buffers, bufferbloat, policers, or"
+  plain "AQM schemes that do not provide a delay signal. It requires the fq"
+  plain "(Fair Queue) pacing packet scheduler."
+  plain ""
+  plain "BBR2 :"
+  plain "BBR2 TCP congestion control is a model-based congestion control"
+  plain "algorithm that aims to maximize network utilization, keep queues and"
+  plain "retransmit rates low, and to be able to coexist with Reno/CUBIC in"
+  plain "common scenarios. It builds an explicit model of the network path.  It"
+  plain "tolerates a targeted degree of random packet loss and delay that are"
+  plain "unrelated to congestion. It can operate over LAN, WAN, cellular, wifi,"
+  plain "or cable modem links, and can use DCTCP-L4S-style ECN signals.  It can"
+  plain "coexist with flows that use loss-based congestion control, and can"
+  plain "operate with shallow buffers, deep buffers, bufferbloat, policers, or"
+  plain "AQM schemes that do not provide a delay signal. It requires pacing,"
+  plain "using either TCP internal pacing or the fq (Fair Queue) pacing packet"
+  plain "scheduler."
+  plain ""
+  read -rp "`echo $' > 1.Enable\n > 2.Disable\n > Default (Enable)\nchoice[1-2]: '`" _bbr
+  if [[ "$_bbr" = "1" ]]; then
+    msg2 "Enable BBR/BBR2 TCP"
+    scripts/config --module CONFIG_TCP_CONG_BBR
+    scripts/config --module CONFIG_TCP_CONG_BBR2
+  elif [[ "$_bbr" = "1" ]]; then
+    msg2 "Disable BBR/BBR2 TCP"
+    scripts/config --disable CONFIG_TCP_CONG_BBR
+    scripts/config --disable CONFIG_TCP_CONG_BBR2
+  else
+    msg2 "Enable BBR/BBR2 TCP"
+    scripts/config --module CONFIG_TCP_CONG_BBR
+    scripts/config --module CONFIG_TCP_CONG_BBR2
+  fi
+
+  sleep 2s
+
+  plain ""
+  plain "#########################################"
+  plain "Enable/disable Virtual (SCSI) Host Bus Adapter (VHBA)"
+  plain ""
+  plain "This is the in-kernel part of CDEmu, a CD/DVD-ROM device emulator."
+  plain "This driver can also be built as a module. If so, the module will be called vhba."
+  plain ""
+  read -rp "`echo $' > 1.Enable\n > 2.Disable\n > Default (Enable)\nchoice[1-2]: '`" _vhba
+  if [[ "$_vhba" = "1" ]]; then
+    msg2 "Enable CONFIG_VHBA"
+    scripts/config --module CONFIG_VHBA
+  elif [[ "$_vhba" = "2" ]]; then
+    msg2 "Disable CONFIG_VHBA"
+    scripts/config --disable CONFIG_VHBA
+  else
+    msg2 "Enable CONFIG_VHBA"
+    scripts/config --module CONFIG_VHBA
+  fi
+
+  sleep 2s
+
+  plain ""
+  plain "#########################################"
+  plain "Enable/disable Kyber I/O Scheduler"
+  plain ""
+  plain "The Kyber I/O scheduler is a low-overhead scheduler suitable for"
+  plain "multiqueue and other fast devices. Given target latencies for reads"
+  plain "and synchronous writes, it will self-tune queue depths to achieve"
+  plain "that goal."
+  plain ""
+  read -rp "`echo $' > 1.Disable\n > 2.Enable\n > Default (Disable)\nchoice[1-2]: '`" _kyber
+  if [[ "$_kyber" = "1" ]]; then
+    msg2 "Disabling Kyber I/O scheduler"
+    scripts/config --disable CONFIG_MQ_IOSCHED_KYBER
+  elif [[ "$_kyber" = "2" ]]; then
+    msg2 "Enable Kyber I/O scheduler"
+    scripts/config --enable CONFIG_MQ_IOSCHED_KYBER
+  else
+    msg2 "Disabling Kyber I/O scheduler"
+    scripts/config --disable CONFIG_MQ_IOSCHED_KYBER
+  fi
+
+  sleep 2s
+
+  plain ""
+  plain "#########################################"
+  plain "Enable/disable MQ-Deadline I/O Scheduler"
+  plain ""
+  plain "MQ version of the deadline IO scheduler.MQ version of the deadline"
+  plain "IO scheduler."
+  plain ""
+  plain "deadline i/o scheduler : The goal of the deadline io scheduler is"
+  plain "to attempt to guarantee a start service time for a request. As we"
+  plain "focus mainly on read latencies, this is tunable. When a read request"
+  plain "first enters the io scheduler, it is assigned a deadline that is the"
+  plain "current time + the read_expire value in units of milliseconds."
+  plain ""
+  read -rp "`echo $' > 1.Disable\n > 2.Enable\n > Default (Disable)\nchoice[1-2]: '`" _deadline
+  if [[ "$_deadline" = "1" ]]; then
+    msg2 "Disabling MQ-Deadline I/O scheduler"
+    scripts/config --disable CONFIG_MQ_IOSCHED_DEADLINE
+    scripts/config --disable CONFIG_MQ_IOSCHED_DEADLINE_NODEFAULT
+  elif [[ "$_deadline" = "2" ]]; then
+    msg2 "Enable Deadline I/O scheduler"
+    scripts/config --enable CONFIG_MQ_IOSCHED_DEADLINE
+
+    sleep 2s
+
+    plain ""
+    plain "#########################################"
+    plain "Enable/disable MQ-Deadline-Nodefault I/O Scheduler"
+    plain ""
+    plain "This renames the mq-deadline scheduler to "mq-deadline-nodefault""
+    plain "and also drops its alias of "deadline"."
+    plain "This can prevent existing userspace from forcing this scheduler"
+    plain "over the kernel's choice."
+    plain ""
+    read -rp "`echo $' > 1.Disable\n > 2.Enable\n > Default (Enable)\nchoice[1-2]: '`" _deadline_nodefault
+    if [[ "$_deadline_nodefault" = "1" ]]; then
+      msg2 "Disable MQ-Deadline-Nodefault I/O scheduler"
+      scripts/config --disable CONFIG_MQ_IOSCHED_DEADLINE_NODEFAULT
+    elif [[ "$_deadline_nodefault" = "2" ]]; then
+      msg2 "Enable MQ-Deadline-Nodefault I/O scheduler"
+      scripts/config --enable CONFIG_MQ_IOSCHED_DEADLINE_NODEFAULT
+    else
+      msg2 "Enable MQ-Deadline-Nodefault I/O scheduler"
+      scripts/config --enable CONFIG_MQ_IOSCHED_DEADLINE_NODEFAULT
+    fi
+  else
+    msg2 "Disable MQ-Deadline I/O scheduler"
+    scripts/config --disable CONFIG_MQ_IOSCHED_DEADLINE
+    scripts/config --disable CONFIG_MQ_IOSCHED_DEADLINE_NODEFAULT
+  fi
+
+  sleep 2s
+
+  plain ""
+  plain "#########################################"
+  plain "Enable/disable CONFIG_BFQ_CGROUP_DEBUG"
+  read -rp "`echo $' > 1.Disable\n > 2.Enable\n > Default (Enable)\nchoice[1-2]: '`" _bfq_cgroup
+  if [[ "$_bfq_cgroup" = "1" ]]; then
+    msg2 "disable CONFIG_BFQ_CGROUP_DEBUG"
+    scripts/config --disable CONFIG_BFQ_CGROUP_DEBUG
+  elif [[ "$_bfq_cgroup" = "2" ]]; then
+    msg2 "Enable CONFIG_BFQ_CGROUP_DEBUG"
+    scripts/config --enable CONFIG_BFQ_CGROUP_DEBUG
+  else
+    msg2 "Enable CONFIG_BFQ_CGROUP_DEBUG"
+    scripts/config --enable CONFIG_BFQ_CGROUP_DEBUG
+  fi
+
+  sleep 2s
+
+  plain ""
+  plain "#########################################"
+  plain "Disable debug options?"
+  read -rp "`echo $' > 1.Disable\n > 2.Keep\n > Default (Disable)\nchoice[1-2]: '`" _debug
+  if [[ "$_debug" = "1" ]]; then
+    msg2 "Disable debug options"
+    scripts/config --disable CONFIG_SLUB_DEBUG
+    scripts/config --disable CONFIG_PM_DEBUG
+    scripts/config --disable CONFIG_PM_ADVANCED_DEBUG
+    scripts/config --disable CONFIG_PM_SLEEP_DEBUG
+    scripts/config --disable CONFIG_ACPI_DEBUG
+    scripts/config --disable CONFIG_SCHED_DEBUG
+    scripts/config --disable CONFIG_LATENCYTOP
+    scripts/config --disable CONFIG_DEBUG_PREEMPT
+    scripts/config --disable CONFIG_DEBUG_INFO
+    scripts/config --disable CONFIG_CGROUP_BPF
+    scripts/config --disable CONFIG_BPF_LSM
+    scripts/config --disable CONFIG_BPF_PRELOAD
+    scripts/config --disable CONFIG_BPF_LIRC_MODE2
+    scripts/config --disable CONFIG_BPF_KPROBE_OVERRIDE
+    scripts/config --disable CONFIG_DEBUG_INFO_REDUCED
+    scripts/config --disable CONFIG_DEBUG_INFO_COMPRESSED
+    scripts/config --disable CONFIG_DEBUG_INFO_SPLI
+    scripts/config --disable CONFIG_GDB_SCRIPTS
+    scripts/config --disable CONFIG_DEBUG_INFO_DWARF4
+    scripts/config --disable CONFIG_DEBUG_INFO_BTF
+    scripts/config --disable CONFIG_BPF_PRELOAD
+    scripts/config --disable CONFIG_BPF_PRELOAD_UMD
+    scripts/config --disable CONFIG_BPF_STREAM_PARSER
+    scripts/config --disable CONFIG_DMA_API_DEBUG
+    scripts/config --disable CONFIG_DMA_API_DEBUG_SG
+    scripts/config --disable CONFIG_DMA_MAP_BENCHMARK
+    scripts/config --disable CONFIG_DEBUG_FS
+    scripts/config --disable CONFIG_GCOV_KERNEL
+    scripts/config --disable CONFIG_GCOV_PROFILE_ALL
+    scripts/config --disable CONFIG_DEBUG_FS
+    scripts/config --disable CONFIG_GENERIC_IRQ_DEBUGFS
+    scripts/config --disable CONFIG_ACPI_DEBUGGER
+    scripts/config --disable CONFIG_ACPI_DEBUGGER_USER
+    scripts/config --disable CONFIG_ACPI_EC_DEBUGFS
+    scripts/config --disable CONFIG_ACPI_APEI_ERST_DEBUG
+    scripts/config --disable CONFIG_NFIT_SECURITY_DEBUG
+    scripts/config --disable CONFIG_DMADEVICES_DEBUG
+    scripts/config --disable CONFIG_DMADEVICES_VDEBUG
+    scripts/config --disable CONFIG_DMATEST
+    scripts/config --disable CONFIG_BTRFS_DEBUG
+    scripts/config --disable CONFIG_BTRFS_FS_REF_VERIFY
+    scripts/config --disable CONFIG_BTRFS_ASSERT
+    scripts/config --disable CONFIG_BTRFS_FS_RUN_SANITY_TESTS
+    scripts/config --disable CONFIG_BTRFS_FS_CHECK_INTEGRITY
+    scripts/config --disable CONFIG_EXT4_DEBUG
+    scripts/config --disable CONFIG_EXT4_KUNIT_TESTS
+    scripts/config --disable CONFIG_SECURITY_APPARMOR_DEBUG
+    scripts/config --disable CONFIG_SECURITY_APPARMOR_DEBUG_ASSERTS
+    scripts/config --disable CONFIG_SECURITY_APPARMOR_DEBUG_MESSAGES
+    scripts/config --disable CONFIG_SECURITY_APPARMOR_KUNIT_TEST
+    scripts/config --disable CONFIG_POWER_SUPPLY_DEBUG
+    scripts/config --disable CONFIG_NTFS_DEBUG
+    scripts/config --disable CONFIG_GENERIC_IRQ_DEBUGFS
+    scripts/config --disable CONFIG_CIFS_STATS2
+    scripts/config --disable CONFIG_CIFS_DEBUG
+    scripts/config --disable CONFIG_CIFS_DEBUG2
+    scripts/config --disable CONFIG_CIFS_DEBUG_DUMP_KEYS
+    scripts/config --disable CONFIG_JBD2_DEBUG
+    scripts/config --disable CONFIG_CONFIG_NFS_DEBUG
+    scripts/config --disable CONFIG_TRACE_IRQFLAGS_SUPPORT
+    scripts/config --disable CONFIG_TRACE_IRQFLAGS_NMI_SUPPORT
+    scripts/config --disable CONFIG_EARLY_PRINTK_USB
+    scripts/config --disable CONFIG_X86_VERBOSE_BOOTUP
+    scripts/config --disable CONFIG_EARLY_PRINTK
+    scripts/config --disable CONFIG_EARLY_PRINTK_DBGP
+    scripts/config --disable CONFIG_EARLY_PRINTK_USB_XDBC
+    scripts/config --disable CONFIG_EFI_PGT_DUMP
+    scripts/config --disable CONFIG_DEBUG_TLBFLUSH
+    scripts/config --disable CONFIG_IOMMU_DEBUG
+    scripts/config --disable CONFIG_IOMMU_LEAK
+    scripts/config --disable CONFIG_HAVE_MMIOTRACE_SUPPORT
+    scripts/config --disable CONFIG_X86_DECODER_SELFTEST
+    scripts/config --disable CONFIG_IO_DELAY_0X80
+    scripts/config --disable CONFIG_IO_DELAY_0XED
+    scripts/config --disable CONFIG_IO_DELAY_UDELAY
+    scripts/config --disable CONFIG_IO_DELAY_NONE
+    scripts/config --disable CONFIG_DEBUG_BOOT_PARAMS
+    scripts/config --disable CONFIG_CPA_DEBUG
+    scripts/config --disable CONFIG_DEBUG_ENTRY
+    scripts/config --disable CONFIG_DEBUG_NMI_SELFTEST
+    scripts/config --disable CONFIG_DEBUG_IMR_SELFTEST
+    scripts/config --disable CONFIG_X86_DEBUG_FPU
+    scripts/config --disable CONFIG_PUNIT_ATOM_DEBUG
+    scripts/config --disable CONFIG_UNWINDER_ORC
+    scripts/config --disable CONFIG_UNWINDER_FRAME_POINTER
+    scripts/config --disable CONFIG_UNWINDER_GUESS
+    scripts/config --disable CONFIG_FRAME_POINTER
+    scripts/config --disable CONFIG_THINKPAD_ACPI_DEBUGFACILITIES
+    scripts/config --disable CONFIG_THINKPAD_ACPI_DEBUG
+    scripts/config --disable CONFIG_THINKPAD_ACPI_UNSAFE_LEDS
+    scripts/config --disable CONFIG_CMA_DEBUG
+    scripts/config --disable CONFIG_CMA_DEBUGFS
+    scripts/config --disable CONFIG_EDAC_DEBUG
+    scripts/config --disable CONFIG_ATM_IA_DEBUG
+    scripts/config --disable CONFIG_ATM_FORE200E_DEBUG
+    scripts/config --disable CONFIG_BCMA_DEBUG
+  elif [[ "$_debug" = "2" ]]; then
+    msg2 "Keep debug options"
+  else
+    msg2 "Disable debug options"
+    scripts/config --disable CONFIG_SLUB_DEBUG
+    scripts/config --disable CONFIG_PM_DEBUG
+    scripts/config --disable CONFIG_PM_ADVANCED_DEBUG
+    scripts/config --disable CONFIG_PM_SLEEP_DEBUG
+    scripts/config --disable CONFIG_ACPI_DEBUG
+    scripts/config --disable CONFIG_SCHED_DEBUG
+    scripts/config --disable CONFIG_LATENCYTOP
+    scripts/config --disable CONFIG_DEBUG_PREEMPT
+    scripts/config --disable CONFIG_DEBUG_INFO
+    scripts/config --disable CONFIG_CGROUP_BPF
+    scripts/config --disable CONFIG_BPF_LSM
+    scripts/config --disable CONFIG_BPF_PRELOAD
+    scripts/config --disable CONFIG_BPF_LIRC_MODE2
+    scripts/config --disable CONFIG_BPF_KPROBE_OVERRIDE
+    scripts/config --disable CONFIG_DEBUG_INFO_REDUCED
+    scripts/config --disable CONFIG_DEBUG_INFO_COMPRESSED
+    scripts/config --disable CONFIG_DEBUG_INFO_SPLI
+    scripts/config --disable CONFIG_GDB_SCRIPTS
+    scripts/config --disable CONFIG_DEBUG_INFO_DWARF4
+    scripts/config --disable CONFIG_DEBUG_INFO_BTF
+    scripts/config --disable CONFIG_BPF_PRELOAD
+    scripts/config --disable CONFIG_BPF_PRELOAD_UMD
+    scripts/config --disable CONFIG_BPF_STREAM_PARSER
+    scripts/config --disable CONFIG_DMA_API_DEBUG
+    scripts/config --disable CONFIG_DMA_API_DEBUG_SG
+    scripts/config --disable CONFIG_DMA_MAP_BENCHMARK
+    scripts/config --disable CONFIG_DEBUG_FS
+    scripts/config --disable CONFIG_GCOV_KERNEL
+    scripts/config --disable CONFIG_GCOV_PROFILE_ALL
+    scripts/config --disable CONFIG_DEBUG_FS
+    scripts/config --disable CONFIG_GENERIC_IRQ_DEBUGFS
+    scripts/config --disable CONFIG_ACPI_DEBUGGER
+    scripts/config --disable CONFIG_ACPI_DEBUGGER_USER
+    scripts/config --disable CONFIG_ACPI_EC_DEBUGFS
+    scripts/config --disable CONFIG_ACPI_APEI_ERST_DEBUG
+    scripts/config --disable CONFIG_NFIT_SECURITY_DEBUG
+    scripts/config --disable CONFIG_DMADEVICES_DEBUG
+    scripts/config --disable CONFIG_DMADEVICES_VDEBUG
+    scripts/config --disable CONFIG_DMATEST
+    scripts/config --disable CONFIG_BTRFS_DEBUG
+    scripts/config --disable CONFIG_BTRFS_FS_REF_VERIFY
+    scripts/config --disable CONFIG_BTRFS_ASSERT
+    scripts/config --disable CONFIG_BTRFS_FS_RUN_SANITY_TESTS
+    scripts/config --disable CONFIG_BTRFS_FS_CHECK_INTEGRITY
+    scripts/config --disable CONFIG_EXT4_DEBUG
+    scripts/config --disable CONFIG_EXT4_KUNIT_TESTS
+    scripts/config --disable CONFIG_SECURITY_APPARMOR_DEBUG
+    scripts/config --disable CONFIG_SECURITY_APPARMOR_DEBUG_ASSERTS
+    scripts/config --disable CONFIG_SECURITY_APPARMOR_DEBUG_MESSAGES
+    scripts/config --disable CONFIG_SECURITY_APPARMOR_KUNIT_TEST
+    scripts/config --disable CONFIG_POWER_SUPPLY_DEBUG
+    scripts/config --disable CONFIG_NTFS_DEBUG
+    scripts/config --disable CONFIG_GENERIC_IRQ_DEBUGFS
+    scripts/config --disable CONFIG_CIFS_STATS2
+    scripts/config --disable CONFIG_CIFS_DEBUG
+    scripts/config --disable CONFIG_CIFS_DEBUG2
+    scripts/config --disable CONFIG_CIFS_DEBUG_DUMP_KEYS
+    scripts/config --disable CONFIG_JBD2_DEBUG
+    scripts/config --disable CONFIG_CONFIG_NFS_DEBUG
+    scripts/config --disable CONFIG_TRACE_IRQFLAGS_SUPPORT
+    scripts/config --disable CONFIG_TRACE_IRQFLAGS_NMI_SUPPORT
+    scripts/config --disable CONFIG_EARLY_PRINTK_USB
+    scripts/config --disable CONFIG_X86_VERBOSE_BOOTUP
+    scripts/config --disable CONFIG_EARLY_PRINTK
+    scripts/config --disable CONFIG_EARLY_PRINTK_DBGP
+    scripts/config --disable CONFIG_EARLY_PRINTK_USB_XDBC
+    scripts/config --disable CONFIG_EFI_PGT_DUMP
+    scripts/config --disable CONFIG_DEBUG_TLBFLUSH
+    scripts/config --disable CONFIG_IOMMU_DEBUG
+    scripts/config --disable CONFIG_IOMMU_LEAK
+    scripts/config --disable CONFIG_HAVE_MMIOTRACE_SUPPORT
+    scripts/config --disable CONFIG_X86_DECODER_SELFTEST
+    scripts/config --disable CONFIG_IO_DELAY_0X80
+    scripts/config --disable CONFIG_IO_DELAY_0XED
+    scripts/config --disable CONFIG_IO_DELAY_UDELAY
+    scripts/config --disable CONFIG_IO_DELAY_NONE
+    scripts/config --disable CONFIG_DEBUG_BOOT_PARAMS
+    scripts/config --disable CONFIG_CPA_DEBUG
+    scripts/config --disable CONFIG_DEBUG_ENTRY
+    scripts/config --disable CONFIG_DEBUG_NMI_SELFTEST
+    scripts/config --disable CONFIG_DEBUG_IMR_SELFTEST
+    scripts/config --disable CONFIG_X86_DEBUG_FPU
+    scripts/config --disable CONFIG_PUNIT_ATOM_DEBUG
+    scripts/config --disable CONFIG_UNWINDER_ORC
+    scripts/config --disable CONFIG_UNWINDER_FRAME_POINTER
+    scripts/config --disable CONFIG_UNWINDER_GUESS
+    scripts/config --disable CONFIG_FRAME_POINTER
+    scripts/config --disable CONFIG_THINKPAD_ACPI_DEBUGFACILITIES
+    scripts/config --disable CONFIG_THINKPAD_ACPI_DEBUG
+    scripts/config --disable CONFIG_THINKPAD_ACPI_UNSAFE_LEDS
+    scripts/config --disable CONFIG_CMA_DEBUG
+    scripts/config --disable CONFIG_CMA_DEBUGFS
+    scripts/config --disable CONFIG_EDAC_DEBUG
+    scripts/config --disable CONFIG_ATM_IA_DEBUG
+    scripts/config --disable CONFIG_ATM_FORE200E_DEBUG
+    scripts/config --disable CONFIG_BCMA_DEBUG
+  fi
+
+  sleep 2s
+
+  plain ""
+  plain "#########################################"
+  plain "Enable/disable CONFIG_SCHED_AUTOGROUP_DEFAULT_ENABLED"
+  plain ""
+  plain "If set, automatic process group scheduling will be enabled per"
+  plain "default but can be disabled through passing autogroup=0 on the"
+  plain "kernel commandline during boot or a value of 0 via the file"
+  plain "proc/sys/kernel/sched_autogroup_enabled."
+  plain ""
+  read -rp "`echo $' > 1.Enable\n > 2.Disable\n > Default (Enable)\nchoice[1-2]: '`" _autogroup
+  if [[ "$_autogroup" = "1" ]]; then
+    msg2 "Enable CONFIG_SCHED_AUTOGROUP_DEFAULT_ENABLED"
+    scripts/config --enable CONFIG_SCHED_AUTOGROUP_DEFAULT_ENABLED
+  elif [[ "$_autogroup" = "2" ]]; then
+    msg2 "Disable CONFIG_SCHED_AUTOGROUP_DEFAULT_ENABLED"
+    scripts/config --disable CONFIG_SCHED_AUTOGROUP_DEFAULT_ENABLED
+  else
+    msg2 "Enable CONFIG_SCHED_AUTOGROUP_DEFAULT_ENABLED"
+    scripts/config --enable CONFIG_SCHED_AUTOGROUP_DEFAULT_ENABLED
+  fi
+
+  sleep 2s
+  
+  plain ""
+  plain "#########################################"
+  plain "Enable CONFIG_ZENIFY a selection of patches from Zen/Liquorix kernel"
+  plain "and additional tweaks for a better gaming experience (ZENIFY)"
+  plain ""
+  plain "Tunes the kernel for responsiveness at the cost of throughput and power usage."
+  #plain ""
+  #plain "	  --- Virtual Memory Subsystem ---------------------------"
+  #plain ""
+  #plain "	    Mem dirty before bg writeback..:  10 %  ->  20 %"
+  #plain "	    Mem dirty before sync writeback:  20 %  ->  50 %"
+  #plain ""
+  #plain "	  --- Block Layer ----------------------------------------"
+  #plain ""
+  #plain "	    Queue depth...............:      128    -> 512"
+  #plain "	    Default MQ scheduler......: mq-deadline -> bfq"
+  #plain ""
+  #plain "	  --- CFS CPU Scheduler ----------------------------------"
+  #plain ""
+  #plain "	    Scheduling latency.............:   6    ->   3    ms"
+  #plain "	    Minimal granularity............:   0.75 ->   0.3  ms"
+  #plain "	    Wakeup granularity.............:   1    ->   0.5  ms"
+  #plain "	    CPU migration cost.............:   0.5  ->   0.25 ms"
+  #plain "	    Bandwidth slice size...........:   5    ->   3    ms"
+  #plain "	    Ondemand fine upscaling limit..:  95 %  ->  85 %"
+  #plain ""
+  #plain "	  --- MuQSS CPU Scheduler --------------------------------"
+  #plain ""
+  #plain "     Scheduling interval............:   6    ->   3    ms"
+  #plain "	    ISO task max realtime use......:  70 %  ->  25 %"
+  #plain "	    Ondemand coarse upscaling limit:  80 %  ->  45 %"
+  #plain "	    Ondemand fine upscaling limit..:  95 %  ->  45 %"
+  #plain ""
+  read -rp "`echo $' > 1.Yes\n > 2.No\n > Default (Yes)\nchoice[1-2]: '`" _zenify
+  if [[ "$_zenify" = "1" ]]; then
+    msg2 "Enable CONFIG_ZENIFY"
+    scripts/config --enable CONFIG_ZENIFY
+  elif [[ "$_zenify" = "2" ]]; then
+    msg2 "Disable CONFIG_ZENIFY"
+    scripts/config --disable CONFIG_ZENIFY
+  else
+    msg2 "Enable CONFIG_ZENIFY"
+    scripts/config --enable CONFIG_ZENIFY
+  fi
+  
+  sleep 2s
+
+  plain ""
+  plain "#########################################"
+  plain "Enable support for fsync, an experimental replacement for esync in"
+  plain "Valve Proton 4.11+"
+  read -rp "`echo $' > 1.Yes\n > 2.No\n > Default (Yes)\nchoice[1-2]: '`" _fsync
+  if [[ "$_fsync" = "1" ]]; then
+    msg2 "Enable Fsync support"
+    scripts/config --enable CONFIG_FUTEX
+    scripts/config --enable CONFIG_FUTEX_PI
+  elif [[ "$_fsync" = "2" ]]; then
+    msg2 "Disable Fsync support"
+    scripts/config --disable CONFIG_FUTEX
+    scripts/config --disable CONFIG_FUTEX_PI
+  else
+    msg2 "Enable Fsync support"
+    scripts/config --enable CONFIG_FUTEX
+    scripts/config --enable CONFIG_FUTEX_PI
+  fi
+
+  sleep 2s
+
+  plain ""
+  plain "#########################################"
+  plain "Enable support for futex2, an experimental replacement for esync and"
+  plain "fsync in Valve Proton 5.13 experimental"
+  plain "Can be enabled alongside regular fsync patchset to have a fallback option"
+  plain "Enabling Futex2 will enable fsync support by default"
+  plain "https://gitlab.collabora.com/tonyk/linux/-/tree/futex2-dev"
+  plain "https://github.com/ValveSoftware/Proton/issues/4568"
+  plain ""
+  read -rp "`echo $' > 1.Yes\n > 2.No\n > Default (Yes)\nchoice[1-2]: '`" _futex2
+  if [[ "$_futex2" = "1" ]]; then
+    msg2 "Enable Futex2 support"
+    scripts/config --enable CONFIG_FUTEX2
+  elif [[ "$_futex2" = "2" ]]; then
+    msg2 "Disable Futex2 support"
+    scripts/config --disable CONFIG_FUTEX2
+  else
+    msg2 "Enable Futex2 support"
+    scripts/config --enable CONFIG_FUTEX2
+  fi
+
+  sleep 2s
+
+  plain ""
+  plain "#########################################"
+  plain "Enable support for winesync, an experimental replacement for esync"
+  plain "https://repo.or.cz/linux/zf.git/shortlog/refs/heads/winesync"
+  read -rp "`echo $' > 1.Yes\n > 2.No\n > Default (Yes)\nchoice[1-2]: '`" _wine
+  if [[ "$_wine" = "1" ]]; then
+    msg2 "Enable winesync support"
+    scripts/config --module CONFIG_WINESYNC
+  elif [[ "$_wine" = "2" ]]; then
+    msg2 "Disable winesync support"
+    scripts/config --disable CONFIG_WINESYNC
+  else
+    msg2 "Enable winesync support"
+    scripts/config --module CONFIG_WINESYNC
+  fi
+
+  sleep 2s
+
+  plain ""
+  plain "#########################################"
+  plain "Enable SECURITY_FORK_BRUT, Fork brute force attack detection"
+  plain "and mitigation"
+  plain ""
+  plain "This is an LSM that stops any fork brute force attack against"
+  plain "vulnerable userspace processes. The detection method is based on"
+  plain "the application crash period and as a mitigation procedure all the"
+  plain "offending tasks are killed. Also, the executable file involved in the"
+  plain "attack will be marked as not allowed and new execve system calls"
+  plain "using this file will fail. Like capabilities, this security module"
+  plain "stacks with other LSMs."
+  read -rp "`echo $' > 1.Yes\n > 2.No\n > Default (Yes)\nchoice[1-2]: '`" _security
+  if [[ "$_security" = "1" ]]; then
+    msg2 "Enable SECURITY_FORK_BRUT"
+    scripts/config --enable CONFIG_SECURITY_FORK_BRUT
+  elif [[ "$_security" = "1" ]]; then
+    msg2 "Enable SECURITY_FORK_BRUT"
+    scripts/config --disable CONFIG_SECURITY_FORK_BRUT
+  else
+    msg2 "Enable SECURITY_FORK_BRUT"
+    scripts/config --enable CONFIG_SECURITY_FORK_BRUT
+  fi
+
+  sleep 2s
+
+  plain ""
+  if [[ $_cpu_sched = "5" ]]; then
+    msg2 "Enable MuQSS"
+    scripts/config --enable CONFIG_SCHED_MC
+    scripts/config --enable CONFIG_SCHED_SMT
+    scripts/config --enable CONFIG_SMP
+    scripts/config --enable CONFIG_SCHED_MC_PRIO
+    scripts/config --enable CONFIG_SCHED_MUQSS
+
+    plain ""
+    plain "#########################################"
+    plain "MuQSS configuration"
+    plain ""
+    plain "Set CONFIG_RQ"
+    plain ""
+    plain "RQ_NONE : No sharing: This is the default behaviour where the CPU"
+    plain "scheduler has one runqueue per CPU, whether it is a physical or"
+    plain "logical CPU (hyperthread)."
+    plain ""
+    plain "RQ_SMT : SMT (hyperthread) siblings : With this option enabled,"
+    plain "the CPU scheduler will have one runqueue shared by SMT (hyperthread)"
+    plain "siblings. As these logical cores share one physical core, sharing"
+    plain "the runqueue resource can lead to decreased overhead, lower latency"
+    plain "and higher throughput."
+    plain ""
+    plain "RQ_MC : Multicore siblings : With this option enabled, the CPU"
+    plain "scheduler will have one runqueue shared by multicore siblings"
+    plain "in addition to any SMT siblings. As these physical cores share"
+    plain "caches, sharing the runqueue resource will lead to lower latency,"
+    plain "but its effects on overhead and throughput are less predictable. As"
+    plain "a general rule, 6 or fewer cores will likely benefit from this,"
+    plain "while larger CPUs will only derive a latency benefit. If your"
+    plain "workloads are primarily single threaded, this will possibly worsen"
+    plain "throughput. If you are only concerned about latency then enable this"
+    plain "regardless of how many cores you have."
+    plain ""
+    plain "RQ_MC_LLC : Multicore siblings (LLC) : With this option enabled, the"
+    plain "CPU scheduler will behave similarly as with Multicore siblings."
+    plain "This option takes LLC cache into account when scheduling tasks."
+    plain "Option may benefit CPUs with multiple LLC caches, such as Ryzen and"
+    plain "Xeon CPUs."
+    plain ""
+    plain "RQ_SMP : Symmetric Multi-Processing : With this option enabled, the"
+    plain "CPU scheduler will have one runqueue shared by all physical CPUs"
+    plain "unless they are on separate NUMA nodes. As physical CPUs usually do"
+    plain "not share resources, sharing the runqueue will normally worsen"
+    plain "throughput but improve latency. If you only care about latency"
+    plain "enable this"
+    plain ""
+    plain "RQ_ALL : With this option enabled, the CPU scheduler will have one"
+    plain "runqueue regardless of the architecture configuration, including"
+    plain "across NUMA nodes. This can substantially decrease throughput in"
+    plain "NUMA configurations, but light NUMA designs will not be dramatically"
+    plain "affected. This option should only be chosen if latency is the"
+    plain "prime concern."
+    plain ""
+    read -rp "`echo $' > 1.RQ_NONE\n > 2.RQ_SMT\n > 3.RQ_MC\n > 4.RQ_MC_LLC\n > 5.RQ_SMP\n > 6.RQ_ALL\n > Default (RQ_MC)\nchoice[1-6]: '`" _config_rq
+    if [[ $_config_rq = "1" ]]; then
+      msg2 "Set to RQ_NONE"
+      scripts/config --enable CONFIG_RQ_NONE
+      scripts/config --set-val CONFIG_SHARERQ 0
+      msg2 "Disable CFS"
+      scripts/config --disable CONFIG_FAIR_GROUP_SCHED
+      scripts/config --disable CONFIG_CFS_BANDWIDTH
+    elif [[ $_config_rq = "2" ]]; then
+      msg2 "Set to RQ_SMT"
+      scripts/config --enable CONFIG_RQ_SMT
+      scripts/config --set-val CONFIG_SHARERQ 1
+      msg2 "Disable CFS"
+      scripts/config --disable CONFIG_FAIR_GROUP_SCHED
+      scripts/config --disable CONFIG_CFS_BANDWIDTH
+
+      sleep 2
+
+      plain ""
+      plain "#########################################"
+      plain "Enable/disable CONFIG_SMT_NICE"
+      plain ""
+      plain "SMT nice support makes each logical CPU aware of what is running on"
+      plain "its hyperthread siblings, maintaining appropriate distribution of"
+      plain "CPU according to nice levels and scheduling policies at the expense"
+      plain "of slightly increased overhead."
+      plain "If unsure Enable"
+      plain ""
+      read -rp "`echo $' > 1.Disable\n > 2.Enable\n > Default (Enable)\nchoice[1-2]: '`" _smt_nice
+      if [[ $_smt_nice = "1" ]]; then
+
+        msg2 "Disable CONFIG_SMT_NICE"
+        scripts/config --disable CONFIG_SMT_NICE
+      elif [[ $_smt_nice = "2" ]]; then
+        msg2 "Enable CONFIG_SMT_NICE"
+        scripts/config --enable CONFIG_SMT_NICE
+      else
+        msg2 "Enable CONFIG_SMT_NICE"
+        scripts/config --enable CONFIG_SMT_NICE
+      fi
+
+    elif [[ $_config_rq = "3" ]]; then
+      msg2 "Set to RQ_MC"
+      scripts/config --enable CONFIG_RQ_MC
+      scripts/config --set-val CONFIG_SHARERQ 2
+      msg2 "Disable CFS"
+      scripts/config --disable CONFIG_FAIR_GROUP_SCHED
+      scripts/config --disable CONFIG_CFS_BANDWIDTH
+    elif [[ $_config_rq = "4" ]]; then
+      msg2 "Set to RQ_MC_LLC"
+      scripts/config --enable CONFIG_RQ_MC_LLC
+      scripts/config --set-val CONFIG_SHARERQ 3
+      msg2 "Disable CFS"
+      scripts/config --disable CONFIG_FAIR_GROUP_SCHED
+      scripts/config --disable CONFIG_CFS_BANDWIDTH
+    elif [[ $_config_rq = "5" ]]; then
+      msg2 "Set to RQ_SMP"
+      scripts/config --enable CONFIG_RQ_SMP
+      scripts/config --set-val CONFIG_SHARERQ 4
+      msg2 "Disable CFS"
+      scripts/config --disable CONFIG_FAIR_GROUP_SCHED
+      scripts/config --disable CONFIG_CFS_BANDWIDTH
+    elif [[ $_config_rq = "6" ]]; then
+      msg2 "Set to RQ_ALL"
+      scripts/config --enable CONFIG_RQ_ALL
+      scripts/config --set-val CONFIG_SHARERQ 5
+      msg2 "Disable CFS"
+      scripts/config --disable CONFIG_FAIR_GROUP_SCHED
+      scripts/config --disable CONFIG_CFS_BANDWIDTH
+    else
+      msg2 "Set to RQ_MC"
+      scripts/config --enable CONFIG_RQ_MC
+      scripts/config --set-val CONFIG_SHARERQ 2
+      msg2 "Disable CFS"
+      scripts/config --disable CONFIG_FAIR_GROUP_SCHED
+      scripts/config --disable CONFIG_CFS_BANDWIDTH
+    fi
+  else
+    msg2 "Enable CFS"
+    scripts/config --enable CONFIG_FAIR_GROUP_SCHED
+    scripts/config --enable CONFIG_CFS_BANDWIDTH
+  fi
+
+  sleep 2s
+}
+
+cpu_arch(){
+  plain ""
+  plain "#########################################"
+  plain "Set cpu microarchitecture optimization in GCC"
+  read -rp "`echo $'   > 1) M486SX : Select this for an 486-class CPU without an FPU such as AMD/Cyrix/IBM/Intel SL/SLC/SLC2/SLC3/SX/SX2 and UMC U5S.\n \
+  > 2) M486 : Select this for an 486-class CPU such as AMD/Cyrix/IBM/Intel 486DX/DX2/DX4 and UMC U5D.\n \
+  > 3) M586 : Select this for an 586 or 686 series processor such as the AMD K5,the Cyrix 5x86, 6x86 and 6x86MX. This choice does not assume the RDTSC (Read Time Stamp Counter) instruction.\n \
+  > 4) M586TSC : Select this for a Pentium Classic processor with the RDTSC (Read Time Stamp Counter) instruction for benchmarking.\n \
+  > 5) M586MMX : Select this for a Pentium with the MMX graphics/multimedia extended instructions.\n \
+  > 6) M686 : Select this for Intel Pentium Pro chips.\n \
+  > 7) MPENTIUMII : Select this for Intel chips based on the Pentium-II and pre-Coppermine Celeron core.\n \
+  > 8) MPENTIUMIII : Select this for Intel chips based on the Pentium-III and Celeron-Coppermine core.\n \
+  > 9) MPENTIUMM : Select this for Intel Pentium M (not Pentium-4 M) notebook chips.\n \
+  > 10) MPENTIUM4 : Select this for Intel Pentium 4 chips.\n \
+  > 11) MK6 : Select this for an AMD K6-family processor.\n \
+  > 12) MK7 : Select this for an AMD Athlon K7-family processor.\n \
+  > 13) MK8 : Select this for an AMD Opteron or Athlon64 Hammer-family processor.\n \
+  > 14) MK8SSE3 : Select this for improved AMD Opteron or Athlon64 Hammer-family processors.\n \
+  > 15) MK10 : Select this for an AMD 61xx Eight-Core Magny-Cours, Athlon X2 7x50,Phenom X3/X4/II, Athlon II X2/X3/X4, or Turion II-family processor.\n \
+  > 16) MBARCELONA : Select this for AMD Family 10h Barcelona processors.\n \
+  > 17) MBOBCAT : Select this for AMD Family 14h Bobcat processors.\n \
+  > 18) MJAGUAR : Select this for AMD Family 16h Jaguar processors.\n \
+  > 19) MBULLDOZER : Select this for AMD Family 15h Bulldozer processors.\n \
+  > 20) MPILEDRIVER : Select this for AMD Family 15h Piledriver processors.\n \
+  > 21) MSTEAMROLLER : Select this for AMD Family 15h Steamroller processors.\n \
+  > 22) MEXCAVATOR : Select this for AMD Family 15h Excavator processors.\n \
+  > 23) MZEN : Select this for AMD Family 17h Zen processors.\n \
+  > 24) MZEN2 : Select this for AMD Family 17h Zen 2 processors.\n \
+  > 25) MZEN3 : Select this for AMD Family 19h Zen 3 processors. - GCC 10.3 required - CLANG 12.0.0 required\n \
+  > 26) MCRUSOE : Select this for a Transmeta Crusoe processor.\n \
+  > 27) MEFFICEON : Select this for a Transmeta Efficeon processor.\n \
+  > 28) MWINCHIPC6 : Select this for an IDT Winchip C6 chip.\n \
+  > 29) MWINCHIP3D : Select this for an IDT Winchip-2, 2A or 3.\n \
+  > 30) MELAN : Select this for an AMD Elan processor.\n \
+  > 31) MGEODEGX1 : Select this for a Geode GX1 (Cyrix MediaGX) chip.\n \
+  > 32) MGEODE_LX Select this for AMD Geode GX and LX processors.\n \
+  > 33) MCYRIXIII : Select this for a Cyrix III or C3 chip.\n \
+  > 34) MVIAC3_2 : Select this for a VIA C3 "Nehemiah".\n \
+  > 35) MVIAC7 : Select this for a VIA C7.\n \
+  > 36) MPSC : Optimize for Intel Pentium 4, Pentium D and older Nocona/Dempsey Xeon CPUs with Intel 64bit which is compatible with x86-64.\n \
+  > 37) MCORE2 : Select this for Intel Core 2 and newer Core 2 Xeons (Xeon 51xx and 53xx) CPUs.\n \
+  > 38) MATOM : Select this for the Intel Atom platform.\n \
+  > 39) MNEHALEM : Select this for 1st Gen Core processors in the Nehalem family.\n \
+  > 40) MWESTMERE : Select this for the Intel Westmere formerly Nehalem-C family.\n \
+  > 41) MSILVERMONT Select this for the Intel Silvermont platform.\n \
+  > 42) MGOLDMONT : Select this for the Intel Goldmont platform including Apollo Lake and Denverton.\n \
+  > 43) MGOLDMONTPLUS : Select this for the Intel Goldmont Plus platform including Gemini Lake.\n \
+  > 44) MSANDYBRIDGE : Select this for 2nd Gen Core processors in the Sandy Bridge family.\n \
+  > 45) MIVYBRIDGE : Select this for 3rd Gen Core processors in the Ivy Bridge family.\n \
+  > 46) MHASWELL : Select this for 4th Gen Core processors in the Haswell family.\n \
+  > 47) MBROADWELL : Select this for 5th Gen Core processors in the Broadwell family.\n \
+  > 48) MSKYLAKE : Select this for 6th Gen Core processors in the Skylake family.\n \
+  > 49) MSKYLAKEX : Select this for 6th Gen Core processors in the Skylake X family.\n \
+  > 50) MCANNONLAKE : Select this for 8th Gen Core processors.\n \
+  > 51) MICELAKE : Select this for 10th Gen Core processors in the Ice Lake family.\n \
+  > 52) MCASCADELAKE : Select this for Xeon processors in the Cascade Lake family.\n \
+  > 53) MCOOPERLAKE : Select this for Xeon processors in the Cooper Lake family. - GCC 10.1 required - CLANG 10.0.0 required\n \
+  > 54) MTIGERLAKE : Select this for third-generation 10 nm process processors in the Tiger Lake family. - GCC 10.1 required - CLANG 10.0.0 required\n \
+  > 55) MSAPPHIRERAPIDS : Select this for third-generation 10 nm process processors in the Sapphire Rapids family. - GCC 11 required - CLANG 12.0.0 required\n \
+  > 56) MROCKETLAKE : Select this for eleventh-generation processors in the Rocket Lake family. - GCC 11 required - CLANG 12.0.0 required\n \
+  > 57) MALDERLAKE : Select this for twelfth-generation processors in the Alder Lake family.- GCC 11 required - CLANG 12.0.0 required\n \
+  > 58) GENERIC_CPU : Generic x86-64 CPU. Run equally well on all x86-64 CPUs.\n \
+  > 59) GENERIC_CPU2 : Run equally well on all x86-64 CPUs with min support of x86-64-v2. - GCC 11 required - CLANG 12.0.0 required\n \
+  > 60) GENERIC_CPU3 : Generic x86-64-v3 CPU with v3 instructions. Run equally well on all x86-64 CPUs with min support of x86-64-v3. - GCC 11 required - CLANG 12.0.0 required\n \
+  > 61) GENERIC_CPU4 : Generic x86-64 CPU with v4 instructions. Run equally well on all x86-64 CPUs with min support of x86-64-v4. - GCC 11 required - CLANG 12.0.0 required\n \
+  > 62) MNATIVE_INTEL : Intel-Native optimizations autodetected by GCC.\n \
+  > 63) MNATIVE_AMD : AMD-Native optimizations autodetected by GCC.\n \
+  > Default (58 : Gneric CPU)\nchoice[0-56]: '`" _microarchitecture
+
+  if [[ "$_microarchitecture" = "1" ]]; then
+    msg2 "Set CONFIG_M486"
+    scripts/config --disable CONFIG_GENERIC_CPU
+    scripts/config --enable CONFIG_M486
+  elif [[ "$_microarchitecture" = "2" ]]; then
+    msg2 "Set CONFIG_M486"
+    scripts/config --disable CONFIG_GENERIC_CPU
+    scripts/config --enable CONFIG_M486
+  elif [[ "$_microarchitecture" = "3" ]]; then
+    msg2 "Set CONFIG_M586"
+    scripts/config --disable CONFIG_GENERIC_CPU
+    scripts/config --enable CONFIG_M586
+  elif [[ "$_microarchitecture" = "4" ]]; then
+    msg2 "Set CONFIG_M586TSC"
+    scripts/config --disable CONFIG_GENERIC_CPU
+    scripts/config --enable CONFIG_M586TSC
+  elif [[ "$_microarchitecture" = "5" ]]; then
+    msg2 "Set CONFIG_M586MMX"
+    scripts/config --disable CONFIG_GENERIC_CPU
+    scripts/config --enable CONFIG_M586MMX
+  elif [[ "$_microarchitecture" = "6" ]]; then
+    msg2 "Set CONFIG_M686"
+    scripts/config --disable CONFIG_GENERIC_CPU
+    scripts/config --enable CONFIG_M686
+  elif [[ "$_microarchitecture" = "7" ]]; then
+    msg2 "Set CONFIG_MPENTIUMII"
+    scripts/config --disable CONFIG_GENERIC_CPU
+    scripts/config --enable CONFIG_MPENTIUMII
+  elif [[ "$_microarchitecture" = "8" ]]; then
+    msg2 "Set CONFIG_MPENTIUMIII"
+    scripts/config --disable CONFIG_GENERIC_CPU
+    scripts/config --enable CONFIG_MPENTIUMIII
+  elif [[ "$_microarchitecture" = "9" ]]; then
+    msg2 "Set CONFIG_MPENTIUMM"
+    scripts/config --disable CONFIG_GENERIC_CPU
+    scripts/config --enable CONFIG_MPENTIUMM
+  elif [[ "$_microarchitecture" = "10" ]]; then
+    msg2 "Set CONFIG_MPENTIUM4"
+    scripts/config --disable CONFIG_GENERIC_CPU
+    scripts/config --enable CONFIG_MPENTIUM4
+  elif [[ "$_microarchitecture" = "11" ]]; then
+    msg2 "Set CONFIG_MK6"
+    scripts/config --disable CONFIG_GENERIC_CPU
+    scripts/config --enable CONFIG_MK6
+  elif [[ "$_microarchitecture" = "12" ]]; then
+    msg2 "Set CONFIG_MK7"
+    scripts/config --disable CONFIG_GENERIC_CPU
+    scripts/config --enable CONFIG_MK7
+  elif [[ "$_microarchitecture" = "13" ]]; then
+    msg2 "Set CONFIG_MK8"
+    scripts/config --disable CONFIG_GENERIC_CPU
+    scripts/config --enable CONFIG_MK8
+  elif [[ "$_microarchitecture" = "14" ]]; then
+    msg2 "Set CONFIG_MK8SSE3"
+    scripts/config --disable CONFIG_GENERIC_CPU
+    scripts/config --enable CONFIG_MK8SSE3
+  elif [[ "$_microarchitecture" = "15" ]]; then
+    msg2 "Set CONFIG_MK10"
+    scripts/config --disable CONFIG_GENERIC_CPU
+    scripts/config --enable CONFIG_MK10
+  elif [[ "$_microarchitecture" = "16" ]]; then
+    msg2 "Set CONFIG_MBARCELONA"
+    scripts/config --disable CONFIG_GENERIC_CPU
+    scripts/config --enable CONFIG_MBARCELONA
+  elif [[ "$_microarchitecture" = "17" ]]; then
+    msg2 "Set CONFIG_MBOBCAT"
+    scripts/config --disable CONFIG_GENERIC_CPU
+    scripts/config --enable CONFIG_MBOBCAT
+  elif [[ "$_microarchitecture" = "18" ]]; then
+    msg2 "Set CONFIG_MJAGUAR"
+    scripts/config --disable CONFIG_GENERIC_CPU
+    scripts/config --enable CONFIG_MJAGUAR
+  elif [[ "$_microarchitecture" = "19" ]]; then
+    msg2 "Set CONFIG_MBULLDOZER"
+    scripts/config --disable CONFIG_GENERIC_CPU
+    scripts/config --enable CONFIG_MBULLDOZER
+  elif [[ "$_microarchitecture" = "20" ]]; then
+    msg2 "Set CONFIG_MPILEDRIVER"
+    scripts/config --disable CONFIG_GENERIC_CPU
+    scripts/config --enable CONFIG_MPILEDRIVER
+  elif [[ "$_microarchitecture" = "21" ]]; then
+    msg2 "Set CONFIG_MSTEAMROLLER"
+    scripts/config --disable CONFIG_GENERIC_CPU
+    scripts/config --enable CONFIG_MSTEAMROLLER
+  elif [[ "$_microarchitecture" = "22" ]]; then
+    msg2 "Set CONFIG_MEXCAVATOR"
+    scripts/config --disable CONFIG_GENERIC_CPU
+    scripts/config --enable CONFIG_MEXCAVATOR
+  elif [[ "$_microarchitecture" = "23" ]]; then
+    msg2 "Set CONFIG_MZEN"
+    scripts/config --disable CONFIG_GENERIC_CPU
+    scripts/config --enable CONFIG_MZEN
+  elif [[ "$_microarchitecture" = "24" ]]; then
+    msg2 "Set CONFIG_MZEN2"
+    scripts/config --disable CONFIG_GENERIC_CPU
+    scripts/config --enable CONFIG_MZEN2
+  elif [[ "$_microarchitecture" = "25" ]]; then
+    msg2 "Set CONFIG_MZEN3"
+    scripts/config --disable CONFIG_GENERIC_CPU
+    scripts/config --enable CONFIG_MZEN3
+  elif [[ "$_microarchitecture" = "26" ]]; then
+    msg2 " Set CONFIG_MCRUSOE"
+    scripts/config --disable CONFIG_GENERIC_CPU
+    scripts/config --enable CONFIG_MCRUSOE
+  elif [[ "$_microarchitecture" = "27" ]]; then
+    msg2 "Set CONFIG_MEFFICEON"
+    scripts/config --disable CONFIG_GENERIC_CPU
+    scripts/config --enable CONFIG_MEFFICEON
+  elif [[ "$_microarchitecture" = "28" ]]; then
+    msg2 "Set CONFIG_MWINCHIPC6"
+    scripts/config --disable CONFIG_GENERIC_CPU
+    scripts/config --enable CONFIG_MWINCHIPC6
+  elif [[ "$_microarchitecture" = "29" ]]; then
+    msg2 "Set CONFIG_MWINCHIP3D"
+    scripts/config --disable CONFIG_GENERIC_CPU
+    scripts/config --enable CONFIG_MWINCHIP3D
+  elif [[ "$_microarchitecture" = "30" ]]; then
+    msg2 "Set CONFIG_MELAN"
+    scripts/config --disable CONFIG_GENERIC_CPU
+    scripts/config --enable CONFIG_MELAN
+  elif [[ "$_microarchitecture" = "31" ]]; then
+    msg2 "Set CONFIG_MGEODEGX1"
+    scripts/config --disable CONFIG_GENERIC_CPU
+    scripts/config --enable CONFIG_MGEODEGX1
+  elif [[ "$_microarchitecture" = "32" ]]; then
+    msg2 "Set CONFIG_MGEODE_LX"
+    scripts/config --disable CONFIG_GENERIC_CPU
+    scripts/config --enable CONFIG_MGEODE_LX
+  elif [[ "$_microarchitecture" = "33" ]]; then
+    msg2 "Set CONFIG_MCYRIXII"
+    scripts/config --disable CONFIG_GENERIC_CPU
+    scripts/config --enable CONFIG_MCYRIXIII
+  elif [[ "$_microarchitecture" = "34" ]]; then
+    msg2 "Set CONFIG_MVIAC3_2"
+    scripts/config --disable CONFIG_GENERIC_CPU
+    scripts/config --enable CONFIG_MVIAC3_2
+  elif [[ "$_microarchitecture" = "35" ]]; then
+    msg2 "Set CONFIG_MVIAC7"
+    scripts/config --disable CONFIG_GENERIC_CPU
+    scripts/config --enable CONFIG_MVIAC7
+  elif [[ "$_microarchitecture" = "36" ]]; then
+    msg2 "Set CONFIG_MPSC"
+    scripts/config --disable CONFIG_GENERIC_CPU
+    scripts/config --enable CONFIG_MPSC
+  elif [[ "$_microarchitecture" = "37" ]]; then
+    msg2 "Set CONFIG_MCORE2"
+    scripts/config --disable CONFIG_GENERIC_CPU
+    scripts/config --enable CONFIG_MCORE2
+  elif [[ "$_microarchitecture" = "38" ]]; then
+    msg2 "Set CONFIG_MATOM"
+    scripts/config --disable CONFIG_GENERIC_CPU
+    scripts/config --enable CONFIG_MATOM
+  elif [[ "$_microarchitecture" = "39" ]]; then
+    msg2 "Set CONFIG_MNEHALEM"
+    scripts/config --disable CONFIG_GENERIC_CPU
+    scripts/config --enable CONFIG_MNEHALEM
+  elif [[ "$_microarchitecture" = "40" ]]; then
+    msg2 "Set CONFIG_MWESTMERE"
+    scripts/config --disable CONFIG_GENERIC_CPU
+    scripts/config --enable CONFIG_MWESTMERE
+  elif [[ "$_microarchitecture" = "41" ]]; then
+    msg2 "Set CONFIG_MSILVERMONT"
+    scripts/config --disable CONFIG_GENERIC_CPU
+    scripts/config --enable CONFIG_MSILVERMONT
+  elif [[ "$_microarchitecture" = "42" ]]; then
+    msg2 "Set CONFIG_MGOLDMONT"
+    scripts/config --disable CONFIG_GENERIC_CPU
+    scripts/config --enable CONFIG_MGOLDMONT
+  elif [[ "$_microarchitecture" = "43" ]]; then
+    msg2 "Set CONFIG_MGOLDMONTPLUS"
+    scripts/config --disable CONFIG_GENERIC_CPU
+    scripts/config --enable CONFIG_MGOLDMONTPLUS
+  elif [[ "$_microarchitecture" = "44" ]]; then
+    msg2 "Set CONFIG_MSANDYBRIDGE"
+    scripts/config --disable CONFIG_GENERIC_CPU
+    scripts/config --enable CONFIG_MSANDYBRIDGE
+  elif [[ "$_microarchitecture" = "45" ]]; then
+    msg2 "Set CONFIG_MIVYBRIDGE"
+    scripts/config --disable CONFIG_GENERIC_CPU
+    scripts/config --enable CONFIG_MIVYBRIDGE
+  elif [[ "$_microarchitecture" = "46" ]]; then
+    msg2 "Set CONFIG_MHASWELL"
+    scripts/config --disable CONFIG_GENERIC_CPU
+    scripts/config --enable CONFIG_MHASWELL
+  elif [[ "$_microarchitecture" = "47" ]]; then
+    msg2 "Set CONFIG_MBROADWELL"
+    scripts/config --disable CONFIG_GENERIC_CPU
+    scripts/config --enable CONFIG_MBROADWELL
+  elif [[ "$_microarchitecture" = "48" ]]; then
+    msg2 "Set CONFIG_MSKYLAKE"
+    scripts/config --disable CONFIG_GENERIC_CPU
+    scripts/config --enable CONFIG_MSKYLAKE
+  elif [[ "$_microarchitecture" = "49" ]]; then
+    msg2 "Set CONFIG_MSKYLAKEX"
+    scripts/config --disable CONFIG_GENERIC_CPU
+    scripts/config --enable CONFIG_MSKYLAKEX
+  elif [[ "$_microarchitecture" = "50" ]]; then
+    msg2 "Set CONFIG_MCANNONLAKE"
+    scripts/config --disable CONFIG_GENERIC_CPU
+    scripts/config --enable CONFIG_MCANNONLAKE
+  elif [[ "$_microarchitecture" = "51" ]]; then
+    msg2 "Set CONFIG_MICELAKE"
+    scripts/config --disable CONFIG_GENERIC_CPU
+    scripts/config --enable CONFIG_MICELAKE
+  elif [[ "$_microarchitecture" = "52" ]]; then
+    msg2 "Set CONFIG_MCASCADELAK"
+    scripts/config --disable CONFIG_GENERIC_CPU
+    scripts/config --enable CONFIG_MCASCADELAKE
+  elif [[ "$_microarchitecture" = "53" ]]; then
+    msg2 "Set CONFIG_MCOOPERLAKE"
+    scripts/config --disable CONFIG_GENERIC_CPU
+    scripts/config --enable CONFIG_MCOOPERLAKE
+  elif [[ "$_microarchitecture" = "54" ]]; then
+    msg2 "Set CONFIG_MTIGERLAKE"
+    scripts/config --disable CONFIG_GENERIC_CPU
+    scripts/config --enable CONFIG_MTIGERLAKE
+  elif [[ "$_microarchitecture" = "55" ]]; then
+    msg2 "Set CONFIG_MSAPPHIRERAPIDS"
+    scripts/config --disable CONFIG_GENERIC_CPU
+    scripts/config --enable CONFIG_MSAPPHIRERAPIDS
+  elif [[ "$_microarchitecture" = "56" ]]; then
+    msg2 "Set CONFIG_MROCKETLAKE"
+    scripts/config --disable CONFIG_GENERIC_CPU
+    scripts/config --enable CONFIG_MROCKETLAKE
+  elif [[ "$_microarchitecture" = "57" ]]; then
+    msg2 "Set CONFIG_MALDERLAKE"
+    scripts/config --disable CONFIG_GENERIC_CPU
+    scripts/config --enable CONFIG_MALDERLAKE
+  elif [[ "$_microarchitecture" = "58" ]]; then
+    msg2 "Set CONFIG_GENERIC_CPU"
+    scripts/config --enable CONFIG_GENERIC_CPU
+  elif [[ "$_microarchitecture" = "59" ]]; then
+    msg2 "Set CONFIG_GENERIC_CPU2"
+    scripts/config --disable CONFIG_GENERIC_CPU
+    scripts/config --enable CONFIG_GENERIC_CPU2
+  elif [[ "$_microarchitecture" = "60" ]]; then
+    msg2 "Set CONFIG_GENERIC_CPU3"
+    scripts/config --disable CONFIG_GENERIC_CPU
+    scripts/config --enable CONFIG_GENERIC_CPU3
+  elif [[ "$_microarchitecture" = "61" ]]; then
+    msg2 "Set CONFIG_GENERIC_CPU4"
+    scripts/config --disable CONFIG_GENERIC_CPU
+    scripts/config --enable CONFIG_GENERIC_CPU4
+  elif [[ "$_microarchitecture" = "62" ]]; then
+    msg2 "Set CONFIG_MNATIVE_INTEL"
+    scripts/config --disable CONFIG_GENERIC_CPU
+    scripts/config --enable CONFIG_MNATIVE_INTEL
+  elif [[ "$_microarchitecture" = "63" ]]; then
+    msg2 "Set CONFIG_MNATIVE_AMD"
+    scripts/config --disable CONFIG_GENERIC_CPU
+    scripts/config --enable CONFIG_MNATIVE_AMD
+  else
+    msg2 "Set CONFIG_GENERIC_CPU"
+    scripts/config --enable CONFIG_GENERIC_CPU
+  fi
+
+  plain ""
+
+  sleep 2
+}
+
+rapid_config(){
+
+  plain ""
+
+  msg2 "Set SIG level to SHA512"
+  scripts/config --undefine MODULE_SIG_FORCE
+  scripts/config --disable MODULE_SIG_FORCE
+  scripts/config --enable CONFIG_MODULE_SIG
+  scripts/config --enable CONFIG_MODULE_SIG_ALL
+  scripts/config --disable CONFIG_MODULE_SIG_SHA1
+  scripts/config --disable CONFIG_MODULE_SIG_SHA224
+  scripts/config --disable CONFIG_MODULE_SIG_SHA256
+  scripts/config --disable CONFIG_MODULE_SIG_SHA384
+  scripts/config --enable CONFIG_MODULE_SIG_SHA512
+  scripts/config  --set-val CONFIG_MODULE_SIG_HASH "sha512"
+
+  sleep 2s
+
+  msg2 "Set module compression to ZSTD"
+  scripts/config --enable CONFIG_MODULE_COMPRESS
+  scripts/config --disable CONFIG_MODULE_COMPRESS_GZIP
+  scripts/config --disable CONFIG_MODULE_COMPRESS_XZ
+  scripts/config --enable CONFIG_MODULE_COMPRESS_ZSTD
+
+  sleep 2s
+
+  msg2 "Enable CONFIG_STACK_VALIDATION"
+  scripts/config --enable CONFIG_STACK_VALIDATION
+
+  sleep 2s
+
+  msg2 "Enable IKCONFIG"
+  scripts/config --enable CONFIG_IKCONFIG
+  scripts/config --enable CONFIG_IKCONFIG_PROC
+
+  sleep 2s
+
+  msg2 "Disable NUMA"
+  scripts/config --disable CONFIG_NUMA
+  scripts/config --disable CONFIG_AMD_NUMA
+  scripts/config --disable CONFIG_X86_64_ACPI_NUMA
+  scripts/config --disable CONFIG_NODES_SPAN_OTHER_NODES
+  scripts/config --disable CONFIG_NUMA_EMU
+  scripts/config --disable CONFIG_NEED_MULTIPLE_NODES
+  scripts/config --disable CONFIG_USE_PERCPU_NUMA_NODE_ID
+  scripts/config --disable CONFIG_ACPI_NUMA
+  scripts/config --disable CONFIG_ARCH_SUPPORTS_NUMA_BALANCING
+  scripts/config --disable CONFIG_NODES_SHIFT
+  scripts/config --undefine CONFIG_NODES_SHIFT
+  scripts/config --disable CONFIG_NEED_MULTIPLE_NODES
+
+  sleep 2s
+
+  msg2 "Disable FUNCTION_TRACER/GRAPH_TRACER"
+  scripts/config --disable CONFIG_FUNCTION_TRACER
+  scripts/config --disable CONFIG_STACK_TRACER
+
+  sleep 2s
+
+  msg2 "Disable CONFIG_USER_NS_UNPRIVILEGED"
+  scripts/config --disable CONFIG_USER_NS_UNPRIVILEGED
+
+  sleep 2s
+
+  msg2 "Set CPU Frequency scaling CONFIG_CPU_FREQ_DEFAULT_GOV/CONFIG_CPU_FREQ_GOV for performance"
+  scripts/config --disable CONFIG_CPU_FREQ_DEFAULT_GOV_POWERSAVE
+  scripts/config --disable CONFIG_CPU_FREQ_GOV_POWERSAVE
+  scripts/config --disable CONFIG_CPU_FREQ_DEFAULT_GOV_USERSPACE
+  scripts/config --disable CONFIG_CPU_FREQ_GOV_USERSPACE
+  scripts/config --disable CONFIG_CPU_FREQ_DEFAULT_GOV_ONDEMAND
+  scripts/config --disable CONFIG_CPU_FREQ_GOV_ONDEMAND
+  scripts/config --disable CONFIG_CPU_FREQ_DEFAULT_GOV_CONSERVATIVE
+  scripts/config --disable CONFIG_CPU_FREQ_GOV_CONSERVATIVE
+  scripts/config --disable CONFIG_CPU_FREQ_DEFAULT_GOV_SCHEDUTIL
+  scripts/config --disable CONFIG_CPU_FREQ_GOV_SCHEDUTIL
+  scripts/config --enable CONFIG_CPU_FREQ_DEFAULT_GOV_PERFORMANCE
+  scripts/config --enable CONFIG_CPU_FREQ_GOV_PERFORMANCE
+
+  sleep 2s
+
+  msg2 "Set CPU DEVFREQ GOV CONFIG_DEVFREQ_GOV for performance"
+  scripts/config --disable CONFIG_DEVFREQ_GOV_SIMPLE_ONDEMAND
+  scripts/config --undefine CONFIG_DEVFREQ_GOV_SIMPLE_ONDEMAND
+  scripts/config --disable CONFIG_DEVFREQ_GOV_POWERSAVE
+  scripts/config --disable CONFIG_DEVFREQ_GOV_USERSPACE
+  scripts/config --disable CONFIG_DEVFREQ_GOV_PASSIVE
+  scripts/config --enable CONFIG_DEVFREQ_GOV_PERFORMANCE
+
+  sleep 2s
+
+  msg2 "Set PCIEASPM DRIVER to performance"
+  scripts/config --enable CONFIG_PCIEASPM
+  scripts/config --enable CONFIG_PCIEASPM_PERFORMANCE
+
+  sleep 2s
+
+  msg2 "Set CONFIG_PCIE_BUS for performance"
+  scripts/config --enable CONFIG_PCIE_BUS_PERFORMANCE
+
+  sleep 2s
+
+  msg2 "Enable CONFIG_CC_OPTIMIZE_FOR_PERFORMANCE_O3"
+  scripts/config --disable CONFIG_CC_OPTIMIZE_BASAL
+  scripts/config --disable CONFIG_CC_OPTIMIZE_FOR_PERFORMANCE
+  scripts/config --disable CONFIG_CC_OPTIMIZE_FOR_SIZE
+  scripts/config --enable CONFIG_CC_OPTIMIZE_FOR_PERFORMANCE_O3
+
+  sleep 2s
+
+  if [[ $_cpu_sched = "1" ]] || [[ $_cpu_sched = "2" ]]; then
+    msg2 "Set timer frequency to 2000HZ"
+    scripts/config --enable CONFIG_HZ_2000
+    scripts/config --set-val CONFIG_HZ 2000
+  else
+    msg2 "Set timer frequency to 1000HZ"
+    scripts/config --enable CONFIG_HZ_1000
+    scripts/config --set-val CONFIG_HZ 1000
+  fi
+
+  sleep 2s
+
+  msg2 "Enable PREEMPT"
+  scripts/config --disable CONFIG_PREEMPT_NONE
+  scripts/config --disable CONFIG_PREEMPT_VOLUNTARY
+  scripts/config --enable CONFIG_PREEMPT
+  scripts/config --enable CONFIG_PREEMPT_COUNT
+  scripts/config --enable CONFIG_PREEMPTION
+
+  sleep 2s
+
+  msg2 "Enable CONFIG_IRQ_FORCE_THREADING"
+  scripts/config --enable CONFIG_IRQ_FORCE_THREADING
+
+  sleep 2s
+
+  msg2 "Set to full tickless"
+  scripts/config --disable CONFIG_HZ_PERIODIC
+  scripts/config --disable CONFIG_NO_HZ_IDLE
+  scripts/config --enable CONFIG_NO_HZ_FULL
+  scripts/config --enable CONFIG_NO_HZ
+  scripts/config --enable CONFIG_NO_HZ_COMMON
+  #scripts/config --enable CONFIG_CONTEXT_TRACKING
+  #scripts/config --disable CONFIG_CONTEXT_TRACKING_FORCE
+
+  sleep 2s
+
+  msg2 "Enable Device Tree and Open Firmware support"
+  scripts/config --enable CONFIG_OF
+
+  sleep 2s
+
+  msg2 "Enable tristate V4L2 loopback device"
+  scripts/config --module CONFIG_V4L2_LOOPBACK
+
+  sleep 2s
+
+  msg2 "Enable ntfs"
+  scripts/config --module CONFIG_NTFS_FS
+  scripts/config --enable CONFIG_NTFS_RW
+  msg2 "Enable ntfs3"
+  scripts/config --module CONFIG_NTFS3_FS
+  scripts/config --enable CONFIG_NTFS3_64BIT_CLUSTER
+  scripts/config --enable CONFIG_NTFS3_LZX_XPRESS
+  scripts/config --enable CONFIG_NTFS3_FS_POSIX_ACL
+
+  sleep 2s
+
+  msg2 "Enable BBR/BBR2 TCP"
+  scripts/config --module CONFIG_TCP_CONG_BBR
+  scripts/config --module CONFIG_TCP_CONG_BBR2
+
+  sleep 2s
+
+  msg2 "Enable CONFIG_VHBA"
+  scripts/config --module CONFIG_VHBA
+
+  sleep 2s
+
+  msg2 "Disabling Kyber I/O scheduler"
+  scripts/config --disable CONFIG_MQ_IOSCHED_KYBER
+
+  sleep 2s
+
+  msg2 "Enable Deadline I/O scheduler"
+  scripts/config --enable CONFIG_MQ_IOSCHED_DEADLINE
+
+  sleep 2s
+
+  msg2 "Enable MQ-Deadline-Nodefault I/O scheduler"
+  scripts/config --enable CONFIG_MQ_IOSCHED_DEADLINE_NODEFAULT
+
+  sleep 2s
+
+  msg2 "Enable CONFIG_BFQ_CGROUP_DEBUG"
+  scripts/config --enable CONFIG_BFQ_CGROUP_DEBUG
+
+  sleep 2s
+
+  msg2 "Disable debug options"
+  scripts/config --disable CONFIG_SLUB_DEBUG
+  scripts/config --disable CONFIG_PM_DEBUG
+  scripts/config --disable CONFIG_PM_ADVANCED_DEBUG
+  scripts/config --disable CONFIG_PM_SLEEP_DEBUG
+  scripts/config --disable CONFIG_ACPI_DEBUG
+  scripts/config --disable CONFIG_SCHED_DEBUG
+  scripts/config --disable CONFIG_LATENCYTOP
+  scripts/config --disable CONFIG_DEBUG_PREEMPT
+  scripts/config --disable CONFIG_DEBUG_INFO
+  scripts/config --disable CONFIG_CGROUP_BPF
+  scripts/config --disable CONFIG_BPF_LSM
+  scripts/config --disable CONFIG_BPF_PRELOAD
+  scripts/config --disable CONFIG_BPF_LIRC_MODE2
+  scripts/config --disable CONFIG_BPF_KPROBE_OVERRIDE
+  scripts/config --disable CONFIG_DEBUG_INFO_REDUCED
+  scripts/config --disable CONFIG_DEBUG_INFO_COMPRESSED
+  scripts/config --disable CONFIG_DEBUG_INFO_SPLI
+  scripts/config --disable CONFIG_GDB_SCRIPTS
+  scripts/config --disable CONFIG_DEBUG_INFO_DWARF4
+  scripts/config --disable CONFIG_DEBUG_INFO_BTF
+  scripts/config --disable CONFIG_BPF_PRELOAD
+  scripts/config --disable CONFIG_BPF_PRELOAD_UMD
+  scripts/config --disable CONFIG_BPF_STREAM_PARSER
+  scripts/config --disable CONFIG_DMA_API_DEBUG
+  scripts/config --disable CONFIG_DMA_API_DEBUG_SG
+  scripts/config --disable CONFIG_DMA_MAP_BENCHMARK
+  scripts/config --disable CONFIG_DEBUG_FS
+  scripts/config --disable CONFIG_GCOV_KERNEL
+  scripts/config --disable CONFIG_GCOV_PROFILE_ALL
+  scripts/config --disable CONFIG_DEBUG_FS
+  scripts/config --disable CONFIG_GENERIC_IRQ_DEBUGFS
+  scripts/config --disable CONFIG_ACPI_DEBUGGER
+  scripts/config --disable CONFIG_ACPI_DEBUGGER_USER
+  scripts/config --disable CONFIG_ACPI_EC_DEBUGFS
+  scripts/config --disable CONFIG_ACPI_APEI_ERST_DEBUG
+  scripts/config --disable CONFIG_NFIT_SECURITY_DEBUG
+  scripts/config --disable CONFIG_DMADEVICES_DEBUG
+  scripts/config --disable CONFIG_DMADEVICES_VDEBUG
+  scripts/config --disable CONFIG_DMATEST
+  scripts/config --disable CONFIG_BTRFS_DEBUG
+  scripts/config --disable CONFIG_BTRFS_FS_REF_VERIFY
+  scripts/config --disable CONFIG_BTRFS_ASSERT
+  scripts/config --disable CONFIG_BTRFS_FS_RUN_SANITY_TESTS
+  scripts/config --disable CONFIG_BTRFS_FS_CHECK_INTEGRITY
+  scripts/config --disable CONFIG_EXT4_DEBUG
+  scripts/config --disable CONFIG_EXT4_KUNIT_TESTS
+  scripts/config --disable CONFIG_SECURITY_APPARMOR_DEBUG
+  scripts/config --disable CONFIG_SECURITY_APPARMOR_DEBUG_ASSERTS
+  scripts/config --disable CONFIG_SECURITY_APPARMOR_DEBUG_MESSAGES
+  scripts/config --disable CONFIG_SECURITY_APPARMOR_KUNIT_TEST
+  scripts/config --disable CONFIG_POWER_SUPPLY_DEBUG
+  scripts/config --disable CONFIG_NTFS_DEBUG
+  scripts/config --disable CONFIG_GENERIC_IRQ_DEBUGFS
+  scripts/config --disable CONFIG_CIFS_STATS2
+  scripts/config --disable CONFIG_CIFS_DEBUG
+  scripts/config --disable CONFIG_CIFS_DEBUG2
+  scripts/config --disable CONFIG_CIFS_DEBUG_DUMP_KEYS
+  scripts/config --disable CONFIG_JBD2_DEBUG
+  scripts/config --disable CONFIG_CONFIG_NFS_DEBUG
+  scripts/config --disable CONFIG_TRACE_IRQFLAGS_SUPPORT
+  scripts/config --disable CONFIG_TRACE_IRQFLAGS_NMI_SUPPORT
+  scripts/config --disable CONFIG_EARLY_PRINTK_USB
+  scripts/config --disable CONFIG_X86_VERBOSE_BOOTUP
+  scripts/config --disable CONFIG_EARLY_PRINTK
+  scripts/config --disable CONFIG_EARLY_PRINTK_DBGP
+  scripts/config --disable CONFIG_EARLY_PRINTK_USB_XDBC
+  scripts/config --disable CONFIG_EFI_PGT_DUMP
+  scripts/config --disable CONFIG_DEBUG_TLBFLUSH
+  scripts/config --disable CONFIG_IOMMU_DEBUG
+  scripts/config --disable CONFIG_IOMMU_LEAK
+  scripts/config --disable CONFIG_HAVE_MMIOTRACE_SUPPORT
+  scripts/config --disable CONFIG_X86_DECODER_SELFTEST
+  scripts/config --disable CONFIG_IO_DELAY_0X80
+  scripts/config --disable CONFIG_IO_DELAY_0XED
+  scripts/config --disable CONFIG_IO_DELAY_UDELAY
+  scripts/config --disable CONFIG_IO_DELAY_NONE
+  scripts/config --disable CONFIG_DEBUG_BOOT_PARAMS
+  scripts/config --disable CONFIG_CPA_DEBUG
+  scripts/config --disable CONFIG_DEBUG_ENTRY
+  scripts/config --disable CONFIG_DEBUG_NMI_SELFTEST
+  scripts/config --disable CONFIG_DEBUG_IMR_SELFTEST
+  scripts/config --disable CONFIG_X86_DEBUG_FPU
+  scripts/config --disable CONFIG_PUNIT_ATOM_DEBUG
+  scripts/config --disable CONFIG_UNWINDER_ORC
+  scripts/config --disable CONFIG_UNWINDER_FRAME_POINTER
+  scripts/config --disable CONFIG_UNWINDER_GUESS
+  scripts/config --disable CONFIG_FRAME_POINTER
+  scripts/config --disable CONFIG_THINKPAD_ACPI_DEBUGFACILITIES
+  scripts/config --disable CONFIG_THINKPAD_ACPI_DEBUG
+  scripts/config --disable CONFIG_THINKPAD_ACPI_UNSAFE_LEDS
+  scripts/config --disable CONFIG_CMA_DEBUG
+  scripts/config --disable CONFIG_CMA_DEBUGFS
+  scripts/config --disable CONFIG_EDAC_DEBUG
+  scripts/config --disable CONFIG_ATM_IA_DEBUG
+  scripts/config --disable CONFIG_ATM_FORE200E_DEBUG
+  scripts/config --disable CONFIG_BCMA_DEBUG
+
+  sleep 2s
+
+  msg2 "Enable CONFIG_SCHED_AUTOGROUP_DEFAULT_ENABLED"
+  scripts/config --enable CONFIG_SCHED_AUTOGROUP_DEFAULT_ENABLED
+
+  sleep 2s
+
+  if [[ $_cpu_sched != "1" ]] && [[ $_cpu_sched != "2" ]]; then
+    msg2 "Enable CONFIG_ZENIFY"
+    scripts/config --enable CONFIG_ZENIFY
+
+    sleep 2s
+  fi
+
+  msg2 "Enable Fsync support"
+  scripts/config --enable CONFIG_FUTEX
+  scripts/config --enable CONFIG_FUTEX_PI
+
+  sleep 2s
+
+  msg2 "Enable Futex2 support"
+  scripts/config --enable CONFIG_FUTEX2
+
+  sleep 2s
+
+  msg2 "Enable winesync support"
+  scripts/config --module CONFIG_WINESYNC
+
+  sleep 2s
+
+  msg2 "Enable SECURITY_FORK_BRUT"
+  scripts/config --enable CONFIG_SECURITY_FORK_BRUT
+
+  sleep 2s
+
+  if [[ $_cpu_sched = "1" ]]; then
+    msg2 "Enable CacULE CPU scheduler"
+    scripts/config --enable CONFIG_CACULE_SCHED
+    #msg2 "Disable CFS"
+    #scripts/config --disable CONFIG_FAIR_GROUP_SCHED
+    #scripts/config --disable CONFIG_CFS_BANDWIDTH
+  elif [[ $_cpu_sched = "2" ]]; then
+    msg2 "Enable CacULE CPU scheduler"
+    scripts/config --enable CONFIG_CACULE_SCHED
+    msg2 "Enable CacULE-RDB CPU scheduler..."
+    scripts/config --enable CONFIG_CACULE_RDB
+    #msg2 "Disable CFS"
+    #scripts/config --disable CONFIG_FAIR_GROUP_SCHED
+    #scripts/config --disable CONFIG_CFS_BANDWIDTH
+  elif [[ $_cpu_sched = "3" ]]; then
+    msg2 "Enable CONFIG_SCHED_ALT, this feature enable alternative CPU scheduler"
+    scripts/config --enable CONFIG_SCHED_ALT
+    msg2 "Enable BMQ CPU scheduler"
+    scripts/config --enable CONFIG_SCHED_BMQ
+    scripts/config --disable CONFIG_SCHED_PDS
+    msg2 "Disable CFS"
+    scripts/config --disable CONFIG_FAIR_GROUP_SCHED
+    scripts/config --disable CONFIG_CFS_BANDWIDTH
+  elif [[ $_cpu_sched = "4" ]]; then
+    msg2 "Enable CONFIG_SCHED_ALT, this feature enable alternative CPU scheduler"
+    scripts/config --enable CONFIG_SCHED_ALT
+    msg2 "Enable PDS CPU scheduler"
+    scripts/config --disable CONFIG_SCHED_BMQ
+    scripts/config --enable CONFIG_SCHED_PDS
+    msg2 "Disable CFS"
+    scripts/config --disable CONFIG_FAIR_GROUP_SCHED
+    scripts/config --disable CONFIG_CFS_BANDWIDTH
+  #elif [[ $_cpu_sched = "5" ]]; then
+  #  msg2 "Enable MuQSS"
+  #  scripts/config --enable CONFIG_SCHED_MC
+  #  scripts/config --enable CONFIG_SCHED_SMT
+  #  scripts/config --enable CONFIG_SMP
+  #  scripts/config --enable CONFIG_SCHED_MC_PRIO
+  #  scripts/config --enable CONFIG_SCHED_MUQSS
+  #  msg2 "Set to RQ_MC"
+  #  scripts/config --enable CONFIG_RQ_MC
+  #  scripts/config --set-val CONFIG_SHARERQ 2
+  #  msg2 "Disable CFS"
+  #  scripts/config --disable CONFIG_FAIR_GROUP_SCHED
+  #  scripts/config --disable CONFIG_CFS_BANDWIDTH
+  else
+    msg2 "Enable CFS"
+    scripts/config --enable CONFIG_FAIR_GROUP_SCHED
+    scripts/config --enable CONFIG_CFS_BANDWIDTH
+  fi
+
+  sleep 2s
+
+  if [[ $_cpu_sched = "1" ]] || [[ $_cpu_sched = "2" ]]; then
+    msg2 "Apply suggested config by Hamad Al Marri for CacULE"
+    # General Setup
+    echo "General Setup"
+    sleep 1s
+    scripts/config --disable CONFIG_EXPERT
+    # Note:
+    # CONFIG_NO_HZ_FULL requires you to add
+    # the boot parameter "nohz_full=" in your
+    # grup. For example, in case your machine
+    # has 8 CPUS, "nohz_full=1-7" makes
+    # all CPUs (except CPU0) adaptive ticks.
+    # Without "nohz_full=1-7", no benfit of
+    # selecting CONFIG_NO_HZ_FULL
+    #
+    # Please see the discussion here:
+    # https://github.com/hamadmarri/cacule-cpu-scheduler/discussions/23#discussioncomment-711456
+    #scripts/config --enable CONFIG_NO_HZ_FULL
+
+    scripts/config --enable CONFIG_PREEMPT
+    scripts/config --enable CONFIG_SCHED_AUTOGROUP
+    scripts/config --disable CONFIG_BSD_PROCESS_ACCT
+    scripts/config --disable CONFIG_TASK_XACCT
+    scripts/config --disable CONFIG_PSI
+    scripts/config --disable CONFIG_MEMCG
+    scripts/config --disable CONFIG_CGROUP_CPUACCT
+    scripts/config --disable CONFIG_CGROUP_DEBUG
+    scripts/config --disable CONFIG_CHECKPOINT_RESTORE
+    scripts/config --disable CONFIG_SLAB_MERGE_DEFAULT
+    scripts/config --disable CONFIG_SLAB_FREELIST_HARDENED
+    scripts/config --disable CONFIG_SLUB_CPU_PARTIAL
+    scripts/config --disable CONFIG_PROFILING
+    # Processor type and features
+    echo "Processor type and features"
+    sleep 1s
+    scripts/config --disable CONFIG_RETPOLINE
+    scripts/config --disable CONFIG_X86_5LEVEL
+    scripts/config --disable CONFIG_KEXEC
+    scripts/config --disable CONFIG_KEXEC_FILE
+    scripts/config --disable CONFIG_CRASH_DUMP
+    scripts/config --enable HZ_2000
+    # ./scripts/config --set_val CONFIG_NR_CPUS (# number of cpus)
+    # if you are not using this kernel as guest in a virtual machine,
+    # then disable CONFIG_HYPERVISOR_GUEST
+    #./scripts/config --disable CONFIG_HYPERVISOR_GUEST
+    # Power
+    echo "Power"
+    sleep 1s
+    scripts/config --enable CONFIG_CPU_FREQ_DEFAULT_GOV_PERFORMANCE
+    scripts/config --enable CONFIG_CPU_FREQ_GOV_PERFORMANCE
+    scripts/config --disable CONFIG_CPU_FREQ_GOV_ONDEMAND
+    # General architecture-dependent options
+    scripts/config --disable CONFIG_KPROBES
+    # Kernel hacking
+    echo "Kernel hacking"
+    scripts/config --disable CONFIG_FTRACE
+    scripts/config --disable CONFIG_DEBUG_KERNEL
+    scripts/config --disable CONFIG_PAGE_EXTENSION
+    scripts/config --set-val CONFIG_RCU_CPU_STALL_TIMEOUT 4
+    scripts/config --disable CONFIG_PRINTK_TIME
+    scripts/config --disable CONFIG_DEBUG_INFO
+    scripts/config --disable CONFIG_ENABLE_MUST_CHECK
+    scripts/config --disable CONFIG_STRIP_ASM_SYMS
+    scripts/config --disable CONFIG_UNUSED_SYMBOLS
+    scripts/config --disable CONFIG_DEBUG_FS
+    scripts/config --disable CONFIG_OPTIMIZE_INLINING
+    scripts/config --disable CONFIG_DEBUG_SECTION_MISMATCH
+    scripts/config --disable CONFIG_SECTION_MISMATCH_WARN_ONLY
+    scripts/config --disable CONFIG_STACK_VALIDATION
+    scripts/config --disable CONFIG_DEBUG_FORCE_WEAK_PER_CPU
+    scripts/config --disable CONFIG_MAGIC_SYSRQ
+    scripts/config --disable CONFIG_MAGIC_SYSRQ_SERIAL
+    scripts/config --disable CONFIG_PAGE_EXTENSION
+    scripts/config --disable CONFIG_DEBUG_PAGEALLOC
+    scripts/config --disable CONFIG_PAGE_OWNER
+    scripts/config --disable CONFIG_DEBUG_MEMORY_INIT
+    scripts/config --disable CONFIG_HARDLOCKUP_DETECTOR
+    scripts/config --disable CONFIG_SOFTLOCKUP_DETECTOR
+    scripts/config --disable CONFIG_DETECT_HUNG_TASK
+    scripts/config --disable CONFIG_WQ_WATCHDOG
+    scripts/config --set-val CONFIG_PANIC_TIMEOUT 10
+    scripts/config --disable CONFIG_SCHED_DEBUG
+    scripts/config --disable CONFIG_SCHEDSTATS
+    scripts/config --disable CONFIG_SCHED_STACK_END_CHECK
+    scripts/config --disable CONFIG_STACKTRACE
+    scripts/config --disable CONFIG_DEBUG_BUGVERBOSE
+    scripts/config --set-val CONFIG_RCU_CPU_STALL_TIMEOUT 4
+    scripts/config --disable CONFIG_RCU_TRACE
+    scripts/config --disable CONFIG_FAULT_INJECTION
+    scripts/config --disable CONFIG_LATENCYTOP
+    scripts/config --disable CONFIG_PROVIDE_OHCI1394_DMA_INIT
+    scripts/config --disable RUNTIME_TESTING_MENU
+    scripts/config --disable CONFIG_MEMTEST
+    scripts/config --disable CONFIG_KGDB
+    scripts/config --disable CONFIG_EARLY_PRINTK
+    scripts/config --disable CONFIG_DOUBLEFAULT
+
+    sleep 2s
+  fi
+
+  msg2 "Set CONFIG_GENERIC_CPU"
+  scripts/config --enable CONFIG_GENERIC_CPU
+
+  sleep 2s
+}
+
+strip_down(){
+
+plain ""
+
+############ Accessibility ############
+
+# Disable accessibility
+msg2 "Disable accessibility"
+scripts/config --disable CONFIG_ACCESSIBILITY
+# Disable braille
+echo "Disable braille"
+scripts/config --disable CONFIG_A11Y_BRAILLE_CONSOLE
+# Disable screen reader
+echo "Disable screen reader"
+scripts/config --disable CONFIG_SPEAKUP
+scripts/config --disable CONFIG_SPEAKUP_SERIALIO
+scripts/config --disable CONFIG_SPEAKUP_SYNTH_ACNTSA
+scripts/config --disable CONFIG_SPEAKUP_SYNTH_ACNTPC
+scripts/config --disable CONFIG_SPEAKUP_SYNTH_APOLLO
+scripts/config --disable CONFIG_SPEAKUP_SYNTH_AUDPTR
+scripts/config --disable CONFIG_SPEAKUP_SYNTH_BNS
+scripts/config --disable CONFIG_SPEAKUP_SYNTH_DECTLK
+scripts/config --disable CONFIG_SPEAKUP_SYNTH_DECEXT
+scripts/config --disable CONFIG_SPEAKUP_SYNTH_DECPC
+scripts/config --disable CONFIG_SPEAKUP_SYNTH_DTLK
+scripts/config --disable CONFIG_SPEAKUP_SYNTH_KEYPC
+scripts/config --disable CONFIG_SPEAKUP_SYNTH_LTLK
+scripts/config --disable CONFIG_SPEAKUP_SYNTH_SOFT
+scripts/config --disable CONFIG_SPEAKUP_SYNTH_SPKOUT
+scripts/config --disable CONFIG_SPEAKUP_SYNTH_TXPRT
+scripts/config --disable CONFIG_SPEAKUP_SYNTH_DUMMY
+
+#######################################
+
+sleep 2s
+
+############ Drivers/gpu/drm ############
+
+# Add full support for DRM
+msg2 "Add full support for DRM"
+scripts/config --module CONFIG_DRM
+scripts/config --module CONFIG_DRM_MIPI_DBI
+scripts/config --enable CONFIG_DRM_MIPI_DSI
+scripts/config --enable CONFIG_DRM_DP_AUX_CHARDEV
+scripts/config --enable CONFIG_DRM_KMS_HELPER
+scripts/config --enable CONFIG_DRM_KMS_FB_HELPER
+scripts/config --enable CONFIG_DRM_FBDEV_EMULATION
+scripts/config --set-val CONFIG_DRM_FBDEV_OVERALLOC 100
+scripts/config --enable CONFIG_DRM_FBDEV_LEAK_PHYS_SMEM
+scripts/config --enable CONFIG_DRM_LOAD_EDID_FIRMWARE
+scripts/config --enable CONFIG_DRM_DP_CEC
+scripts/config --module CONFIG_DRM_TTM
+scripts/config --module CONFIG_DRM_VRAM_HELPER
+scripts/config --module CONFIG_DRM_TTM_HELPER
+scripts/config --enable CONFIG_DRM_GEM_CMA_HELPER
+scripts/config --enable CONFIG_DRM_KMS_CMA_HELPER
+scripts/config --enable CONFIG_DRM_GEM_SHMEM_HELPER
+scripts/config --enable CONFIG_DRM_VM
+scripts/config --module CONFIG_DRM_SCHED
+scripts/config --module CONFIG_DRM_RADEON
+scripts/config --module CONFIG_DRM_AMDGPU
+scripts/config --module CONFIG_DRM_VGEM
+scripts/config --module CONFIG_DRM_VKMS
+scripts/config --enable CONFIG_DRM_LEGACY
+scripts/config --module CONFIG_DRM_TDFX
+scripts/config --module CONFIG_DRM_R128
+scripts/config --module CONFIG_DRM_I810
+scripts/config --module CONFIG_DRM_MGA
+scripts/config --module CONFIG_DRM_SIS
+scripts/config --module CONFIG_DRM_VIA
+scripts/config --module CONFIG_DRM_SAVAGE
+scripts/config --enable CONFIG_DRM_EXPORT_FOR_TESTS
+scripts/config --enable CONFIG_DRM_PANEL_ORIENTATION_QUIRKS
+scripts/config --enable CONFIG_DRM_LIB_RANDOM
+scripts/config --enable CONFIG_DRM_DEBUG_MM
+scripts/config --enable CONFIG_DRM_DEBUG_SELFTEST
+scripts/config --enable CONFIG_DRM_DEBUG_DP_MST_TOPOLOGY_REFS
+
+sleep 2s
+
+# Disable uneeded gpu drivers
+msg2 "Disable uneeded gpu drivers"
+# Arc
+echo "Disable Arc drivers"
+scripts/config --disable CONFIG_DRM_ARCPGU
+# Arm
+echo "Disable Arm drivers"
+scripts/config --disable CONFIG_DRM_HDLCD
+scripts/config --disable CONFIG_DRM_HDLCD_SHOW_UNDERRUN
+scripts/config --disable CONFIG_DRM_MALI_DISPLAY
+scripts/config --disable CONFIG_DRM_KOMEDA
+# Armada
+echo "Disable Armada drivers"
+scripts/config --disable CONFIG_DRM_ARMADA
+# Aspeed
+echo "Disable Aspeed drivers"
+scripts/config --disable CONFIG_DRM_ASPEED_GFX
+# Ast
+echo "Disable Ast drivers"
+scripts/config --disable CONFIG_DRM_AST
+# Atmel-hlcdc
+echo "Disable Atmel-hlcdc drivers"
+scripts/config --disable CONFIG_DRM_ATMEL_HLCDC
+# Bochs
+echo "Disable Bochs drivers"
+scripts/config --disable CONFIG_DRM_BOCHS
+# Bridge
+echo "Disable Bridge drivers"
+scripts/config --disable CONFIG_DRM_CDNS_DSI
+scripts/config --disable CONFIG_DRM_CHRONTEL_CH7033
+scripts/config --disable CONFIG_DRM_DISPLAY_CONNECTOR
+scripts/config --disable CONFIG_DRM_LONTIUM_LT9611
+scripts/config --disable CONFIG_DRM_LONTIUM_LT9611UXC
+scripts/config --disable CONFIG_DRM_LVDS_CODEC
+scripts/config --disable CONFIG_DRM_MEGACHIPS_STDPXXXX_GE_B850V3_FW
+scripts/config --disable CONFIG_DRM_NWL_MIPI_DSI
+scripts/config --disable CONFIG_DRM_NXP_PTN3460
+scripts/config --disable CONFIG_DRM_PARADE_PS8622
+scripts/config --disable CONFIG_DRM_PARADE_PS8640
+scripts/config --disable CONFIG_DRM_SIL_SII8620
+scripts/config --disable CONFIG_DRM_SII902X
+scripts/config --disable CONFIG_DRM_SII9234
+scripts/config --disable CONFIG_DRM_SIMPLE_BRIDGE
+scripts/config --disable CONFIG_DRM_THINE_THC63LVD1024
+scripts/config --disable CONFIG_DRM_TOSHIBA_TC358762
+scripts/config --disable CONFIG_DRM_TOSHIBA_TC358764
+scripts/config --disable CONFIG_DRM_TOSHIBA_TC358767
+scripts/config --disable CONFIG_DRM_TOSHIBA_TC358768
+scripts/config --disable CONFIG_DRM_TOSHIBA_TC358775
+scripts/config --disable CONFIG_DRM_TI_TFP410
+scripts/config --disable CONFIG_DRM_TI_SN65DSI86
+scripts/config --disable CONFIG_DRM_TI_TPD12S015
+# Bridge/ADV
+echo "Disable Bridge/Adv drivers"
+scripts/config --disable CONFIG_DRM_I2C_ADV7511
+scripts/config --disable CONFIG_DRM_I2C_ADV7511_AUDIO
+scripts/config --disable CONFIG_DRM_I2C_ADV7511_CEC
+# Bridge/Analogix
+echo "Disable Bridge/Analogix drivers"
+scripts/config --disable CONFIG_DRM_ANALOGIX_ANX6345
+scripts/config --disable CONFIG_DRM_ANALOGIX_ANX78XX
+scripts/config --disable CONFIG_DRM_ANALOGIX_DP
+scripts/config --disable CONFIG_DRM_ANALOGIX_ANX7625
+# Bridge/Synopsys
+echo "Disable Bridge/Synopsys drivers"
+scripts/config --disable CONFIG_DRM_DW_HDMI
+scripts/config --disable CONFIG_DRM_DW_HDMI_AHB_AUDIO
+scripts/config --disable CONFIG_DRM_DW_HDMI_I2S_AUDIO
+scripts/config --disable CONFIG_DRM_DW_HDMI_CEC
+scripts/config --disable CONFIG_DRM_DW_MIPI_DSI
+# Etnaviv
+echo "Disable Etnaviv drivers"
+scripts/config --disable CONFIG_DRM_ETNAVIV
+scripts/config --disable CONFIG_DRM_ETNAVIV_THERMAL
+# Exynos
+echo "Disable Exynos drivers"
+scripts/config --disable CONFIG_DRM_EXYNOS
+scripts/config --disable CONFIG_DRM_EXYNOS_FIMD
+scripts/config --disable CONFIG_DRM_EXYNOS5433_DECON
+scripts/config --disable CONFIG_DRM_EXYNOS7_DECON
+scripts/config --disable CONFIG_DRM_EXYNOS_MIXER
+scripts/config --disable CONFIG_DRM_EXYNOS_VIDI
+scripts/config --disable CONFIG_DRM_EXYNOS_DPI
+scripts/config --disable CONFIG_DRM_EXYNOS_DSI
+scripts/config --disable CONFIG_DRM_EXYNOS_DP
+scripts/config --disable CONFIG_DRM_EXYNOS_HDMI
+scripts/config --disable CONFIG_DRM_EXYNOS_MIC
+scripts/config --disable CONFIG_DRM_EXYNOS_G2D
+scripts/config --disable CONFIG_DRM_EXYNOS_IPP
+scripts/config --disable CONFIG_DRM_EXYNOS_FIMC
+scripts/config --disable CONFIG_DRM_EXYNOS_ROTATOR
+scripts/config --disable CONFIG_DRM_EXYNOS_SCALER
+scripts/config --disable CONFIG_DRM_EXYNOS_GSC
+# Fsl-dcu
+echo "Disable Fsl-dcu drivers"
+scripts/config --disable CONFIG_DRM_FSL_DCU
+# Hisilicon
+echo "Disable Hisilicon drivers"
+scripts/config --disable CONFIG_DRM_HISI_HIBMC
+scripts/config --disable CONFIG_DRM_HISI_KIRIN
+# I2c
+echo "Disable I2c drivers"
+scripts/config --disable CONFIG_DRM_I2C_CH7006
+scripts/config --disable CONFIG_DRM_I2C_SIL164
+scripts/config --disable CONFIG_DRM_I2C_NXP_TDA998X
+scripts/config --disable CONFIG_DRM_I2C_NXP_TDA9950
+# IMX
+echo "Disable Imx drivers"
+scripts/config --disable CONFIG_DRM_IMX_DCSS
+scripts/config --disable CONFIG_DRM_IMX
+scripts/config --disable CONFIG_DRM_IMX_PARALLEL_DISPLAY
+scripts/config --disable CONFIG_DRM_IMX_TVE
+scripts/config --disable CONFIG_DRM_IMX_LDB
+scripts/config --disable CONFIG_DRM_IMX_HDMI
+# Ingenic
+echo "Disable Ingenic drivers"
+scripts/config --disable CONFIG_DRM_INGENIC
+scripts/config --disable CONFIG_DRM_INGENIC_IPU
+# Kmb
+echo "Disable Kmb drivers"
+scripts/config --disable CONFIG_DRM_KMB_DISPLAY
+# Lima
+echo "Disable Lima drivers"
+scripts/config --disable CONFIG_DRM_LIMA
+# MCDE
+echo "Disable Mcda drivers"
+scripts/config --disable CONFIG_DRM_MCDE
+# Mediatek
+echo "Disable Mediatek drivers"
+scripts/config --disable CONFIG_DRM_MEDIATEK
+scripts/config --disable CONFIG_DRM_MEDIATEK_HDMI
+# Meson
+echo "Disable Meson drivers"
+scripts/config --disable CONFIG_DRM_MESON
+scripts/config --disable CONFIG_DRM_MESON_DW_HDMI
+# Mgag200
+echo "Disable Mgag200 drivers"
+scripts/config --disable CONFIG_DRM_MGAG200
+# Msm
+echo "Disable Msm drivers"
+scripts/config --disable CONFIG_DRM_MSM
+scripts/config --disable CONFIG_DRM_MSM_GPU_STATE
+scripts/config --disable CONFIG_DRM_MSM_REGISTER_LOGGING
+scripts/config --disable CONFIG_DRM_MSM_GPU_SUDO
+scripts/config --disable CONFIG_DRM_MSM_HDMI_HDCP
+scripts/config --disable CONFIG_DRM_MSM_DP
+scripts/config --disable CONFIG_DRM_MSM_DSI
+scripts/config --disable CONFIG_DRM_MSM_DSI_PLL
+scripts/config --disable CONFIG_DRM_MSM_DSI_28NM_PHY
+scripts/config --disable CONFIG_DRM_MSM_DSI_20NM_PHY
+scripts/config --disable CONFIG_DRM_MSM_DSI_28NM_8960_PHY
+scripts/config --disable CONFIG_DRM_MSM_DSI_14NM_PHY
+scripts/config --disable CONFIG_DRM_MSM_DSI_10NM_PHY
+scripts/config --disable CONFIG_DRM_MSM_DSI_7NM_PHY
+# MXSFB
+echo "Disable MXSFB drivers"
+scripts/config --disable CONFIG_DRM_MXS
+scripts/config --disable CONFIG_DRM_MXSFB
+# Omapdrm
+echo "Disable Omapdrm drivers"
+scripts/config --disable CONFIG_DRM_OMAP
+scripts/config --disable CONFIG_DRM_OMAP_PANEL_DSI_CM
+scripts/config --disable CONFIG_OMAP2_DSS_INIT
+scripts/config --disable CONFIG_OMAP_DSS_BASE
+scripts/config --disable CONFIG_OMAP2_DSS
+scripts/config --disable CONFIG_OMAP2_DSS_DEBUG
+scripts/config --disable CONFIG_OMAP2_DSS_DEBUGFS
+scripts/config --disable CONFIG_OMAP2_DSS_COLLECT_IRQ_STATS
+scripts/config --disable CONFIG_OMAP2_DSS_DPI
+scripts/config --disable CONFIG_OMAP2_DSS_VENC
+scripts/config --disable CONFIG_OMAP2_DSS_HDMI_COMMON
+scripts/config --disable CONFIG_OMAP4_DSS_HDMI
+scripts/config --disable CONFIG_OMAP4_DSS_HDMI_CEC
+scripts/config --disable CONFIG_OMAP5_DSS_HDMI
+scripts/config --disable CONFIG_OMAP2_DSS_SDI
+scripts/config --disable CONFIG_OMAP2_DSS_DSI
+scripts/config --disable CONFIG_OMAP2_DSS_MIN_FCK_PER_PCK
+scripts/config --disable CONFIG_OMAP2_DSS_SLEEP_AFTER_VENC_RESET
+# Panfrost
+echo "Disable Panfrost drivers"
+scripts/config --disable CONFIG_DRM_PANFROST
+# Panel
+echo "Disable Panel drivers"
+scripts/config --disable CONFIG_DRM_PANEL
+scripts/config --disable CONFIG_DRM_PANEL_ABT_Y030XX067A
+scripts/config --disable CONFIG_DRM_PANEL_ARM_VERSATILE
+scripts/config --disable CONFIG_DRM_PANEL_ASUS_Z00T_TM5P5_NT35596
+scripts/config --disable CONFIG_DRM_PANEL_BOE_HIMAX8279D
+scripts/config --disable CONFIG_DRM_PANEL_BOE_TV101WUM_NL6
+scripts/config --disable CONFIG_DRM_PANEL_LVDS
+scripts/config --disable CONFIG_DRM_PANEL_SIMPLE
+scripts/config --disable CONFIG_DRM_PANEL_ELIDA_KD35T133
+scripts/config --disable CONFIG_DRM_PANEL_FEIXIN_K101_IM2BA02
+scripts/config --disable CONFIG_DRM_PANEL_FEIYANG_FY07024DI26A30D
+scripts/config --disable CONFIG_DRM_PANEL_ILITEK_IL9322
+scripts/config --disable CONFIG_DRM_PANEL_ILITEK_ILI9881C
+scripts/config --disable CONFIG_DRM_PANEL_INNOLUX_P079ZCA
+scripts/config --disable CONFIG_DRM_PANEL_JDI_LT070ME05000
+scripts/config --disable CONFIG_DRM_PANEL_KINGDISPLAY_KD097D04
+scripts/config --disable CONFIG_DRM_PANEL_LEADTEK_LTK050H3146W
+scripts/config --disable CONFIG_DRM_PANEL_LEADTEK_LTK500HD1829
+scripts/config --disable CONFIG_DRM_PANEL_SAMSUNG_LD9040
+scripts/config --disable CONFIG_DRM_PANEL_LG_LB035Q02
+scripts/config --disable CONFIG_DRM_PANEL_LG_LG4573
+scripts/config --disable CONFIG_DRM_PANEL_NEC_NL8048HL11
+scripts/config --disable CONFIG_DRM_PANEL_NOVATEK_NT35510
+scripts/config --disable CONFIG_DRM_PANEL_NOVATEK_NT36672A
+scripts/config --disable CONFIG_DRM_PANEL_NOVATEK_NT39016
+scripts/config --disable CONFIG_DRM_PANEL_MANTIX_MLAF057WE51
+scripts/config --disable CONFIG_DRM_PANEL_OLIMEX_LCD_OLINUXINO
+scripts/config --disable CONFIG_DRM_PANEL_ORISETECH_OTM8009A
+scripts/config --disable CONFIG_DRM_PANEL_OSD_OSD101T2587_53TS
+scripts/config --disable CONFIG_DRM_PANEL_PANASONIC_VVX10F034N00
+scripts/config --disable CONFIG_DRM_PANEL_RASPBERRYPI_TOUCHSCREEN
+scripts/config --disable CONFIG_DRM_PANEL_RAYDIUM_RM67191
+scripts/config --disable CONFIG_DRM_PANEL_RAYDIUM_RM68200
+scripts/config --disable CONFIG_DRM_PANEL_RONBO_RB070D30
+scripts/config --disable CONFIG_DRM_PANEL_SAMSUNG_S6D16D0
+scripts/config --disable CONFIG_DRM_PANEL_SAMSUNG_S6E3HA2
+scripts/config --disable CONFIG_DRM_PANEL_SAMSUNG_S6E63J0X03
+scripts/config --disable CONFIG_DRM_PANEL_SAMSUNG_S6E63M0
+scripts/config --disable CONFIG_DRM_PANEL_SAMSUNG_S6E63M0_SPI
+scripts/config --disable CONFIG_DRM_PANEL_SAMSUNG_S6E63M0_DSI
+scripts/config --disable CONFIG_DRM_PANEL_SAMSUNG_S6E88A0_AMS452EF01
+scripts/config --disable CONFIG_DRM_PANEL_SAMSUNG_S6E8AA0
+scripts/config --disable CONFIG_DRM_PANEL_SAMSUNG_SOFEF00
+scripts/config --disable CONFIG_DRM_PANEL_SEIKO_43WVF1G
+scripts/config --disable CONFIG_DRM_PANEL_SHARP_LQ101R1SX01
+scripts/config --disable CONFIG_DRM_PANEL_SHARP_LS037V7DW01
+scripts/config --disable CONFIG_DRM_PANEL_SHARP_LS043T1LE01
+scripts/config --disable CONFIG_DRM_PANEL_SITRONIX_ST7701
+scripts/config --disable CONFIG_DRM_PANEL_SITRONIX_ST7703
+scripts/config --disable CONFIG_DRM_PANEL_SITRONIX_ST7789V
+scripts/config --disable CONFIG_DRM_PANEL_SONY_ACX424AKP
+scripts/config --disable CONFIG_DRM_PANEL_SONY_ACX565AKM
+scripts/config --disable CONFIG_DRM_PANEL_TDO_TL070WSH30
+scripts/config --disable CONFIG_DRM_PANEL_TPO_TD028TTEC1
+scripts/config --disable CONFIG_DRM_PANEL_TPO_TD043MTEA1
+scripts/config --disable CONFIG_DRM_PANEL_TPO_TPG110
+scripts/config --disable CONFIG_DRM_PANEL_TRULY_NT35597_WQXGA
+scripts/config --disable CONFIG_DRM_PANEL_VISIONOX_RM69299
+scripts/config --disable CONFIG_DRM_PANEL_XINPENG_XPP055C272
+# PL111
+echo "Disable PL111 drivers"
+scripts/config --disable CONFIG_DRM_PL111
+# Qxl
+echo "Disable Qxl drivers"
+scripts/config --disable CONFIG_DRM_QXL
+# Rcar-du
+echo "Disable Rcar-du drivers"
+scripts/config --disable CONFIG_DRM_RCAR_DU
+scripts/config --disable CONFIG_DRM_RCAR_CMM
+scripts/config --disable CONFIG_DRM_RCAR_DW_HDMI
+scripts/config --disable CONFIG_DRM_RCAR_LVDS
+scripts/config --disable CONFIG_DRM_RCAR_VSP
+scripts/config --disable CONFIG_DRM_RCAR_WRITEBACK
+# Rockchip
+echo "Disable Rockchip drivers"
+scripts/config --disable CONFIG_DRM_ROCKCHIP
+scripts/config --disable CONFIG_ROCKCHIP_ANALOGIX_DP
+scripts/config --disable CONFIG_ROCKCHIP_CDN_DP
+scripts/config --disable CONFIG_ROCKCHIP_DW_HDMI
+scripts/config --disable CONFIG_ROCKCHIP_DW_MIPI_DSI
+scripts/config --disable CONFIG_ROCKCHIP_INNO_HDMI
+scripts/config --disable CONFIG_ROCKCHIP_LVDS
+scripts/config --disable CONFIG_ROCKCHIP_RGB
+scripts/config --disable CONFIG_ROCKCHIP_RK3066_HDMI
+# SH Mobile
+echo "Disable SH Mobile drivers"
+scripts/config --disable CONFIG_DRM_SHMOBILE
+# Sti
+echo "Disable Sti drivers"
+scripts/config --disable CONFIG_DRM_STI
+# Stm
+echo "Disable Stm drivers"
+scripts/config --disable CONFIG_DRM_STM
+scripts/config --disable CONFIG_DRM_STM_DSI
+# Sun4I
+echo "Disable Sun4I drivers"
+scripts/config --disable CONFIG_DRM_SUN4I
+scripts/config --disable CONFIG_DRM_SUN4I_HDMI
+scripts/config --disable CONFIG_DRM_SUN4I_HDMI_CEC
+scripts/config --disable CONFIG_DRM_SUN4I_BACKEND
+scripts/config --disable CONFIG_DRM_SUN6I_DSI
+scripts/config --disable CONFIG_DRM_SUN8I_DW_HDMI
+scripts/config --disable CONFIG_DRM_SUN8I_MIXER
+scripts/config --disable CONFIG_DRM_SUN8I_TCON_TOP
+# Tegra
+echo "Disable Tegra drivers"
+scripts/config --disable CONFIG_DRM_TEGRA
+scripts/config --disable CONFIG_DRM_TEGRA_DEBUG
+scripts/config --disable CONFIG_DRM_TEGRA_STAGING
+# Tidss
+echo "Disable Tidss drivers"
+scripts/config --disable CONFIG_DRM_TIDSS
+# Tilcdc
+echo "Disable Tilcdc drivers"
+scripts/config --disable CONFIG_DRM_TILCDC
+# Tiny
+echo "Disable Tiny drivers"
+scripts/config --disable CONFIG_DRM_CIRRUS_QEMU
+scripts/config --disable CONFIG_DRM_GM12U320
+scripts/config --disable CONFIG_TINYDRM_HX8357D
+scripts/config --disable CONFIG_TINYDRM_ILI9225
+scripts/config --disable CONFIG_TINYDRM_ILI9341
+scripts/config --disable CONFIG_TINYDRM_ILI9486
+scripts/config --disable CONFIG_TINYDRM_MI0283QT
+scripts/config --disable CONFIG_TINYDRM_REPAPER
+scripts/config --disable CONFIG_TINYDRM_ST7586
+scripts/config --disable CONFIG_TINYDRM_ST7735R
+# Tve200
+echo "Disable Tve200 drivers"
+scripts/config --disable CONFIG_DRM_TVE200
+# Udl
+echo "Disable Udl drivers"
+scripts/config --disable CONFIG_DRM_UDL
+# V3d
+echo "Disable V3d drivers"
+scripts/config --disable CONFIG_DRM_V3D
+# Vc4
+echo "Disable Vc4 drivers"
+scripts/config --disable CONFIG_DRM_VC4
+scripts/config --disable CONFIG_DRM_VC4_HDMI_CEC
+# Xlnx
+echo "Disable Xlnx drivers"
+scripts/config --disable CONFIG_DRM_ZYNQMP_DPSUB
+# Zte
+echo "Disable Zte drivers"
+scripts/config --disable CONFIG_DRM_ZTE
+
+sleep 2s
+
+# Enable CONFIG_DRM_BRIDGE/CONFIG_DRM_PANEL_BRIDGE
+msg2 "Enable CONFIG_DRM_BRIDGE/CONFIG_DRM_PANEL_BRIDGE"
+scripts/config --enable CONFIG_DRM_BRIDGE
+scripts/config --enable CONFIG_DRM_PANEL_BRIDGE
+
+sleep 2s
+
+# Add full support for amd/intel/nouveau gpu
+msg2 "Add full support for amd/intel/nouveau gpu"
+# AMD
+echo "Enable full support for AMD GPU"
+scripts/config --enable CONFIG_DRM_AMD_ACP
+scripts/config --enable CONFIG_DRM_AMDGPU_SI
+scripts/config --enable CONFIG_DRM_AMDGPU_CIK
+scripts/config --enable CONFIG_DRM_AMDGPU_USERPTR
+scripts/config --enable CONFIG_DRM_AMDGPU_GART_DEBUGFS
+scripts/config --enable CONFIG_HSA_AMD
+scripts/config --enable CONFIG_DRM_AMD_DC
+scripts/config --enable CONFIG_DRM_AMD_DC_DCN
+scripts/config --enable CONFIG_DRM_AMD_DC_HDCP
+scripts/config --enable CONFIG_DRM_AMD_DC_SI
+scripts/config --enable CONFIG_DEBUG_KERNEL_DC
+scripts/config --enable CONFIG_DRM_RADEON_USERPTR
+# Intel
+echo "Enable full support for Intel GPU"
+scripts/config --module CONFIG_DRM_I915
+scripts/config --set-val CONFIG_DRM_I915_FORCE_PROBE "*"
+scripts/config --enable CONFIG_DRM_I915_CAPTURE_ERROR
+scripts/config --enable CONFIG_DRM_I915_COMPRESS_ERROR
+scripts/config --enable CONFIG_DRM_I915_USERPTR
+scripts/config --enable CONFIG_DRM_I915_GVT
+scripts/config --enable CONFIG_DRM_I915_GVT_KVMGT
+scripts/config --enable CONFIG_DRM_I915_WERROR
+scripts/config --enable CONFIG_DRM_I915_DEBUG
+scripts/config --enable CONFIG_DRM_I915_DEBUG_MMIO
+scripts/config --enable CONFIG_DRM_I915_DEBUG_GEM
+scripts/config --enable CONFIG_DRM_I915_ERRLOG_GEM
+scripts/config --enable CONFIG_DRM_I915_TRACE_GEM
+scripts/config --enable CONFIG_DRM_I915_TRACE_GTT
+scripts/config --enable CONFIG_DRM_I915_SW_FENCE_DEBUG_OBJECTS
+scripts/config --enable CONFIG_DRM_I915_SW_FENCE_CHECK_DAG
+scripts/config --enable CONFIG_DRM_I915_DEBUG_GUC
+scripts/config --enable CONFIG_DRM_I915_SELFTEST
+scripts/config --enable CONFIG_DRM_I915_SELFTEST_BROKEN
+scripts/config --enable CONFIG_DRM_I915_LOW_LEVEL_TRACEPOINTS
+scripts/config --enable CONFIG_DRM_I915_DEBUG_VBLANK_EVADE
+scripts/config --enable CONFIG_DRM_I915_DEBUG_RUNTIME_PM
+scripts/config --set-val CONFIG_DRM_I915_FENCE_TIMEOUT 10000
+scripts/config --set-val CONFIG_DRM_I915_USERFAULT_AUTOSUSPEND 250
+scripts/config --set-val CONFIG_DRM_I915_HEARTBEAT_INTERVAL 2500
+scripts/config --set-val CONFIG_DRM_I915_PREEMPT_TIMEOUT 640
+scripts/config --set-val CONFIG_DRM_I915_MAX_REQUEST_BUSYWAIT 8000
+scripts/config --set-val CONFIG_DRM_I915_STOP_TIMEOUT 100
+scripts/config --set-val CONFIG_DRM_I915_TIMESLICE_DURATION 1
+scripts/config --enable CONFIG_DRM_I915_UNSTABLE
+scripts/config --enable CONFIG_DRM_I915_UNSTABLE_FAKE_LMEM
+# Intel/GMA500
+scripts/config --enable CONFIG_DRM_GMA500
+scripts/config --enable CONFIG_DRM_GMA600
+scripts/config --enable CONFIG_DRM_GMA3600
+scripts/config --enable CONFIG_DRM_MEDFIELD
+# Nouveau
+echo "Enable full support for Nouveau GPU"
+scripts/config --module CONFIG_DRM_NOUVEAU
+scripts/config --enable CONFIG_NOUVEAU_LEGACY_CTX_SUPPORT
+scripts/config --enable CONFIG_NOUVEAU_PLATFORM_DRIVER
+scripts/config --set-val CONFIG_NOUVEAU_DEBUG 3
+scripts/config --set-val CONFIG_NOUVEAU_DEBUG_DEFAULT 3
+scripts/config --enable CONFIG_NOUVEAU_DEBUG_MMU
+scripts/config --enable CONFIG_NOUVEAU_DEBUG_PUSH
+scripts/config --enable CONFIG_DRM_NOUVEAU_BACKLIGHT
+scripts/config --enable CONFIG_DRM_NOUVEAU_SVM
+
+sleep 2s
+
+# Enable vbox/virtio/vkms/vmwgfx/xen
+msg2 "Enable vbox/virtio/vkms/vmwgfx/xen"
+# Vbox
+echo "Enable Vbox"
+scripts/config --module CONFIG_DRM_VBOXVIDEO
+# Virtio
+echo "Enable Virtio"
+scripts/config --module CONFIG_DRM_VIRTIO_GPU
+# Vmwgfx
+echo "Enable Vmwgfx"
+scripts/config --module CONFIG_DRM_VMWGFX
+scripts/config --enable CONFIG_DRM_VMWGFX_FBCON
+
+#######################################
+
+sleep 2s
+
+############ Leds ############
+
+# Disable some leds features
+msg2 "Disable CONFIG_LEDS_RT8515"
+scripts/config --disable CONFIG_LEDS_RT8515
+
+#######################################
+
+sleep 2s
+
+############ Radio ############
+
+# Disable Radio driver
+msg2 "Disable Radio driver"
+scripts/config --disable CONFIG_MEDIA_RADIO_SUPPORT
+scripts/config --disable CONFIG_RADIO_ADAPTERS
+scripts/config --disable CONFIG_RADIO_TEA575X
+scripts/config --disable CONFIG_RADIO_SI4713
+scripts/config --disable CONFIG_RADIO_SI476X
+scripts/config --disable CONFIG_USB_MR800
+scripts/config --disable CONFIG_USB_DSBR
+scripts/config --disable CONFIG_RADIO_MAXIRADIO
+scripts/config --disable CONFIG_RADIO_SHARK
+scripts/config --disable CONFIG_RADIO_SHARK2
+scripts/config --disable CONFIG_USB_KEENE
+scripts/config --disable CONFIG_USB_RAREMONO
+scripts/config --disable CONFIG_USB_MA901
+scripts/config --disable CONFIG_RADIO_TEA5764
+scripts/config --disable CONFIG_RADIO_TEA5764_XTAL
+scripts/config --disable CONFIG_RADIO_SAA7706H
+scripts/config --disable CONFIG_RADIO_TEF6862
+scripts/config --disable CONFIG_RADIO_TIMBERDALE
+scripts/config --disable CONFIG_RADIO_WL1273
+scripts/config --disable CONFIG_V4L_RADIO_ISA_DRIVERS
+scripts/config --disable CONFIG_RADIO_ISA
+scripts/config --disable CONFIG_RADIO_CADET
+scripts/config --disable CONFIG_RADIO_RTRACK
+scripts/config --disable CONFIG_RADIO_RTRACK_PORT
+scripts/config --disable CONFIG_RADIO_RTRACK2
+scripts/config --disable CONFIG_RADIO_RTRACK2_PORT
+scripts/config --disable CONFIG_RADIO_AZTECH
+scripts/config --disable CONFIG_RADIO_AZTECH_PORT
+scripts/config --disable CONFIG_RADIO_GEMTEK
+scripts/config --disable CONFIG_RADIO_GEMTEK_PORT
+scripts/config --disable CONFIG_RADIO_GEMTEK_PROBE
+scripts/config --disable CONFIG_RADIO_MIROPCM20
+scripts/config --disable CONFIG_RADIO_SF16FMI
+scripts/config --disable CONFIG_RADIO_SF16FMR2
+scripts/config --disable CONFIG_RADIO_TERRATEC
+scripts/config --disable CONFIG_RADIO_TRUST
+scripts/config --disable CONFIG_RADIO_TRUST_PORT
+scripts/config --disable CONFIG_RADIO_TYPHOON
+scripts/config --disable CONFIG_RADIO_TYPHOON_PORT
+scripts/config --disable CONFIG_RADIO_TYPHOON_MUTEFREQ
+scripts/config --disable CONFIG_RADIO_ZOLTRIX
+scripts/config --disable CONFIG_RADIO_ZOLTRIX_PORT
+scripts/config --disable CONFIG_RADIO_SI470X
+scripts/config --disable CONFIG_USB_SI470X
+scripts/config --disable CONFIG_I2C_SI470X
+scripts/config --disable CONFIG_USB_SI4713
+scripts/config --disable CONFIG_PLATFORM_SI4713
+scripts/config --disable CONFIG_I2C_SI4713
+scripts/config --disable CONFIG_RADIO_WL128X
+
+#######################################
+
+sleep 2s
+
+############ Tv Tunners ############
+
+# Disable TV Tuners
+msg2 "Disable TV Tuners"
+scripts/config --disable CONFIG_MEDIA_DIGITAL_TV_SUPPORT
+scripts/config --disable CONFIG_MEDIA_TUNER
+scripts/config --disable CONFIG_MEDIA_TUNER_SIMPLE
+scripts/config --disable CONFIG_MEDIA_TUNER_TDA18250
+scripts/config --disable CONFIG_MEDIA_TUNER_TDA8290
+scripts/config --disable CONFIG_MEDIA_TUNER_TDA827X
+scripts/config --disable CONFIG_MEDIA_TUNER_TDA18271
+scripts/config --disable CONFIG_MEDIA_TUNER_TDA9887
+scripts/config --disable CONFIG_MEDIA_TUNER_TEA5761
+scripts/config --disable CONFIG_MEDIA_TUNER_TEA5767
+scripts/config --disable CONFIG_MEDIA_TUNER_MSI001
+scripts/config --disable CONFIG_MEDIA_TUNER_MT20XX
+scripts/config --disable CONFIG_MEDIA_TUNER_MT2060
+scripts/config --disable CONFIG_MEDIA_TUNER_MT2063
+scripts/config --disable CONFIG_MEDIA_TUNER_MT2266
+scripts/config --disable CONFIG_MEDIA_TUNER_MT2131
+scripts/config --disable CONFIG_MEDIA_TUNER_QT1010
+scripts/config --disable CONFIG_MEDIA_TUNER_XC2028
+scripts/config --disable CONFIG_MEDIA_TUNER_XC5000
+scripts/config --disable CONFIG_MEDIA_TUNER_XC4000
+scripts/config --disable CONFIG_MEDIA_TUNER_MXL5005S
+scripts/config --disable CONFIG_MEDIA_TUNER_MXL5007T
+scripts/config --disable CONFIG_MEDIA_TUNER_MC44S803
+scripts/config --disable CONFIG_MEDIA_TUNER_MAX2165
+scripts/config --disable CONFIG_MEDIA_TUNER_TDA18218
+scripts/config --disable CONFIG_MEDIA_TUNER_FC0011
+scripts/config --disable CONFIG_MEDIA_TUNER_FC0012
+scripts/config --disable CONFIG_MEDIA_TUNER_FC0013
+scripts/config --disable CONFIG_MEDIA_TUNER_TDA18212
+scripts/config --disable CONFIG_MEDIA_TUNER_E4000
+scripts/config --disable CONFIG_MEDIA_TUNER_FC2580
+scripts/config --disable CONFIG_MEDIA_TUNER_M88RS6000T
+scripts/config --disable CONFIG_MEDIA_TUNER_TUA9001
+scripts/config --disable CONFIG_MEDIA_TUNER_SI2157
+scripts/config --disable CONFIG_MEDIA_TUNER_IT913X
+scripts/config --disable CONFIG_MEDIA_TUNER_R820T
+scripts/config --disable CONFIG_MEDIA_TUNER_MXL301RF
+scripts/config --disable CONFIG_MEDIA_TUNER_QM1D1C0042
+scripts/config --disable CONFIG_MEDIA_TUNER_QM1D1B0004
+
+#######################################
+
+sleep 2s
+
+############ Apple drivers ############
+
+# Disable Apple drivers
+msg2 "Disable Apple drivers"
+scripts/config --disable CONFIG_HID_APPLE
+scripts/config --disable CONFIG_HID_APPLEIR
+scripts/config --disable CONFIG_MACINTOSH_DRIVERS
+scripts/config --disable CONFIG_ADB
+scripts/config --disable CONFIG_ADB_MACII
+scripts/config --disable CONFIG_ADB_IOP
+scripts/config --disable CONFIG_ADB_CUDA
+scripts/config --disable CONFIG_ADB_PMU
+scripts/config --disable CONFIG_ADB_PMU_LED
+scripts/config --disable CONFIG_ADB_PMU_LED_DISK
+scripts/config --disable CONFIG_PMAC_SMU
+scripts/config --disable CONFIG_PMAC_APM_EMU
+scripts/config --disable CONFIG_PMAC_MEDIABAY
+scripts/config --disable CONFIG_PMAC_BACKLIGHT
+scripts/config --disable CONFIG_PMAC_BACKLIGHT_LEGACY
+scripts/config --disable CONFIG_ADB_MACIO
+scripts/config --disable CONFIG_INPUT_ADBHID
+scripts/config --disable CONFIG_MAC_EMUMOUSEBTN
+scripts/config --disable CONFIG_THERM_WINDTUNNEL
+scripts/config --disable CONFIG_THERM_ADT746X
+scripts/config --disable CONFIG_WINDFARM
+scripts/config --disable CONFIG_WINDFARM_PM81
+scripts/config --disable CONFIG_WINDFARM_PM72
+scripts/config --disable CONFIG_WINDFARM_RM31
+scripts/config --disable CONFIG_WINDFARM_PM91
+scripts/config --disable CONFIG_WINDFARM_PM112
+scripts/config --disable CONFIG_WINDFARM_PM121
+scripts/config --disable CONFIG_ANSLCD
+scripts/config --disable CONFIG_PMAC_RACKMETER
+scripts/config --disable CONFIG_SENSORS_AMS
+scripts/config --disable CONFIG_SENSORS_AMS_PMU
+scripts/config --disable CONFIG_SENSORS_AMS_I2C
+scripts/config --disable CONFIG_APPLE_GMUX
+scripts/config --disable CONFIG_HID_MAGICMOUSE
+
+#######################################
+
+sleep 2s
+
+############ Drivers/iio ############
+
+# Disable uneeded iio drivers
+msg2 "Disable uneeded iio drivers"
+# Accelerometers
+echo "Disable Accelerometers"
+scripts/config --disable CONFIG_ADIS16201
+scripts/config --disable CONFIG_ADIS16209
+scripts/config --disable CONFIG_ADXL345
+scripts/config --disable CONFIG_ADXL345_I2C
+scripts/config --disable CONFIG_ADXL345_SPI
+scripts/config --disable CONFIG_ADXL372
+scripts/config --disable CONFIG_ADXL372_SPI
+scripts/config --disable CONFIG_ADXL372_I2C
+scripts/config --disable CONFIG_BMA180
+scripts/config --disable CONFIG_BMA220
+scripts/config --disable CONFIG_BMA400
+scripts/config --disable CONFIG_BMA400_I2C
+scripts/config --disable CONFIG_BMA400_SPI
+scripts/config --disable CONFIG_BMC150_ACCEL
+scripts/config --disable CONFIG_BMC150_ACCEL_I2C
+scripts/config --disable CONFIG_BMC150_ACCEL_SPI
+scripts/config --disable CONFIG_DA280
+scripts/config --disable CONFIG_DA311
+scripts/config --disable CONFIG_DMARD06
+scripts/config --disable CONFIG_DMARD09
+scripts/config --disable CONFIG_DMARD10
+scripts/config --disable CONFIG_HID_SENSOR_ACCEL_3D
+scripts/config --disable CONFIG_IIO_CROS_EC_ACCEL_LEGACY
+scripts/config --disable CONFIG_IIO_ST_ACCEL_3AXIS
+scripts/config --disable CONFIG_IIO_ST_ACCEL_I2C_3AXIS
+scripts/config --disable CONFIG_IIO_ST_ACCEL_SPI_3AXIS
+scripts/config --disable CONFIG_KXSD9
+scripts/config --disable CONFIG_KXSD9_SPI
+scripts/config --disable CONFIG_KXSD9_I2C
+scripts/config --disable CONFIG_KXCJK1013
+scripts/config --disable CONFIG_MC3230
+scripts/config --disable CONFIG_MMA7455
+scripts/config --disable CONFIG_MMA7455_I2C
+scripts/config --disable CONFIG_MMA7455_SPI
+scripts/config --disable CONFIG_MMA7660
+scripts/config --disable CONFIG_MMA8452
+scripts/config --disable CONFIG_MMA9551_CORE
+scripts/config --disable CONFIG_MMA9551
+scripts/config --disable CONFIG_MMA9553
+scripts/config --disable CONFIG_MXC4005
+scripts/config --disable CONFIG_MXC6255
+scripts/config --disable CONFIG_SCA3000
+scripts/config --disable CONFIG_STK8312
+scripts/config --disable CONFIG_STK8BA50
+# Adc (Analog to digital converters)
+echo "Disable Adc (Analog to digital converters)"
+scripts/config --disable CONFIG_AB8500_GPADC
+scripts/config --disable CONFIG_AD_SIGMA_DELTA
+scripts/config --disable CONFIG_AD7091R5
+scripts/config --disable CONFIG_AD7124
+scripts/config --disable CONFIG_AD7192
+scripts/config --disable CONFIG_AD7266
+scripts/config --disable CONFIG_AD7291
+scripts/config --disable CONFIG_AD7292
+scripts/config --disable CONFIG_AD7298
+scripts/config --disable CONFIG_AD7476
+scripts/config --disable CONFIG_AD7606
+scripts/config --disable CONFIG_AD7606_IFACE_PARALLEL
+scripts/config --disable CONFIG_AD7606_IFACE_SPI
+scripts/config --disable CONFIG_AD7766
+scripts/config --disable CONFIG_AD7768_1
+scripts/config --disable CONFIG_AD7780
+scripts/config --disable CONFIG_AD7791
+scripts/config --disable CONFIG_AD7793
+scripts/config --disable CONFIG_AD7887
+scripts/config --disable CONFIG_AD7923
+scripts/config --disable CONFIG_AD7949
+scripts/config --disable CONFIG_AD799X
+scripts/config --disable CONFIG_AD9467
+scripts/config --disable CONFIG_ADI_AXI_ADC
+scripts/config --disable CONFIG_ASPEED_ADC
+scripts/config --disable CONFIG_AT91_ADC
+scripts/config --disable CONFIG_AT91_SAMA5D2_ADC
+scripts/config --disable CONFIG_AXP20X_ADC
+scripts/config --disable CONFIG_AXP288_ADC
+scripts/config --disable CONFIG_BCM_IPROC_ADC
+scripts/config --disable CONFIG_BERLIN2_ADC
+scripts/config --disable CONFIG_CC10001_ADC
+scripts/config --disable CONFIG_CPCAP_ADC
+scripts/config --disable CONFIG_DA9150_GPADC
+scripts/config --disable CONFIG_DLN2_ADC
+scripts/config --disable CONFIG_ENVELOPE_DETECTOR
+scripts/config --disable CONFIG_EP93XX_ADC
+scripts/config --disable CONFIG_EXYNOS_ADC
+scripts/config --disable CONFIG_MXS_LRADC_ADC
+scripts/config --disable CONFIG_FSL_MX25_ADC
+scripts/config --disable CONFIG_HI8435
+scripts/config --disable CONFIG_HX711
+scripts/config --disable CONFIG_INA2XX_ADC
+scripts/config --disable CONFIG_INGENIC_ADC
+scripts/config --disable CONFIG_INTEL_MRFLD_ADC
+scripts/config --disable CONFIG_IMX7D_ADC
+scripts/config --disable CONFIG_LP8788_ADC
+scripts/config --disable CONFIG_LPC18XX_ADC
+scripts/config --disable CONFIG_LPC32XX_ADC
+scripts/config --disable CONFIG_LTC2471
+scripts/config --disable CONFIG_LTC2485
+scripts/config --disable CONFIG_LTC2496
+scripts/config --disable CONFIG_LTC2497
+scripts/config --disable CONFIG_MAX1027
+scripts/config --disable CONFIG_MAX11100
+scripts/config --disable CONFIG_MAX1118
+scripts/config --disable CONFIG_MAX1241
+scripts/config --disable CONFIG_MAX1363
+scripts/config --disable CONFIG_MAX9611
+scripts/config --disable CONFIG_MCP320X
+scripts/config --disable CONFIG_MCP3422
+scripts/config --disable CONFIG_MCP3911
+scripts/config --disable CONFIG_MEDIATEK_MT6360_ADC
+scripts/config --disable CONFIG_MEDIATEK_MT6577_AUXADC
+scripts/config --disable CONFIG_MEN_Z188_ADC
+scripts/config --disable CONFIG_MESON_SARADC
+scripts/config --disable CONFIG_MP2629_ADC
+scripts/config --disable CONFIG_NAU7802
+scripts/config --disable CONFIG_NPCM_ADC
+scripts/config --disable CONFIG_PALMAS_GPADC
+scripts/config --disable CONFIG_QCOM_VADC_COMMON
+scripts/config --disable CONFIG_QCOM_PM8XXX_XOADC
+scripts/config --disable CONFIG_QCOM_SPMI_IADC
+scripts/config --disable CONFIG_QCOM_SPMI_VADC
+scripts/config --disable CONFIG_QCOM_SPMI_ADC5
+scripts/config --disable CONFIG_RCAR_GYRO_ADC
+scripts/config --disable CONFIG_RN5T618_ADC
+scripts/config --disable CONFIG_ROCKCHIP_SARADC
+scripts/config --disable CONFIG_SC27XX_ADC
+scripts/config --disable CONFIG_SPEAR_ADC
+scripts/config --disable CONFIG_SD_ADC_MODULATOR
+scripts/config --disable CONFIG_STM32_ADC_CORE
+scripts/config --disable CONFIG_STM32_ADC
+scripts/config --disable CONFIG_STM32_DFSDM_CORE
+scripts/config --disable CONFIG_STM32_DFSDM_ADC
+scripts/config --disable CONFIG_STMPE_ADC
+scripts/config --disable CONFIG_STX104
+scripts/config --disable CONFIG_SUN4I_GPADC
+scripts/config --disable CONFIG_TI_ADC081C
+scripts/config --disable CONFIG_TI_ADC0832
+scripts/config --disable CONFIG_TI_ADC084S021
+scripts/config --disable CONFIG_TI_ADC12138
+scripts/config --disable CONFIG_TI_ADC108S102
+scripts/config --disable CONFIG_TI_ADC128S052
+scripts/config --disable CONFIG_TI_ADC161S626
+scripts/config --disable CONFIG_TI_ADS1015
+scripts/config --disable CONFIG_TI_ADS7950
+scripts/config --disable CONFIG_TI_ADS8344
+scripts/config --disable CONFIG_TI_ADS8688
+scripts/config --disable CONFIG_TI_ADS124S08
+scripts/config --disable CONFIG_TI_AM335X_ADC
+scripts/config --disable CONFIG_TI_TLC4541
+scripts/config --disable CONFIG_TWL4030_MADC
+scripts/config --disable CONFIG_TWL6030_GPADC
+scripts/config --disable CONFIG_VF610_ADC
+scripts/config --disable CONFIG_VIPERBOARD_ADC
+scripts/config --disable CONFIG_XILINX_XADC
+# Afe (Analog Front End drivers)
+echo "Disable Afe (Analog Front End drivers)"
+scripts/config --disable CONFIG_IIO_RESCALE
+# Amplifier
+echo "Disable Amplifier"
+scripts/config --disable CONFIG_AD8366
+scripts/config --disable CONFIG_HMC425
+# Buffer
+echo "Disable Buffer"
+scripts/config --disable CONFIG_IIO_BUFFER_CB
+scripts/config --disable CONFIG_IIO_BUFFER_DMA
+scripts/config --disable CONFIG_IIO_BUFFER_DMAENGINE
+scripts/config --disable CONFIG_IIO_BUFFER_HW_CONSUMER
+scripts/config --disable CONFIG_IIO_KFIFO_BUF
+scripts/config --disable CONFIG_IIO_TRIGGERED_BUFFER
+# Cdc
+echo "Disable Cdc drivers"
+scripts/config --disable CONFIG_AD7150
+# Chemical
+echo "Disable Chemical drivers"
+scripts/config --disable CONFIG_ATLAS_PH_SENSOR
+scripts/config --disable CONFIG_ATLAS_EZO_SENSOR
+scripts/config --disable CONFIG_BME680
+scripts/config --disable CONFIG_BME680_I2C
+scripts/config --disable CONFIG_BME680_SPI
+scripts/config --disable CONFIG_CCS811
+scripts/config --disable CONFIG_IAQCORE
+scripts/config --disable CONFIG_PMS7003
+scripts/config --disable CONFIG_SCD30_CORE
+scripts/config --disable CONFIG_SCD30_I2C
+scripts/config --disable CONFIG_SCD30_SERIAL
+scripts/config --disable CONFIG_SENSIRION_SGP30
+scripts/config --disable CONFIG_SPS30
+scripts/config --disable CONFIG_VZ89X
+# Common
+echo "Disable Common drivers"
+scripts/config --disable CONFIG_IIO_CROS_EC_SENSORS_CORE
+scripts/config --disable CONFIG_IIO_CROS_EC_SENSORS
+scripts/config --disable CONFIG_IIO_CROS_EC_SENSORS_LID_ANGLE
+scripts/config --disable CONFIG_HID_SENSOR_IIO_COMMON
+scripts/config --disable CONFIG_HID_SENSOR_IIO_TRIGGER
+scripts/config --disable CONFIG_IIO_MS_SENSORS_I2C
+scripts/config --disable CONFIG_IIO_SCMI
+scripts/config --disable CONFIG_IIO_SSP_SENSORS_COMMONS
+scripts/config --disable CONFIG_IIO_SSP_SENSORHUB
+scripts/config --disable CONFIG_IIO_ST_SENSORS_I2C
+scripts/config --disable CONFIG_IIO_ST_SENSORS_SPI
+scripts/config --disable CONFIG_IIO_ST_SENSORS_CORE
+# Dac (Digital to analog converters)
+echo "Disable Dac (Digital to analog converters)"
+scripts/config --disable CONFIG_AD5064
+scripts/config --disable CONFIG_AD5360
+scripts/config --disable CONFIG_AD5380
+scripts/config --disable CONFIG_AD5421
+scripts/config --disable CONFIG_AD5446
+scripts/config --disable CONFIG_AD5449
+scripts/config --disable CONFIG_AD5592R_BASE
+scripts/config --disable CONFIG_AD5592R
+scripts/config --disable CONFIG_AD5593R
+scripts/config --disable CONFIG_AD5504
+scripts/config --disable CONFIG_AD5624R_SPI
+scripts/config --disable CONFIG_AD5686
+scripts/config --disable CONFIG_AD5686_SPI
+scripts/config --disable CONFIG_AD5696_I2C
+scripts/config --disable CONFIG_AD5755
+scripts/config --disable CONFIG_AD5758
+scripts/config --disable CONFIG_AD5761
+scripts/config --disable CONFIG_AD5764
+scripts/config --disable CONFIG_AD5770R
+scripts/config --disable CONFIG_AD5791
+scripts/config --disable CONFIG_AD7303
+scripts/config --disable CONFIG_AD8801
+scripts/config --disable CONFIG_CIO_DAC
+scripts/config --disable CONFIG_DPOT_DAC
+scripts/config --disable CONFIG_DS4424
+scripts/config --disable CONFIG_LPC18XX_DAC
+scripts/config --disable CONFIG_LTC1660
+scripts/config --disable CONFIG_LTC2632
+scripts/config --disable CONFIG_M62332
+scripts/config --disable CONFIG_MAX517
+scripts/config --disable CONFIG_MAX5821
+scripts/config --disable CONFIG_MCP4725
+scripts/config --disable CONFIG_MCP4922
+scripts/config --disable CONFIG_STM32_DAC
+scripts/config --disable CONFIG_STM32_DAC_CORE
+scripts/config --disable CONFIG_TI_DAC082S085
+scripts/config --disable CONFIG_TI_DAC5571
+scripts/config --disable CONFIG_TI_DAC7311
+scripts/config --disable CONFIG_TI_DAC7612
+scripts/config --disable CONFIG_VF610_DAC
+# Dummy
+echo "Disable Dummy drivers"
+scripts/config --disable CONFIG_IIO_DUMMY_EVGEN
+scripts/config --disable CONFIG_IIO_SIMPLE_DUMMY
+scripts/config --disable CONFIG_IIO_SIMPLE_DUMMY_EVENTS
+scripts/config --disable CONFIG_IIO_SIMPLE_DUMMY_BUFFER
+# Frequency
+echo "Disable Frequency Synthesizers drivers"
+scripts/config --disable CONFIG_AD9523
+scripts/config --disable CONFIG_ADF4350
+scripts/config --disable CONFIG_ADF4371
+# Gyro
+echo "Disable Gyro drivers"
+scripts/config --disable CONFIG_ADIS16080
+scripts/config --disable CONFIG_ADIS16130
+scripts/config --disable CONFIG_ADIS16136
+scripts/config --disable CONFIG_ADIS16260
+scripts/config --disable CONFIG_ADXRS290
+scripts/config --disable CONFIG_ADXRS450
+scripts/config --disable CONFIG_BMG160
+scripts/config --disable CONFIG_BMG160_I2C
+scripts/config --disable CONFIG_BMG160_SPI
+scripts/config --disable CONFIG_FXAS21002C
+scripts/config --disable CONFIG_FXAS21002C_I2C
+scripts/config --disable CONFIG_FXAS21002C_SPI
+scripts/config --disable CONFIG_HID_SENSOR_GYRO_3D
+scripts/config --disable CONFIG_MPU3050
+scripts/config --disable CONFIG_MPU3050_I2C
+scripts/config --disable CONFIG_IIO_ST_GYRO_3AXIS
+scripts/config --disable CONFIG_IIO_ST_GYRO_I2C_3AXIS
+scripts/config --disable CONFIG_IIO_ST_GYRO_SPI_3AXIS
+scripts/config --disable CONFIG_ITG3200
+# Health
+echo "Disable Health drivers"
+scripts/config --disable CONFIG_AFE4403
+scripts/config --disable CONFIG_AFE4404
+scripts/config --disable CONFIG_MAX30100
+scripts/config --disable CONFIG_MAX30102
+# Humidity
+echo "Disable Humidity drivers"
+scripts/config --disable CONFIG_AM2315
+scripts/config --disable CONFIG_DHT11
+scripts/config --disable CONFIG_HDC100X
+scripts/config --disable CONFIG_HDC2010
+scripts/config --disable CONFIG_HID_SENSOR_HUMIDITY
+scripts/config --disable CONFIG_HTS221
+scripts/config --disable CONFIG_HTS221_I2C
+scripts/config --disable CONFIG_HTS221_SPI
+scripts/config --disable CONFIG_HTU21
+scripts/config --disable CONFIG_SI7005
+scripts/config --disable CONFIG_SI7020
+# Imu (Inertial measurement units)
+echo "Disable Imu (Inertial measurement units)"
+scripts/config --disable CONFIG_ADIS16400
+scripts/config --disable CONFIG_ADIS16460
+scripts/config --disable CONFIG_ADIS16475
+scripts/config --disable CONFIG_ADIS16480
+scripts/config --disable CONFIG_FXOS8700
+scripts/config --disable CONFIG_FXOS8700_I2C
+scripts/config --disable CONFIG_FXOS8700_SPI
+scripts/config --disable CONFIG_KMX61
+scripts/config --disable CONFIG_IIO_ADIS_LIB
+scripts/config --disable CONFIG_IIO_ADIS_LIB_BUFFER
+scripts/config --disable CONFIG_BMI160
+scripts/config --disable CONFIG_BMI160_I2C
+scripts/config --disable CONFIG_BMI160_SPI
+scripts/config --disable CONFIG_INV_ICM42600
+scripts/config --disable CONFIG_INV_ICM42600_I2C
+scripts/config --disable CONFIG_INV_ICM42600_SPI
+scripts/config --disable CONFIG_INV_MPU6050_IIO
+scripts/config --disable CONFIG_INV_MPU6050_I2C
+scripts/config --disable CONFIG_INV_MPU6050_SPI
+scripts/config --disable CONFIG_IIO_ST_LSM6DSX
+scripts/config --disable CONFIG_IIO_ST_LSM6DSX_I2C
+scripts/config --disable CONFIG_IIO_ST_LSM6DSX_SPI
+scripts/config --disable CONFIG_IIO_ST_LSM6DSX_I3C
+# Light
+echo "Disable Light drivers"
+scripts/config --disable CONFIG_ACPI_ALS
+scripts/config --disable CONFIG_ADJD_S311
+scripts/config --disable CONFIG_ADUX1020
+scripts/config --disable CONFIG_AL3010
+scripts/config --disable CONFIG_AL3320A
+scripts/config --disable CONFIG_APDS9300
+scripts/config --disable CONFIG_APDS9960
+scripts/config --disable CONFIG_AS73211
+scripts/config --disable CONFIG_BH1750
+scripts/config --disable CONFIG_BH1780
+scripts/config --disable CONFIG_CM32181
+scripts/config --disable CONFIG_CM3232
+scripts/config --disable CONFIG_CM3323
+scripts/config --disable CONFIG_CM3605
+scripts/config --disable CONFIG_CM36651
+scripts/config --disable CONFIG_IIO_CROS_EC_LIGHT_PROX
+scripts/config --disable CONFIG_GP2AP002
+scripts/config --disable CONFIG_GP2AP020A00F
+scripts/config --disable CONFIG_IQS621_ALS
+scripts/config --disable CONFIG_SENSORS_ISL29018
+scripts/config --disable CONFIG_SENSORS_ISL29028
+scripts/config --disable CONFIG_ISL29125
+scripts/config --disable CONFIG_HID_SENSOR_ALS
+scripts/config --disable CONFIG_HID_SENSOR_PROX
+scripts/config --disable CONFIG_JSA1212
+scripts/config --disable CONFIG_RPR0521
+scripts/config --disable CONFIG_SENSORS_LM3533
+scripts/config --disable CONFIG_LTR501
+scripts/config --disable CONFIG_LV0104CS
+scripts/config --disable CONFIG_MAX44000
+scripts/config --disable CONFIG_MAX44009
+scripts/config --disable CONFIG_NOA1305
+scripts/config --disable CONFIG_OPT3001
+scripts/config --disable CONFIG_PA12203001
+scripts/config --disable CONFIG_SI1133
+scripts/config --disable CONFIG_SI1145
+scripts/config --disable CONFIG_STK3310
+scripts/config --disable CONFIG_ST_UVIS25
+scripts/config --disable CONFIG_ST_UVIS25_I2C
+scripts/config --disable CONFIG_ST_UVIS25_SPI
+scripts/config --disable CONFIG_TCS3414
+scripts/config --disable CONFIG_TCS3472
+scripts/config --disable CONFIG_SENSORS_TSL2563
+scripts/config --disable CONFIG_TSL2583
+scripts/config --disable CONFIG_TSL2772
+scripts/config --disable CONFIG_TSL4531
+scripts/config --disable CONFIG_US5182D
+scripts/config --disable CONFIG_VCNL4000
+scripts/config --disable CONFIG_VCNL4035
+scripts/config --disable CONFIG_VEML6030
+scripts/config --disable CONFIG_VEML6070
+scripts/config --disable CONFIG_VL6180
+scripts/config --disable CONFIG_ZOPT2201
+# Magnetometer
+echo "Disable Magnetometer drivers"
+scripts/config --disable CONFIG_AK8974
+scripts/config --disable CONFIG_AK8975
+scripts/config --disable CONFIG_AK09911
+scripts/config --disable CONFIG_BMC150_MAGN
+scripts/config --disable CONFIG_BMC150_MAGN_I2C
+scripts/config --disable CONFIG_BMC150_MAGN_SPI
+scripts/config --disable CONFIG_MAG3110
+scripts/config --disable CONFIG_HID_SENSOR_MAGNETOMETER_3D
+scripts/config --disable CONFIG_MMC35240
+scripts/config --disable CONFIG_IIO_ST_MAGN_3AXIS
+scripts/config --disable CONFIG_IIO_ST_MAGN_I2C_3AXIS
+scripts/config --disable CONFIG_IIO_ST_MAGN_SPI_3AXIS
+scripts/config --disable CONFIG_SENSORS_HMC5843
+scripts/config --disable CONFIG_SENSORS_HMC5843_I2C
+scripts/config --disable CONFIG_SENSORS_HMC5843_SPI
+scripts/config --disable CONFIG_SENSORS_RM3100
+scripts/config --disable CONFIG_SENSORS_RM3100_I2C
+scripts/config --disable CONFIG_SENSORS_RM3100_SPI
+# Multiplexer
+echo "Disable Multiplexer drivers"
+scripts/config --disable CONFIG_IIO_MUX
+# Orientation
+echo "Disable Orientation drivers"
+scripts/config --disable CONFIG_HID_SENSOR_INCLINOMETER_3D
+scripts/config --disable CONFIG_HID_SENSOR_DEVICE_ROTATION
+# Position
+echo "Disable Position drivers"
+scripts/config --disable CONFIG_IQS624_POS
+# Position
+echo "Disable Position drivers"
+scripts/config --disable CONFIG_IQS624_POS
+scripts/config --disable CONFIG_HID_SENSOR_CUSTOM_INTEL_HINGE
+# Potentiometers
+echo "Disable Potentiometers drivers"
+scripts/config --disable CONFIG_AD5272
+scripts/config --disable CONFIG_DS1803
+scripts/config --disable CONFIG_MAX5432
+scripts/config --disable CONFIG_MAX5481
+scripts/config --disable CONFIG_MAX5487
+scripts/config --disable CONFIG_MCP4018
+scripts/config --disable CONFIG_MCP4131
+scripts/config --disable CONFIG_MCP4531
+scripts/config --disable CONFIG_MCP41010
+scripts/config --disable CONFIG_TPL0102
+# Potentiostats
+echo "Disable Potentiostats drivers"
+scripts/config --disable CONFIG_LMP91000
+# Pressure
+echo "Disable Pressure drivers"
+scripts/config --disable CONFIG_ABP060MG
+scripts/config --disable CONFIG_BMP280
+scripts/config --disable CONFIG_BMP280_I2C
+scripts/config --disable CONFIG_BMP280_SPI
+scripts/config --disable CONFIG_IIO_CROS_EC_BARO
+scripts/config --disable CONFIG_DLHL60D
+scripts/config --disable CONFIG_DPS310
+scripts/config --disable CONFIG_HID_SENSOR_PRESS
+scripts/config --disable CONFIG_HP03
+scripts/config --disable CONFIG_ICP10100
+scripts/config --disable CONFIG_MPL115
+scripts/config --disable CONFIG_MPL115_I2C
+scripts/config --disable CONFIG_MPL115_SPI
+scripts/config --disable CONFIG_MPL3115
+scripts/config --disable CONFIG_MS5611
+scripts/config --disable CONFIG_MS5611_I2C
+scripts/config --disable CONFIG_MS5611_SPI
+scripts/config --disable CONFIG_MS5637
+scripts/config --disable CONFIG_IIO_ST_PRESS
+scripts/config --disable CONFIG_IIO_ST_PRESS_I2C
+scripts/config --disable CONFIG_IIO_ST_PRESS_SPI
+scripts/config --disable CONFIG_T5403
+scripts/config --disable CONFIG_HP206C
+scripts/config --disable CONFIG_ZPA2326
+scripts/config --disable CONFIG_ZPA2326_I2C
+scripts/config --disable CONFIG_ZPA2326_SPI
+# Proximity
+echo "Disable Proximity drivers"
+scripts/config --disable CONFIG_AS3935
+scripts/config --disable CONFIG_ISL29501
+scripts/config --disable CONFIG_LIDAR_LITE_V2
+scripts/config --disable CONFIG_MB1232
+scripts/config --disable CONFIG_PING
+scripts/config --disable CONFIG_RFD77402
+scripts/config --disable CONFIG_SRF04
+scripts/config --disable CONFIG_SX9310
+scripts/config --disable CONFIG_SX9500
+scripts/config --disable CONFIG_SRF08
+scripts/config --disable CONFIG_VCNL3020
+scripts/config --disable CONFIG_VL53L0X_I2C
+# Resolver
+echo "Disable Resolver drivers"
+scripts/config --disable CONFIG_AD2S90
+scripts/config --disable CONFIG_AD2S1200
+# Temperature
+echo "Disable Temperature"
+scripts/config --disable CONFIG_IQS620AT_TEMP
+scripts/config --disable CONFIG_LTC2983
+scripts/config --disable CONFIG_MAXIM_THERMOCOUPLE
+scripts/config --disable CONFIG_HID_SENSOR_TEMP
+scripts/config --disable CONFIG_MLX90614
+scripts/config --disable CONFIG_MLX90632
+scripts/config --disable CONFIG_TMP006
+scripts/config --disable CONFIG_TMP007
+scripts/config --disable CONFIG_TSYS01
+scripts/config --disable CONFIG_TSYS02D
+scripts/config --disable CONFIG_MAX31856
+# Test
+echo "Disable Test drivers"
+scripts/config --disable CONFIG_IIO_TEST_FORMAT
+# Trigger
+echo "Disable Trigger drivers"
+scripts/config --disable CONFIG_IIO_HRTIMER_TRIGGER
+scripts/config --disable CONFIG_IIO_INTERRUPT_TRIGGER
+scripts/config --disable CONFIG_IIO_STM32_LPTIMER_TRIGGER
+scripts/config --disable CONFIG_IIO_STM32_TIMER_TRIGGER
+scripts/config --disable CONFIG_IIO_TIGHTLOOP_TRIGGER
+scripts/config --disable CONFIG_IIO_SYSFS_TRIGGER
+
+#######################################
+
+sleep 2s
+
+############ Drivers/platform ############
+
+# Disable some platform drivers
+msg2 "Disable some platform drivers"
+# Chrome
+echo "Disable ChromeOS dirvers"
+scripts/config --disable CONFIG_WILCO_EC
+scripts/config --disable CONFIG_WILCO_EC_DEBUGFS
+scripts/config --disable CONFIG_WILCO_EC_EVENTS
+scripts/config --disable CONFIG_WILCO_EC_TELEMETRY
+scripts/config --disable CONFIG_CHROME_PLATFORMS
+scripts/config --disable CONFIG_CHROMEOS_LAPTOP
+scripts/config --disable CONFIG_CHROMEOS_PSTORE
+scripts/config --disable CONFIG_CHROMEOS_TBMC
+scripts/config --disable CONFIG_CROS_EC
+scripts/config --disable CONFIG_CROS_EC_I2C
+scripts/config --disable CONFIG_CROS_EC_RPMSG
+scripts/config --disable CONFIG_CROS_EC_ISHTP
+scripts/config --disable CONFIG_CROS_EC_SPI
+scripts/config --disable CONFIG_CROS_EC_LPC
+scripts/config --disable CONFIG_CROS_EC_PROTO
+scripts/config --disable CONFIG_CROS_KBD_LED_BACKLIGHT
+scripts/config --disable CONFIG_CROS_EC_CHARDEV
+scripts/config --disable CONFIG_CROS_EC_LIGHTBAR
+scripts/config --disable CONFIG_CROS_EC_VBC
+scripts/config --disable CONFIG_CROS_EC_DEBUGFS
+scripts/config --disable CONFIG_CROS_EC_SENSORHUB
+scripts/config --disable CONFIG_CROS_EC_SYSFS
+scripts/config --disable CONFIG_CROS_EC_TYPEC
+scripts/config --disable CONFIG_CROS_USBPD_LOGGER
+scripts/config --disable CONFIG_CROS_USBPD_NOTIFY
+# Goldfish
+echo "Disable Goldfish drivers"
+scripts/config --disable CONFIG_GOLDFISH
+scripts/config --disable CONFIG_GOLDFISH_PIPE
+# Mellanox
+echo "Disable Mellanox drivers"
+scripts/config --disable CONFIG_MELLANOX_PLATFORM
+scripts/config --disable CONFIG_MLXREG_HOTPLUG
+scripts/config --disable CONFIG_MLXREG_IO
+scripts/config --disable CONFIG_MLXBF_TMFIFO
+scripts/config --disable CONFIG_MLXBF_BOOTCTL
+scripts/config --disable CONFIG_MLXBF_PMC
+# Mips
+echo "Disable Mips drivers"
+scripts/config --disable CONFIG_MIPS_PLATFORM_DEVICES
+scripts/config --disable CONFIG_CPU_HWMON
+scripts/config --disable CONFIG_RS780E_ACPI
+# Olpc
+echo "Disable Olpc drivers"
+scripts/config --disable CONFIG_OLPC_EC
+scripts/config --disable CONFIG_OLPC_XO175
+scripts/config --disable CONFIG_OLPC_XO175_EC
+# Surface
+echo "Disable Surface drivers"
+scripts/config --disable CONFIG_SURFACE_PLATFORMS
+scripts/config --disable CONFIG_SURFACE3_WMI
+scripts/config --disable CONFIG_SURFACE_3_BUTTON
+scripts/config --disable CONFIG_SURFACE_3_POWER_OPREGION
+scripts/config --disable CONFIG_SURFACE_GPE
+scripts/config --disable CONFIG_SURFACE_PRO3_BUTTON
+
+sleep 2s
+
+# Enable full support for x86 platform
+msg2 "Enable full support for x86 platform"
+scripts/config --enable CONFIG_X86_PLATFORM_DEVICES
+scripts/config --module CONFIG_ACPI_WMI
+scripts/config --module CONFIG_WMI_BMOF
+scripts/config --module CONFIG_ALIENWARE_WMI
+scripts/config --module CONFIG_HUAWEI_WMI
+scripts/config --module CONFIG_UV_SYSFS
+scripts/config --module CONFIG_INTEL_WMI_SBL_FW_UPDATE
+scripts/config --module CONFIG_INTEL_WMI_THUNDERBOLT
+scripts/config --module CONFIG_MXM_WMI
+scripts/config --module CONFIG_PEAQ_WMI
+scripts/config --module CONFIG_XIAOMI_WMI
+scripts/config --module CONFIG_ACERHDF
+scripts/config --module CONFIG_ACER_WIRELESS
+scripts/config --module CONFIG_ACER_WMI
+scripts/config --module CONFIG_AMD_PMC
+scripts/config --module CONFIG_ASUS_LAPTOP
+scripts/config --module CONFIG_ASUS_WIRELESS
+scripts/config --module CONFIG_ASUS_WMI
+scripts/config --module CONFIG_ASUS_NB_WMI
+scripts/config --module CONFIG_EEEPC_LAPTOP
+scripts/config --module CONFIG_EEEPC_WMI
+scripts/config --module CONFIG_DCDBAS
+scripts/config --module CONFIG_DELL_SMBIOS
+scripts/config --enable CONFIG_DELL_SMBIOS_WMI
+scripts/config --enable CONFIG_DELL_SMBIOS_SMM
+scripts/config --module CONFIG_DELL_LAPTOP
+scripts/config --module CONFIG_DELL_RBTN
+scripts/config --module CONFIG_DELL_RBU
+scripts/config --module CONFIG_DELL_SMO8800
+scripts/config --module CONFIG_DELL_WMI
+scripts/config --module CONFIG_DELL_WMI_SYSMAN
+scripts/config --module CONFIG_DELL_WMI_DESCRIPTOR
+scripts/config --module CONFIG_DELL_WMI_AIO
+scripts/config --module CONFIG_DELL_WMI_LED
+scripts/config --module CONFIG_AMILO_RFKILL
+scripts/config --module CONFIG_FUJITSU_LAPTOP
+scripts/config --module CONFIG_FUJITSU_TABLET
+scripts/config --module CONFIG_GPD_POCKET_FAN
+scripts/config --module CONFIG_HP_ACCEL
+scripts/config --module CONFIG_HP_WIRELESS
+scripts/config --module CONFIG_HP_WMI
+scripts/config --module CONFIG_TC1100_WMI
+scripts/config --module CONFIG_IBM_RTL
+scripts/config --module CONFIG_IDEAPAD_LAPTOP
+scripts/config --module CONFIG_SENSORS_HDAPS
+scripts/config --module CONFIG_THINKPAD_ACPI
+scripts/config --enable CONFIG_THINKPAD_ACPI_ALSA_SUPPORT
+scripts/config --enable CONFIG_THINKPAD_ACPI_VIDEO
+scripts/config --enable CONFIG_THINKPAD_ACPI_HOTKEY_POLL
+scripts/config --module CONFIG_INTEL_ATOMISP2_LED
+scripts/config --module CONFIG_INTEL_ATOMISP2_PM
+scripts/config --module CONFIG_INTEL_CHT_INT33FE
+scripts/config --module CONFIG_INTEL_HID_EVENT
+scripts/config --module CONFIG_INTEL_INT0002_VGPIO
+scripts/config --module CONFIG_INTEL_MENLOW
+scripts/config --module CONFIG_INTEL_OAKTRAIL
+scripts/config --module CONFIG_MSI_LAPTOP
+scripts/config --module CONFIG_MSI_WMI
+scripts/config --module CONFIG_XO15_EBOOK
+scripts/config --module CONFIG_XO1_RFKILL
+scripts/config --module CONFIG_PCENGINES_APU2
+scripts/config --module CONFIG_SAMSUNG_LAPTOP
+scripts/config --module CONFIG_SAMSUNG_Q10
+scripts/config --module CONFIG_ACPI_TOSHIBA
+scripts/config --module CONFIG_TOSHIBA_BT_RFKILL
+scripts/config --module CONFIG_TOSHIBA_HAPS
+scripts/config --module CONFIG_TOSHIBA_WMI
+scripts/config --module CONFIG_ACPI_CMPC
+scripts/config --module CONFIG_LG_LAPTOP
+scripts/config --module CONFIG_PANASONIC_LAPTOP
+scripts/config --module CONFIG_SONY_LAPTOP
+scripts/config --enable CONFIG_SONYPI_COMPAT
+scripts/config --module CONFIG_SYSTEM76_ACPI
+scripts/config --module CONFIG_TOPSTAR_LAPTOP
+scripts/config --module CONFIG_I2C_MULTI_INSTANTIATE
+scripts/config --module CONFIG_MLX_PLATFORM
+scripts/config --enable CONFIG_TOUCHSCREEN_DMI
+scripts/config --enable CONFIG_INTEL_IMR
+scripts/config --module CONFIG_INTEL_IPS
+scripts/config --module CONFIG_INTEL_RST
+scripts/config --module CONFIG_INTEL_SMARTCONNECT
+scripts/config --enable CONFIG_INTEL_TURBO_MAX_3
+scripts/config --module CONFIG_INTEL_UNCORE_FREQ_CONTROL
+scripts/config --module CONFIG_INTEL_BXTWC_PMIC_TMU
+scripts/config --module CONFIG_INTEL_CHTDC_TI_PWRBTN
+scripts/config --module CONFIG_INTEL_MFLD_THERMAL
+scripts/config --module CONFIG_INTEL_MID_POWER_BUTTON
+scripts/config --module CONFIG_INTEL_MRFLD_PWRBTN
+scripts/config --enable CONFIG_INTEL_PMC_CORE
+scripts/config --module CONFIG_INTEL_PMT_CLASS
+scripts/config --module CONFIG_INTEL_PMT_TELEMETRY
+scripts/config --module CONFIG_INTEL_PMT_CRASHLOG
+scripts/config --module CONFIG_INTEL_PUNIT_IPC
+scripts/config --enable CONFIG_INTEL_SCU_IPC
+scripts/config --enable CONFIG_INTEL_SCU
+scripts/config --enable CONFIG_INTEL_SCU_PCI
+scripts/config --module CONFIG_INTEL_SCU_PLATFORM
+scripts/config --module CONFIG_INTEL_SCU_IPC_UTIL
+scripts/config --module CONFIG_INTEL_TELEMETRY
+scripts/config --enable CONFIG_PMC_ATOM
+
+#######################################
+
+sleep 2s
+
+############ Net/ipv6 ############
+
+# Disable Ipv6
+msg2 "Disable Ipv6 ... Everybody use Ipv4"
+scripts/config --disable CONFIG_IPV6
+scripts/config --disable CONFIG_IPV6_ROUTER_PREF
+scripts/config --disable CONFIG_IPV6_ROUTE_INFO
+scripts/config --disable CONFIG_IPV6_OPTIMISTIC_DAD
+scripts/config --disable CONFIG_INET6_AH
+scripts/config --disable CONFIG_INET6_ESP
+scripts/config --disable CONFIG_INET6_ESP_OFFLOAD
+scripts/config --disable CONFIG_INET6_ESPINTCP
+scripts/config --disable CONFIG_INET6_IPCOMP
+scripts/config --disable CONFIG_IPV6_MIP6
+scripts/config --disable CONFIG_IPV6_ILA
+scripts/config --disable CONFIG_INET6_XFRM_TUNNEL
+scripts/config --disable CONFIG_INET6_TUNNEL
+scripts/config --disable CONFIG_IPV6_VTI
+scripts/config --disable CONFIG_IPV6_SIT
+scripts/config --disable CONFIG_IPV6_SIT_6RD
+scripts/config --disable CONFIG_IPV6_NDISC_NODETYPE
+scripts/config --disable CONFIG_IPV6_TUNNEL
+scripts/config --disable CONFIG_IPV6_GRE
+scripts/config --disable CONFIG_IPV6_FOU
+scripts/config --disable CONFIG_IPV6_FOU_TUNNEL
+scripts/config --disable CONFIG_IPV6_MULTIPLE_TABLES
+scripts/config --disable CONFIG_IPV6_SUBTREES
+scripts/config --disable CONFIG_IPV6_MROUTE
+scripts/config --disable CONFIG_IPV6_MROUTE_MULTIPLE_TABLES
+scripts/config --disable CONFIG_IPV6_PIMSM_V2
+scripts/config --disable CONFIG_IPV6_SEG6_LWTUNNEL
+scripts/config --disable CONFIG_IPV6_SEG6_HMAC
+scripts/config --disable CONFIG_IPV6_SEG6_BPF
+scripts/config --disable CONFIG_IPV6_RPL_LWTUNNEL
+scripts/config --disable CONFIG_NF_SOCKET_IPV6
+scripts/config --disable CONFIG_NF_TPROXY_IPV6
+scripts/config --disable CONFIG_NF_TABLES_IPV6
+scripts/config --disable CONFIG_NFT_REJECT_IPV6
+scripts/config --disable CONFIG_NFT_DUP_IPV6
+scripts/config --disable CONFIG_NFT_FIB_IPV6
+scripts/config --disable CONFIG_NF_FLOW_TABLE_IPV6
+scripts/config --disable CONFIG_NF_DUP_IPV6
+scripts/config --disable CONFIG_NF_REJECT_IPV6
+scripts/config --disable CONFIG_NF_LOG_IPV6
+scripts/config --disable CONFIG_IP6_NF_IPTABLES
+scripts/config --disable CONFIG_IP6_NF_IPTABLES
+scripts/config --disable CONFIG_IP6_NF_MATCH_AH
+scripts/config --disable CONFIG_IP6_NF_MATCH_EUI64
+scripts/config --disable CONFIG_IP6_NF_MATCH_FRAG
+scripts/config --disable CONFIG_IP6_NF_MATCH_OPTS
+scripts/config --disable CONFIG_IP6_NF_MATCH_HL
+scripts/config --disable CONFIG_IP6_NF_MATCH_IPV6HEADER
+scripts/config --disable CONFIG_IP6_NF_MATCH_MH
+scripts/config --disable CONFIG_IP6_NF_MATCH_RPFILTER
+scripts/config --disable CONFIG_IP6_NF_MATCH_RT
+scripts/config --disable CONFIG_IP6_NF_MATCH_SRH
+scripts/config --disable CONFIG_IP6_NF_TARGET_HL
+scripts/config --disable CONFIG_IP6_NF_FILTER
+scripts/config --disable CONFIG_IP6_NF_TARGET_REJECT
+scripts/config --disable CONFIG_IP6_NF_TARGET_SYNPROXY
+scripts/config --disable CONFIG_IP6_NF_MANGLE
+scripts/config --disable CONFIG_IP6_NF_RAW
+scripts/config --disable CONFIG_IP6_NF_SECURITY
+scripts/config --disable CONFIG_IP6_NF_NAT
+scripts/config --disable CONFIG_IP6_NF_TARGET_MASQUERADE
+scripts/config --disable CONFIG_IP6_NF_TARGET_NPT
+scripts/config --disable CONFIG_NF_DEFRAG_IPV6
+
+#######################################
+
+sleep 2s
+
+############ Drivers/Gnss ############
+
+# Disable Gnss drivers
+msg2 "Disable Gnss drivers"
+scripts/config --disable CONFIG_GNSS
+scripts/config --disable CONFIG_GNSS_SERIAL
+scripts/config --disable CONFIG_GNSS_SIRF_SERIAL
+scripts/config --disable CONFIG_GNSS_UBX_SERIAL
+
+#######################################
+
+sleep 2s
+
+############ Debugs ############
+
+# Disable CONFIG_DEBUG_INFO=y at build time otherwise memory usage blows up
+# and can easily overwhelm a system with 32 GB of memory using a tmpfs build
+# "partition ... this was introduced by FS#66260, see
+# "https://git.archlinux.org/svntogit/packages.git/commit/trunk?h=packages/linux&id=663b08666b269eeeeaafbafaee07fd03389ac8d7
+msg2 "Disable debbug options"
+scripts/config --disable CONFIG_SLUB_DEBUG
+scripts/config --disable CONFIG_PM_DEBUG
+scripts/config --disable CONFIG_PM_ADVANCED_DEBUG
+scripts/config --disable CONFIG_PM_SLEEP_DEBUG
+scripts/config --disable CONFIG_ACPI_DEBUG
+scripts/config --disable CONFIG_SCHED_DEBUG
+scripts/config --disable CONFIG_LATENCYTOP
+scripts/config --disable CONFIG_DEBUG_PREEMPT
+scripts/config --disable CONFIG_DEBUG_INFO
+scripts/config --disable CONFIG_CGROUP_BPF
+scripts/config --disable CONFIG_BPF_LSM
+scripts/config --disable CONFIG_BPF_PRELOAD
+scripts/config --disable CONFIG_BPF_LIRC_MODE2
+scripts/config --disable CONFIG_BPF_KPROBE_OVERRIDE
+scripts/config --disable CONFIG_DEBUG_INFO_REDUCED
+scripts/config --disable CONFIG_DEBUG_INFO_COMPRESSED
+scripts/config --disable CONFIG_DEBUG_INFO_SPLI
+scripts/config --disable CONFIG_GDB_SCRIPTS
+scripts/config --disable CONFIG_DEBUG_INFO_DWARF4
+scripts/config --disable CONFIG_DEBUG_INFO_BTF
+scripts/config --disable CONFIG_BPF_PRELOAD
+scripts/config --disable CONFIG_BPF_PRELOAD_UMD
+scripts/config --disable CONFIG_BPF_STREAM_PARSER
+scripts/config --disable CONFIG_DMA_API_DEBUG
+scripts/config --disable CONFIG_DMA_API_DEBUG_SG
+scripts/config --disable CONFIG_DMA_MAP_BENCHMARK
+scripts/config --disable CONFIG_DEBUG_FS
+scripts/config --disable CONFIG_GCOV_KERNEL
+scripts/config --disable CONFIG_GCOV_PROFILE_ALL
+scripts/config --disable CONFIG_DEBUG_FS
+scripts/config --disable CONFIG_GENERIC_IRQ_DEBUGFS
+scripts/config --disable CONFIG_ACPI_DEBUGGER
+scripts/config --disable CONFIG_ACPI_DEBUGGER_USER
+scripts/config --disable CONFIG_ACPI_EC_DEBUGFS
+scripts/config --disable CONFIG_ACPI_APEI_ERST_DEBUG
+scripts/config --disable CONFIG_NFIT_SECURITY_DEBUG
+scripts/config --disable CONFIG_DMADEVICES_DEBUG
+scripts/config --disable CONFIG_DMADEVICES_VDEBUG
+scripts/config --disable CONFIG_DMATEST
+scripts/config --disable CONFIG_BTRFS_DEBUG
+scripts/config --disable CONFIG_BTRFS_FS_REF_VERIFY
+scripts/config --disable CONFIG_BTRFS_ASSERT
+scripts/config --disable CONFIG_BTRFS_FS_RUN_SANITY_TESTS
+scripts/config --disable CONFIG_BTRFS_FS_CHECK_INTEGRITY
+scripts/config --disable CONFIG_EXT4_DEBUG
+scripts/config --disable CONFIG_EXT4_KUNIT_TESTS
+scripts/config --disable CONFIG_SECURITY_APPARMOR_DEBUG
+scripts/config --disable CONFIG_SECURITY_APPARMOR_DEBUG_ASSERTS
+scripts/config --disable CONFIG_SECURITY_APPARMOR_DEBUG_MESSAGES
+scripts/config --disable CONFIG_SECURITY_APPARMOR_KUNIT_TEST
+scripts/config --disable CONFIG_POWER_SUPPLY_DEBUG
+scripts/config --disable CONFIG_NTFS_DEBUG
+scripts/config --disable CONFIG_GENERIC_IRQ_DEBUGFS
+scripts/config --disable CONFIG_CIFS_STATS2
+scripts/config --disable CONFIG_CIFS_DEBUG
+scripts/config --disable CONFIG_CIFS_DEBUG2
+scripts/config --disable CONFIG_CIFS_DEBUG_DUMP_KEYS
+scripts/config --disable CONFIG_JBD2_DEBUG
+scripts/config --disable CONFIG_CONFIG_NFS_DEBUG
+scripts/config --disable CONFIG_TRACE_IRQFLAGS_SUPPORT
+scripts/config --disable CONFIG_TRACE_IRQFLAGS_NMI_SUPPORT
+scripts/config --disable CONFIG_EARLY_PRINTK_USB
+scripts/config --disable CONFIG_X86_VERBOSE_BOOTUP
+scripts/config --disable CONFIG_EARLY_PRINTK
+scripts/config --disable CONFIG_EARLY_PRINTK_DBGP
+scripts/config --disable CONFIG_EARLY_PRINTK_USB_XDBC
+scripts/config --disable CONFIG_EFI_PGT_DUMP
+scripts/config --disable CONFIG_DEBUG_TLBFLUSH
+scripts/config --disable CONFIG_IOMMU_DEBUG
+scripts/config --disable CONFIG_IOMMU_LEAK
+scripts/config --disable CONFIG_HAVE_MMIOTRACE_SUPPORT
+scripts/config --disable CONFIG_X86_DECODER_SELFTEST
+scripts/config --disable CONFIG_IO_DELAY_0X80
+scripts/config --disable CONFIG_IO_DELAY_0XED
+scripts/config --disable CONFIG_IO_DELAY_UDELAY
+scripts/config --disable CONFIG_IO_DELAY_NONE
+scripts/config --disable CONFIG_DEBUG_BOOT_PARAMS
+scripts/config --disable CONFIG_CPA_DEBUG
+scripts/config --disable CONFIG_DEBUG_ENTRY
+scripts/config --disable CONFIG_DEBUG_NMI_SELFTEST
+scripts/config --disable CONFIG_DEBUG_IMR_SELFTEST
+scripts/config --disable CONFIG_X86_DEBUG_FPU
+scripts/config --disable CONFIG_PUNIT_ATOM_DEBUG
+scripts/config --disable CONFIG_UNWINDER_ORC
+scripts/config --disable CONFIG_UNWINDER_FRAME_POINTER
+scripts/config --disable CONFIG_UNWINDER_GUESS
+scripts/config --disable CONFIG_FRAME_POINTER
+scripts/config --disable CONFIG_THINKPAD_ACPI_DEBUGFACILITIES
+scripts/config --disable CONFIG_THINKPAD_ACPI_DEBUG
+scripts/config --disable CONFIG_THINKPAD_ACPI_UNSAFE_LEDS
+scripts/config --disable CONFIG_CMA_DEBUG
+scripts/config --disable CONFIG_CMA_DEBUGFS
+scripts/config --disable CONFIG_EDAC_DEBUG
+scripts/config --disable CONFIG_ATM_IA_DEBUG
+scripts/config --disable CONFIG_ATM_FORE200E_DEBUG
+scripts/config --disable CONFIG_BCMA_DEBUG
+
+#######################################
+
+sleep 2s
+
+############ Android ############
+
+msg2 "Disable Android drivers"
+scripts/config --disable CONFIG_ANDROID
+scripts/config --disable CONFIG_ANDROID_BINDER_IPC
+scripts/config --disable CONFIG_ANDROID_BINDERFS
+scripts/config --disable CONFIG_ANDROID_BINDER_DEVICES
+scripts/config --disable CONFIG_ANDROID_BINDER_IPC_SELFTEST
+
+#######################################
+
+plain ""
+
+sleep 2s
+}
