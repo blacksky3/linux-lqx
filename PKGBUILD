@@ -88,7 +88,7 @@ for _p in "${pkgname[@]}"; do
     _package${_p#$pkgbase}
   }"
 done
-pkgver=5.12.16
+pkgver=5.12.16_lqx2
 major=5.12
 pkgrel=1
 liquorixrel=23
