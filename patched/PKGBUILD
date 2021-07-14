@@ -134,6 +134,7 @@ prepare(){
   msg2 "Copy "$srcdir"/liquorix-package-$major-$liquorixrel/linux-liquorix/debian/config/kernelarch-x86/config-arch-64 to "$srcdir"/linux-$major/.config"
   cp "$srcdir"/liquorix-package-$major-$liquorixrel/linux-liquorix/debian/config/kernelarch-x86/config-arch-64 "$srcdir"/linux-$major/.config
 
+  plain ""
   msg2 "Disable LTO"
   scripts/config --disable CONFIG_LTO
   scripts/config --disable CONFIG_LTO_CLANG
