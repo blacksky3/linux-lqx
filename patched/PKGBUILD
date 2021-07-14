@@ -134,6 +134,16 @@ prepare(){
   msg2 "Copy "$srcdir"/liquorix-package-$major-$liquorixrel/linux-liquorix/debian/config/kernelarch-x86/config-arch-64 to "$srcdir"/linux-$major/.config"
   cp "$srcdir"/liquorix-package-$major-$liquorixrel/linux-liquorix/debian/config/kernelarch-x86/config-arch-64 "$srcdir"/linux-$major/.config
 
+  msg2 "Disable LTO"
+  scripts/config --disable CONFIG_LTO
+  scripts/config --disable CONFIG_LTO_CLANG
+  scripts/config --disable CONFIG_ARCH_SUPPORTS_LTO_CLANG
+  scripts/config --disable CONFIG_ARCH_SUPPORTS_LTO_CLANG_THIN
+  scripts/config --disable CONFIG_HAS_LTO_CLANG
+  scripts/config --disable CONFIG_LTO_NONE
+  scripts/config --disable CONFIG_LTO_CLANG_FULL
+  scripts/config --disable CONFIG_LTO_CLANG_THIN
+
   # Disable MuQSS. We will re-enable later if _cpu_sched=1 is set
   msg2 "Disable MuQSS. We will re-enable later if _cpu_sched=1 is set"
   scripts/config --disable CONFIG_SCHED_MUQSS
