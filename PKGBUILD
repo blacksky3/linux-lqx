@@ -157,9 +157,6 @@ prepare(){
   # rapid_config is meant to work with build.sh for automation building
   #rapid_config
 
-  # strip_down script
-  #strip_down
-
   # fix for GCC 12.0.0 (git version)
   # plugins don't work
   # disable plugins
