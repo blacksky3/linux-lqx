@@ -200,7 +200,7 @@ build(){
 }
 
 _package(){
-  pkgdesc="Stable linux kernel and modules with a set of patches by TK-Glitch and Piotr Górski"
+  pkgdesc="Liquorix linux kernel and modules"
   depends=("coreutils" "kmod" "initramfs" "mkinitcpio")
   optdepends=("linux-firmware: firmware images needed for some devices"
               "crda: to set the correct wireless channels of your country")
