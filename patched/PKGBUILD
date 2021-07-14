@@ -219,6 +219,8 @@ prepare(){
   # Copy "$srcdir"/liquorix-package-$major-$liquorixrel/linux-liquorix/debian/config/kernelarch-x86/config-arch-64 to "$srcdir"/linux-$major/.config
   msg2 "Copy "$srcdir"/liquorix-package-$major-$liquorixrel/linux-liquorix/debian/config/kernelarch-x86/config-arch-64 to "$srcdir"/linux-$major/.config"
   cp "$srcdir"/liquorix-package-$major-$liquorixrel/linux-liquorix/debian/config/kernelarch-x86/config-arch-64 "$srcdir"/linux-$major/.config
+  
+  plain ""
 
   msg2 "Disable LTO"
   scripts/config --disable CONFIG_LTO
@@ -229,6 +231,8 @@ prepare(){
   scripts/config --disable CONFIG_LTO_NONE
   scripts/config --disable CONFIG_LTO_CLANG_FULL
   scripts/config --disable CONFIG_LTO_CLANG_THIN
+  
+  plain ""
 
   # Disable MuQSS. We will re-enable later if _cpu_sched=1 is set
   msg2 "Disable MuQSS. We will re-enable later if _cpu_sched=1 is set"
@@ -244,9 +248,9 @@ prepare(){
   # Customize the kernel
   source "${startdir}"/prepare
 
-  #configure
+  configure
 
-  #cpu_arch
+  cpu_arch
 
   # Automation building with rapid_config
   # Uncomment rapid_config and comment out configure and cpu_arch
