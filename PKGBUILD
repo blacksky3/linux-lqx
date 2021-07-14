@@ -188,7 +188,7 @@ prepare(){
 
 build(){
 
-  cd linux-$pkgver
+  cd linux-$major
 
   # make -j$(nproc) all
   msg2 "make -j$(nproc) all..."
@@ -206,7 +206,7 @@ _package(){
               "crda: to set the correct wireless channels of your country")
   provides=("VIRTUALBOX-GUEST-MODULES" "WIREGUARD-MODULE")
 
-  cd linux-$pkgver
+  cd linux-$major
 
   local kernver="$(<version)"
   local modulesdir="${pkgdir}"/usr/lib/modules/${kernver}
@@ -256,7 +256,7 @@ _package-headers(){
   pkgdesc="Headers and scripts for building modules for the $pkgbase package"
   depends=("${pkgbase}" "pahole")
 
-  cd linux-$pkgver
+  cd linux-$major
 
   local builddir="$pkgdir"/usr/lib/modules/"$(<version)"/build
 
