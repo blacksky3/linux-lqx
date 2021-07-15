@@ -88,11 +88,11 @@ for _p in "${pkgname[@]}"; do
     _package${_p#$pkgbase}
   }"
 done
-pkgver=5.12.17_lqx1
+pkgver=5.12.17_lqx2
 major=5.12
 pkgrel=1
-liquorixrel=24
-liquorixpatch=v5.12.17-lqx1
+liquorixrel=25
+liquorixpatch=v5.12.17-lqx2
 arch=(x86_64)
 url="https://www.kernel.org/"
 license=(GPL-2.0)
