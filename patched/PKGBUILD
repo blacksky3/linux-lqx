@@ -146,8 +146,12 @@ source=("https://mirrors.edge.kernel.org/pub/linux/kernel/v5.x/linux-$major.tar.
         "$patchsource/xanmod-patches/0006-XANMOD-dcache-cache_pressure-50-decreases-the-rate-a.patch"
         "$patchsource/xanmod-patches/0007-XANMOD-sched-autogroup-Add-kernel-parameter-and-conf.patch"
         "$patchsource/xanmod-patches/0011-XANMOD-lib-kconfig.debug-disable-default-CONFIG_SYMB.patch"
+        "https://raw.githubusercontent.com/kevall474/kernel-patches-v2/main/5.12/zstd-patches/0002-allow-setting-zstd-compression-level-for-kernel.patch"
+        "https://raw.githubusercontent.com/kevall474/kernel-patches-v2/main/5.12/zstd-dev-patches/zstd-dev-patches.patch"
         "$patchsource/misc-patches/vm.max_map_count.patch")
 md5sums=("SKIP"
+         "SKIP"
+         "SKIP"
          "SKIP"
          "SKIP"
          "SKIP"
