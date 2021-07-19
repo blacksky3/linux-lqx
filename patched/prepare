@@ -1073,7 +1073,7 @@ configure(){
   fi
 
   sleep 2s
-  
+
   plain "#########################################"
   plain "Enable/disable CONFIG_SCHED_AUTOGROUP_DEFAULT_ENABLED"
   plain ""
@@ -1095,8 +1095,8 @@ configure(){
   fi
 
   sleep 2s
-  
-  plain "" 
+
+  plain ""
   plain "#########################################"
   plain "Enable ZEN_INTERACTIVE a selection of patches from Zen/Liquorix kernel"
   plain "and additional tweaks for a better gaming experience (ZENIFY)"
@@ -1113,7 +1113,7 @@ configure(){
     msg2 "Enable ZEN_INTERACTIVE"
     scripts/config --enable ZEN_INTERACTIVE
   fi
-  
+
   sleep 2s
 
   plain ""
@@ -1200,6 +1200,36 @@ configure(){
   else
     msg2 "Enable SECURITY_FORK_BRUT"
     scripts/config --enable CONFIG_SECURITY_FORK_BRUT
+  fi
+
+  sleep 2s
+
+  plain ""
+  plain "#########################################"
+  plain "Enable/disable OpenRGB SMBus access?"
+  plain ""
+  plain "Nuvoton NCT6775 and compatible SMBus controller"
+  plain ""
+  plain "If you say yes to this option, support will be included for the"
+  plain "Nuvoton NCT6775 and compatible SMBus controllers."
+  plain ""
+  plain "SMBus access is necessary for controlling RGB RAM and"
+  plain "certain motherboard on-board LEDs."
+  plain "If you are not trying to use OpenRGB to control RGB RAM or motherboard"
+  plain "LEDs, you may skip this section."
+  plain ""
+  plain "ASUS and ASRock motherboards have their RGB controller on an SMBus interface that"
+  plain "is not accessible by an unmodified Linux kernel (for now)."
+  read -rp "`echo $' > 1.Enable\n > 2.Disable\n > Default (Enable)\nchoice[1-2]: '`" _openrgb
+  if [[ "$_openrgb" = "1" ]]; then
+    msg2 "Enable OpenRGB SMBus access"
+    scripts/config --module CONFIG_I2C_NCT6775
+  elif [[ "$_openrgb" = "2" ]]; then
+    msg2 "Disable OpenRGB SMBus access"
+    scripts/config --disable CONFIG_I2C_NCT6775
+  else
+    msg2 "Enable OpenRGB SMBus access"
+    scripts/config --module CONFIG_I2C_NCT6775
   fi
 
   sleep 2s
@@ -1768,7 +1798,7 @@ rapid_config(){
   scripts/config --enable CONFIG_CC_OPTIMIZE_FOR_PERFORMANCE_O3
 
   sleep 2s
-  
+
   msg2 "Set timer frequency to 1000HZ"
   scripts/config --enable CONFIG_HZ_1000
   scripts/config --set-val CONFIG_HZ 1000
@@ -1851,7 +1881,7 @@ rapid_config(){
   scripts/config --enable CONFIG_SCHED_AUTOGROUP_DEFAULT_ENABLED
 
   sleep 2s
-  
+
   msg2 "Enable CONFIG_INTERACTIVE"
   scripts/config --enable CONFIG_INTERACTIVE
 
@@ -1877,7 +1907,12 @@ rapid_config(){
   scripts/config --enable CONFIG_SECURITY_FORK_BRUT
 
   sleep 2s
-  
+
+  msg2 "Enable OpenRGB SMBus access"
+  scripts/config --module CONFIG_I2C_NCT677
+
+  sleep 2s
+
   if [[ $_cpu_sched = "1" ]]; then
     msg2 "Enable MuQSS"
     scripts/config --enable CONFIG_SCHED_MC
@@ -1898,7 +1933,7 @@ rapid_config(){
     scripts/config --enable CONFIG_CFS_BANDWIDTH
     scripts/config --enable CONFIG_SCHED_DEBUG
   fi
-  
+
   sleep 2s
 
   msg2 "Set CONFIG_GENERIC_CPU"

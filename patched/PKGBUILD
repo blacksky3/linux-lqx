@@ -88,11 +88,11 @@ for _p in "${pkgname[@]}"; do
     _package${_p#$pkgbase}
   }"
 done
-pkgver=5.12.17_lqx2
+pkgver=5.12.18_lqx1
 major=5.12
 pkgrel=1
-liquorixrel=25
-liquorixpatch=v5.12.17-lqx2
+liquorixrel=26
+liquorixpatch=v5.12.18-lqx1
 arch=(x86_64)
 url="https://www.kernel.org/"
 license=(GPL-2.0)
@@ -123,7 +123,6 @@ source=("https://mirrors.edge.kernel.org/pub/linux/kernel/v5.x/linux-$major.tar.
         "$patchsource/clearlinux-patches/0117-xattr-allow-setting-user.-attributes-on-symlinks-by-.patch"
         "$patchsource/clearlinux-patches/0118-add-scheduler-turbo3-patch.patch"
         "$patchsource/clearlinux-patches/0119-use-lfence-instead-of-rep-and-nop.patch"
-        "$patchsource/clearlinux-patches/0120-do-accept-in-LIFO-order-for-cache-efficiency.patch"
         "$patchsource/clearlinux-patches/0121-locking-rwsem-spin-faster.patch"
         "$patchsource/clearlinux-patches/0122-ata-libahci-ignore-staggered-spin-up.patch"
         "$patchsource/clearlinux-patches/0123-print-CPU-that-faults.patch"
@@ -140,6 +139,7 @@ source=("https://mirrors.edge.kernel.org/pub/linux/kernel/v5.x/linux-$major.tar.
         "$patchsource/mm-tkg-patches/0002-mm-Support-soft-dirty-flag-read-with-reset.patch"
         "$patchsource/mm-xanmod-patches/0008-XANMOD-mm-vmscan-vm_swappiness-30-decreases-the-amou.patch"
         "$patchsource/ntfs3-xanmod-patches/ntfs3-xanmod-patches.patch"
+        "https://raw.githubusercontent.com/kevall474/kernel-patches-v2/main/5.12/security-xanmod-patches/Fork-brute-force-attack-mitigation.patch"
         "$patchsource/timer-xanmod-patches/0004-XANMOD-kconfig-add-500Hz-timer-interrupt-kernel-conf.patch"
         "$patchsource/wine-patches/0007-v5.13-winesync.patch"
         "$patchsource/xanmod-patches/0005-XANMOD-kconfig-set-PREEMPT-and-RCU_BOOST-without-del.patch"
@@ -223,7 +223,7 @@ prepare(){
   # Copy "$srcdir"/liquorix-package-$major-$liquorixrel/linux-liquorix/debian/config/kernelarch-x86/config-arch-64 to "$srcdir"/linux-$major/.config
   msg2 "Copy "$srcdir"/liquorix-package-$major-$liquorixrel/linux-liquorix/debian/config/kernelarch-x86/config-arch-64 to "$srcdir"/linux-$major/.config"
   cp "$srcdir"/liquorix-package-$major-$liquorixrel/linux-liquorix/debian/config/kernelarch-x86/config-arch-64 "$srcdir"/linux-$major/.config
-  
+
   plain ""
 
   msg2 "Disable LTO"
@@ -235,7 +235,7 @@ prepare(){
   scripts/config --disable CONFIG_LTO_NONE
   scripts/config --disable CONFIG_LTO_CLANG_FULL
   scripts/config --disable CONFIG_LTO_CLANG_THIN
-  
+
   plain ""
 
   # Disable MuQSS. We will re-enable later if _cpu_sched=1 is set
