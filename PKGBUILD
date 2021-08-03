@@ -125,11 +125,15 @@ prepare(){
     msg2 "Applying patch $src..."
     patch -Np1 < "../$src"
   done
+  
+  plain ""
 
   # Copy the config file first
   # Copy "$srcdir"/liquorix-package-$major-$liquorixrel/linux-liquorix/debian/config/kernelarch-x86/config-arch-64 to "$srcdir"/linux-$major/.config
   msg2 "Copy "$srcdir"/liquorix-package-$major-$liquorixrel/linux-liquorix/debian/config/kernelarch-x86/config-arch-64 to "$srcdir"/linux-$major/.config"
   cp "$srcdir"/liquorix-package-$major-$liquorixrel/linux-liquorix/debian/config/kernelarch-x86/config-arch-64 "$srcdir"/linux-$major/.config
+  
+  sleep 2s
 
   plain ""
 
