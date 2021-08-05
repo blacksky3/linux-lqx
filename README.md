@@ -6,7 +6,7 @@ Linux kernel build for Archlinux with a patch set by TK-Glitch, Piotr Górski, H
 
 # Version
 
-- 5.19.19-lqx3
+- 5.19.19-lqx4
 
 # Build
 
