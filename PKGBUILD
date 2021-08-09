@@ -85,11 +85,11 @@ for _p in "${pkgname[@]}"; do
     _package${_p#$pkgbase}
   }"
 done
-pkgver=5.12.19_lqx4
-major=5.12
-pkgrel=1
+pkgver=5.13.9_lqx1
+major=5.13
+pkgrel=3
 liquorixrel=30
-liquorixpatch=v5.12.19-lqx4
+liquorixpatch=v5.13.9-lqx1
 arch=(x86_64)
 url="https://www.kernel.org/"
 license=(GPL-2.0)
@@ -196,7 +196,7 @@ prepare(){
   sleep 2s
 
   msg2 "Set module compression to ZSTD"
-  scripts/config --enable CONFIG_MODULE_COMPRESS
+  scripts/config --disable CONFIG_MODULE_COMPRESS_NONE
   scripts/config --disable CONFIG_MODULE_COMPRESS_GZIP
   scripts/config --disable CONFIG_MODULE_COMPRESS_XZ
   scripts/config --enable CONFIG_MODULE_COMPRESS_ZSTD
