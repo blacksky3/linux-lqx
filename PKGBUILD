@@ -164,20 +164,26 @@ prepare(){
 
   sleep 2s
 
-  #plain ""
+  plain ""
 
   # fix for GCC 12.0.0 (git version)
-  # plugins don't work
-  # disable plugins
-  #if [[ "$GCC_VERSION" = "12.0.0" ]]; then
-  #sleep 2s
-  #plain ""
-  #msg2 "Disable CONFIG_HAVE_GCC_PLUGINS/CONFIG_GCC_PLUGINS (Quick fix for gcc 12.0.0 git version)"
-  #scripts/config --disable CONFIG_HAVE_GCC_PLUGINS
-  #scripts/config --disable CONFIG_GCC_PLUGINS
-  #plain ""
-  #sleep 2s
-  #fi
+  if [[ "$GCC_VERSION" = "12.0.0" ]] && [[ "$_compiler" = "1" ]]; then
+    plain ""
+
+    #msg2 "Disable CONFIG_HAVE_GCC_PLUGINS/CONFIG_GCC_PLUGINS (Quick fix for gcc 12.0.0 git version)"
+    #scripts/config --disable CONFIG_HAVE_GCC_PLUGINS
+    #scripts/config --disable CONFIG_GCC_PLUGINS
+
+    #sleep 2s
+    
+    msg2 "Disable Fortify"
+    scripts/config --disable CONFIG_FORTIFY_SOURCE
+    scripts/config --disable CONFIG_ARCH_HAS_FORTIFY_SOURCE
+    
+    plain ""
+  fi
+
+  sleep 2s
 
   plain ""
 
