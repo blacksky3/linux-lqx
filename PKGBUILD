@@ -447,7 +447,7 @@ build(){
 }
 
 _package(){
-  pkgdesc="Liquorix linux kernel and modules"
+  pkgdesc="Liquorix kernel and modules"
   depends=("coreutils" "kmod" "initramfs" "mkinitcpio")
   optdepends=("linux-firmware: firmware images needed for some devices"
               "crda: to set the correct wireless channels of your country")
