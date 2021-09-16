@@ -15,7 +15,8 @@
 ################# CPU Scheduler #################
 
 #Set CPU Scheduler
-#Set '1' for MuQSS CPU Schedule
+#Set '1' for PDS CPU Schedule
+#Set '2' for BMQ CPU Schedule
 #Leave empty for no CPU Scheduler
 #Default is empty. It will build with no cpu scheduler. To build with cpu shceduler just use : env _cpu_sched=1 makepkg -s
 if [ -z ${_cpu_sched+x} ]; then
@@ -85,11 +86,11 @@ for _p in "${pkgname[@]}"; do
     _package${_p#$pkgbase}
   }"
 done
-pkgver=5.14.3_lqx1
+pkgver=5.14.4_lqx1
 major=5.14
 pkgrel=1
 liquorixrel=1
-liquorixpatch=v5.14.3-lqx1
+liquorixpatch=v5.14.4-lqx1
 arch=(x86_64)
 url="https://www.kernel.org/"
 license=(GPL-2.0)
