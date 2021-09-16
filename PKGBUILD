@@ -68,9 +68,15 @@ fi
 # This section set the pkgbase based on the cpu scheduler, so user can build different package based on the cpu scheduler.
 if [[ $_cpu_sched = "1" ]]; then
   if [[ "$_compiler" = "1" ]]; then
-    pkgbase=lqx-kernel-muqss-gcc
+    pkgbase=lqx-kernel-pds-gcc
   elif [[ "$_compiler" = "2" ]]; then
-    pkgbase=lqx-kernel-muqss-clang
+    pkgbase=lqx-kernel-pds-clang
+  fi
+elif [[ $_cpu_sched = "2" ]]; then
+  if [[ "$_compiler" = "1" ]]; then
+    pkgbase=lqx-kernel-bmq-gcc
+  elif [[ "$_compiler" = "2" ]]; then
+    pkgbase=lqx-kernel-bmq-clang
   fi
 else
   if [[ "$_compiler" = "1" ]]; then
