@@ -15,8 +15,10 @@
 ################# CPU Scheduler #################
 
 #Set CPU Scheduler
-#Set '1' for PDS CPU Schedule
-#Set '2' for BMQ CPU Schedule
+#Set '1' for CacULE CPU Scheduler
+#Set '2' for CacULE-RDB CPU Scheduler
+#Set '3' for BMQ CPU Scheduler
+#Set '4' for PDS CPU Scheduler
 #Leave empty for no CPU Scheduler
 #Default is empty. It will build with no cpu scheduler. To build with cpu shceduler just use : env _cpu_sched=1 makepkg -s
 if [ -z ${_cpu_sched+x} ]; then
@@ -68,11 +70,23 @@ fi
 # This section set the pkgbase based on the cpu scheduler, so user can build different package based on the cpu scheduler.
 if [[ $_cpu_sched = "1" ]]; then
   if [[ "$_compiler" = "1" ]]; then
+    pkgbase=lqx-kernel-cacule-gcc
+  elif [[ "$_compiler" = "2" ]]; then
+    pkgbase=lqx-kernel-cacule-clang
+  fi
+elif [[ $_cpu_sched = "2" ]]; then
+  if [[ "$_compiler" = "1" ]]; then
+    pkgbase=lqx-kernel-cacule-rdb-gcc
+  elif [[ "$_compiler" = "2" ]]; then
+    pkgbase=lqx-kernel-cacule-rdb-clang
+  fi
+elif [[ $_cpu_sched = "3" ]]; then
+  if [[ "$_compiler" = "1" ]]; then
     pkgbase=lqx-kernel-pds-gcc
   elif [[ "$_compiler" = "2" ]]; then
     pkgbase=lqx-kernel-pds-clang
   fi
-elif [[ $_cpu_sched = "2" ]]; then
+elif [[ $_cpu_sched = "4" ]]; then
   if [[ "$_compiler" = "1" ]]; then
     pkgbase=lqx-kernel-bmq-gcc
   elif [[ "$_compiler" = "2" ]]; then
@@ -158,8 +172,10 @@ prepare(){
 
   plain ""
 
-  # Disable PDS/BMQ. We will re-enable later if _cpu_sched=1 or 2 is set
-  msg2 "Disable MuQSS. We will re-enable later if _cpu_sched=1 is set"
+  # Disable CacULE PDS/BMQ. We will re-enable later if _cpu_sched=1,2,3 or 4 is set
+  msg2 "isable CacULE PDS/BMQ. We will re-enable later if _cpu_sched=1,2,3 or 4 is set"
+  scripts/config --disable CONFIG_CACULE_SCHED
+  scripts/config --disable CONFIG_CACULE_RDB
   scripts/config --disable CONFIG_SCHED_ALT
   scripts/config --disable CONFIG_PDS
   scripts/config --disable CONFIG_BMQ
@@ -293,9 +309,15 @@ prepare(){
 
   sleep 2s
 
-  msg2 "Set timer frequency to 1000HZ"
-  scripts/config --enable CONFIG_HZ_1000
-  scripts/config --set-val CONFIG_HZ 1000
+  if [[ $_cpu_sched = "1" ]] || [[ $_cpu_sched = "2" ]]; then
+    msg2 "Set timer frequency to 2000HZ"
+    scripts/config --enable CONFIG_HZ_2000
+    scripts/config --set-val CONFIG_HZ 2000
+  else
+    msg2 "Set timer frequency to 1000HZ"
+    scripts/config --enable CONFIG_HZ_1000
+    scripts/config --set-val CONFIG_HZ 1000
+  fi
 
   sleep 2s
 
@@ -390,12 +412,21 @@ prepare(){
   sleep 2s
 
   if [[ $_cpu_sched = "1" ]]; then
+    msg2 "Enable CacULE CPU scheduler"
+    scripts/config --enable CONFIG_CACULE_SCHED
+    scripts/config --disable CONFIG_CACULE_RDB
+  elif [[ $_cpu_sched = "2" ]]; then
+    msg2 "Enable CacULE CPU scheduler"
+    scripts/config --enable CONFIG_CACULE_SCHED
+    msg2 "Enable CacULE-RDB CPU scheduler"
+    scripts/config --enable CONFIG_CACULE_RDB
+  elif [[ $_cpu_sched = "3" ]]; then
     msg2 "Enable CONFIG_SCHED_ALT, this feature enable alternative CPU scheduler"
     scripts/config --enable CONFIG_SCHED_ALT
     msg2 "Enable PDS CPU scheduler"
     scripts/config --enable CONFIG_SCHED_PDS
     scripts/config --disable CONFIG_SCHED_BMQ
-  elif [[ $_cpu_sched = "2" ]]; then
+  elif [[ $_cpu_sched = "4" ]]; then
     msg2 "Enable CONFIG_SCHED_ALT, this feature enable alternative CPU scheduler"
     scripts/config --enable CONFIG_SCHED_ALT
     msg2 "Enable BMQ CPU scheduler"
