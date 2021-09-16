@@ -158,16 +158,11 @@ prepare(){
 
   plain ""
 
-  # Disable MuQSS. We will re-enable later if _cpu_sched=1 is set
+  # Disable PDS/BMQ. We will re-enable later if _cpu_sched=1 or 2 is set
   msg2 "Disable MuQSS. We will re-enable later if _cpu_sched=1 is set"
-  scripts/config --disable CONFIG_SCHED_MUQSS
-  scripts/config --disable CONFIG_RQ_NONE
-  scripts/config --disable CONFIG_RQ_SMT
-  scripts/config --disable CONFIG_RQ_MC
-  scripts/config --disable CONFIG_RQ_MC_LLC
-  scripts/config --disable CONFIG_RQ_SMP
-  scripts/config --disable CONFIG_RQ_ALL
-  scripts/config --undefine CONFIG_SHARERQ
+  scripts/config --disable CONFIG_SCHED_ALT
+  scripts/config --disable CONFIG_PDS
+  scripts/config --disable CONFIG_BMQ
 
   sleep 2s
 
@@ -395,15 +390,17 @@ prepare(){
   sleep 2s
 
   if [[ $_cpu_sched = "1" ]]; then
-    msg2 "Enable MuQSS"
-    scripts/config --enable CONFIG_SCHED_MC
-    scripts/config --enable CONFIG_SCHED_SMT
-    scripts/config --enable CONFIG_SMP
-    scripts/config --enable CONFIG_SCHED_MC_PRIO
-    scripts/config --enable CONFIG_SCHED_MUQSS
-    msg2 "Set to RQ_MC"
-    scripts/config --enable CONFIG_RQ_MC
-    scripts/config --set-val CONFIG_SHARERQ 2
+    msg2 "Enable CONFIG_SCHED_ALT, this feature enable alternative CPU scheduler"
+    scripts/config --enable CONFIG_SCHED_ALT
+    msg2 "Enable PDS CPU scheduler"
+    scripts/config --enable CONFIG_SCHED_PDS
+    scripts/config --disable CONFIG_SCHED_BMQ
+  elif [[ $_cpu_sched = "2" ]]; then
+    msg2 "Enable CONFIG_SCHED_ALT, this feature enable alternative CPU scheduler"
+    scripts/config --enable CONFIG_SCHED_ALT
+    msg2 "Enable BMQ CPU scheduler"
+    scripts/config --disable CONFIG_SCHED_PDS
+    scripts/config --enable CONFIG_SCHED_BMQ
   else
     msg2 "Enable CFS"
     scripts/config --enable SCHED_NORMAL
