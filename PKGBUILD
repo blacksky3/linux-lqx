@@ -17,8 +17,8 @@
 #Set CPU Scheduler
 #Set '1' for CacULE CPU Scheduler
 #Set '2' for CacULE-RDB CPU Scheduler
-#Set '3' for BMQ CPU Scheduler
-#Set '4' for PDS CPU Scheduler
+#Set '3' for PDS CPU Scheduler
+#Set '4' for BMQ CPU Scheduler
 #Leave empty for no CPU Scheduler
 #Default is empty. It will build with no cpu scheduler. To build with cpu shceduler just use : env _cpu_sched=1 makepkg -s
 if [ -z ${_cpu_sched+x} ]; then
@@ -106,11 +106,11 @@ for _p in "${pkgname[@]}"; do
     _package${_p#$pkgbase}
   }"
 done
-pkgver=5.14.4_lqx1
+pkgver=5.14.6_lqx1
 major=5.14
 pkgrel=1
 liquorixrel=1
-liquorixpatch=v5.14.4-lqx1
+liquorixpatch=v5.14.6-lqx1
 arch=(x86_64)
 url="https://www.kernel.org/"
 license=(GPL-2.0)
