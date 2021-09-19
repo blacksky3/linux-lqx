@@ -204,11 +204,32 @@ prepare(){
   sleep 2s
 
   plain ""
+  
+  msg2 "Set kernel compression mode to ZSTD"
+  scripts/config --enable CONFIG_HAVE_KERNEL_GZIP
+  scripts/config --enable CONFIG_HAVE_KERNEL_BZIP2
+  scripts/config --enable CONFIG_HAVE_KERNEL_LZMA
+  scripts/config --enable CONFIG_HAVE_KERNEL_XZ
+  scripts/config --enable CONFIG_HAVE_KERNEL_LZO
+  scripts/config --enable CONFIG_HAVE_KERNEL_LZ4
+  scripts/config --enable CONFIG_HAVE_KERNEL_ZSTD
+  scripts/config --enable CONFIG_HAVE_KERNEL_UNCOMPRESSED
 
-  msg2 "Set SIG level to SHA512"
+  scripts/config --disable CONFIG_KERNEL_GZIP
+  scripts/config --disable CONFIG_KERNEL_BZIP2
+  scripts/config --disable CONFIG_KERNEL_LZMA
+  scripts/config --disable CONFIG_KERNEL_XZ
+  scripts/config --disable CONFIG_KERNEL_LZO
+  scripts/config --disable CONFIG_KERNEL_LZ4
+  scripts/config --enable CONFIG_KERNEL_ZSTD
+  scripts/config --disable CONFIG_KERNEL_UNCOMPRESSED
+
+  sleep 2s
+
+  msg2 "Set module signature algorithm"
+  scripts/config --enable CONFIG_MODULE_SIG
   scripts/config --undefine MODULE_SIG_FORCE
   scripts/config --disable MODULE_SIG_FORCE
-  scripts/config --enable CONFIG_MODULE_SIG
   scripts/config --enable CONFIG_MODULE_SIG_ALL
   scripts/config --disable CONFIG_MODULE_SIG_SHA1
   scripts/config --disable CONFIG_MODULE_SIG_SHA224
