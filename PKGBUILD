@@ -77,7 +77,7 @@ elif [[ $_cpu_sched = "3" ]]; then
 elif [[ $_cpu_sched = "4" ]]; then
   pkgbase=lqx-kernel-bmq
 else
-  pkgbase=lqx-kernel-gcc
+  pkgbase=lqx-kernel
 fi
 pkgname=("$pkgbase" "$pkgbase-headers")
 for _p in "${pkgname[@]}"; do
