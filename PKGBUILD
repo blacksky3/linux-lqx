@@ -69,35 +69,15 @@ fi
 
 # This section set the pkgbase based on the cpu scheduler, so user can build different package based on the cpu scheduler.
 if [[ $_cpu_sched = "1" ]]; then
-  if [[ "$_compiler" = "1" ]]; then
-    pkgbase=lqx-kernel-cacule-gcc
-  elif [[ "$_compiler" = "2" ]]; then
-    pkgbase=lqx-kernel-cacule-clang
-  fi
+  pkgbase=lqx-kernel-cacule
 elif [[ $_cpu_sched = "2" ]]; then
-  if [[ "$_compiler" = "1" ]]; then
-    pkgbase=lqx-kernel-cacule-rdb-gcc
-  elif [[ "$_compiler" = "2" ]]; then
-    pkgbase=lqx-kernel-cacule-rdb-clang
-  fi
+  pkgbase=lqx-kernel-cacule-rdb
 elif [[ $_cpu_sched = "3" ]]; then
-  if [[ "$_compiler" = "1" ]]; then
-    pkgbase=lqx-kernel-pds-gcc
-  elif [[ "$_compiler" = "2" ]]; then
-    pkgbase=lqx-kernel-pds-clang
-  fi
+  pkgbase=lqx-kernel-pds
 elif [[ $_cpu_sched = "4" ]]; then
-  if [[ "$_compiler" = "1" ]]; then
-    pkgbase=lqx-kernel-bmq-gcc
-  elif [[ "$_compiler" = "2" ]]; then
-    pkgbase=lqx-kernel-bmq-clang
-  fi
+  pkgbase=lqx-kernel-bmq
 else
-  if [[ "$_compiler" = "1" ]]; then
-    pkgbase=lqx-kernel-gcc
-  elif [[ "$_compiler" = "2" ]]; then
-    pkgbase=lqx-kernel-clang
-  fi
+  pkgbase=lqx-kernel-gcc
 fi
 pkgname=("$pkgbase" "$pkgbase-headers")
 for _p in "${pkgname[@]}"; do
