@@ -87,9 +87,9 @@ for _p in "${pkgname[@]}"; do
   }"
 done
 pkgver=5.14.13_lqx1
-major=5.15
+major=5.14
 pkgrel=1
-liquorixrel=14
+liquorixrel=15
 liquorixpatch=v5.14.13-lqx1
 arch=(x86_64)
 url="https://www.kernel.org/"
