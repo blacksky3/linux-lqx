@@ -10,7 +10,6 @@
 #Credits: Joan Figueras <ffigue at gmail dot com> ---> For the base PKFBUILD
 #Credits: Linus Torvalds ---> For the linux kernel
 #Credits: Steven Barrett <steven@liquorix.net> <https://liquorix.net> ---> For the Liquorix patch
-#Credits: Con Kolivas <kernel@kolivas.org> <http://ck.kolivas.org/> ---> For MuQSS patches
 
 ################# CPU Scheduler #################
 
