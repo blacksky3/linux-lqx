@@ -15,10 +15,8 @@
 ################# CPU Scheduler #################
 
 #Set CPU Scheduler
-#Set '1' for CacULE CPU Scheduler
-#Set '2' for CacULE-RDB CPU Scheduler
-#Set '3' for PDS CPU Scheduler
-#Set '4' for BMQ CPU Scheduler
+#Set '1' for PDS CPU Scheduler
+#Set '2' for BMQ CPU Scheduler
 #Leave empty for no CPU Scheduler
 #Default is empty. It will build with no cpu scheduler. To build with cpu shceduler just use : env _cpu_sched=1 makepkg -s
 if [ -z ${_cpu_sched+x} ]; then
@@ -69,12 +67,8 @@ fi
 
 # This section set the pkgbase based on the cpu scheduler, so user can build different package based on the cpu scheduler.
 if [[ $_cpu_sched = "1" ]]; then
-  pkgbase=lqx-kernel-cacule
-elif [[ $_cpu_sched = "2" ]]; then
-  pkgbase=lqx-kernel-cacule-rdb
-elif [[ $_cpu_sched = "3" ]]; then
   pkgbase=lqx-kernel-pds
-elif [[ $_cpu_sched = "4" ]]; then
+elif [[ $_cpu_sched = "2" ]]; then
   pkgbase=lqx-kernel-bmq
 else
   pkgbase=lqx-kernel
@@ -86,11 +80,11 @@ for _p in "${pkgname[@]}"; do
     _package${_p#$pkgbase}
   }"
 done
-pkgver=5.14.13_lqx1
+pkgver=5.14.17_lqx1
 major=5.14
 pkgrel=1
-liquorixrel=15
-liquorixpatch=v5.14.13-lqx1
+liquorixrel=22
+liquorixpatch=v5.14.17-lqx1
 arch=(x86_64)
 url="https://www.kernel.org/"
 license=(GPL-2.0)
@@ -309,16 +303,10 @@ prepare(){
   scripts/config --enable CONFIG_CC_OPTIMIZE_FOR_PERFORMANCE_O3
 
   sleep 2s
-
-  if [[ $_cpu_sched = "1" ]] || [[ $_cpu_sched = "2" ]]; then
-    msg2 "Set timer frequency to 2000HZ"
-    scripts/config --enable CONFIG_HZ_2000
-    scripts/config --set-val CONFIG_HZ 2000
-  else
-    msg2 "Set timer frequency to 1000HZ"
-    scripts/config --enable CONFIG_HZ_1000
-    scripts/config --set-val CONFIG_HZ 1000
-  fi
+  
+  msg2 "Set timer frequency to 1000HZ"
+  scripts/config --enable CONFIG_HZ_1000
+  scripts/config --set-val CONFIG_HZ 1000
 
   sleep 2s
 
@@ -413,21 +401,12 @@ prepare(){
   sleep 2s
 
   if [[ $_cpu_sched = "1" ]]; then
-    msg2 "Enable CacULE CPU scheduler"
-    scripts/config --enable CONFIG_CACULE_SCHED
-    scripts/config --disable CONFIG_CACULE_RDB
-  elif [[ $_cpu_sched = "2" ]]; then
-    msg2 "Enable CacULE CPU scheduler"
-    scripts/config --enable CONFIG_CACULE_SCHED
-    msg2 "Enable CacULE-RDB CPU scheduler"
-    scripts/config --enable CONFIG_CACULE_RDB
-  elif [[ $_cpu_sched = "3" ]]; then
     msg2 "Enable CONFIG_SCHED_ALT, this feature enable alternative CPU scheduler"
     scripts/config --enable CONFIG_SCHED_ALT
     msg2 "Enable PDS CPU scheduler"
     scripts/config --enable CONFIG_SCHED_PDS
     scripts/config --disable CONFIG_SCHED_BMQ
-  elif [[ $_cpu_sched = "4" ]]; then
+  elif [[ $_cpu_sched = "2" ]]; then
     msg2 "Enable CONFIG_SCHED_ALT, this feature enable alternative CPU scheduler"
     scripts/config --enable CONFIG_SCHED_ALT
     msg2 "Enable BMQ CPU scheduler"
