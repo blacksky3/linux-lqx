@@ -4,13 +4,13 @@ Liquorix kernel build for Archlinux.
 
 # Version
 
-- 5.14.11-lqx1
+- 5.14.19-lqx2
 
 # Build
 
     git clone https://github.com/kevall474/Liquorix.git
     cd Liquorix
-    env _cpu_sched=(1,2,3 or 4) _compiler=(1 or 2) makepkg -s
+    env _cpu_sched=(1 or 2) _compiler=(1 or 2) makepkg -s
 
 # Build variables
 
@@ -18,10 +18,8 @@ Liquorix kernel build for Archlinux.
 
 - Will add a CPU Scheduler :
 
-        1 : CacULE by Hamad Al Marri
-        2 : CacULE-RDB by Hamad Al Marri
-        3 : PDS by Alfred Chen
-        4 : BMQ by Alfred Chen
+        1 : PDS by Alfred Chen
+        2 : BMQ by Alfred Chen
 
 Leave this variable empty if you don't want to add a CPU Scheduler.
 
