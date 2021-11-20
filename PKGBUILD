@@ -146,7 +146,7 @@ prepare(){
   plain ""
 
   # Disable PDS/BMQ. We will re-enable later if _cpu_sched=1 or 2 is set
-  msg2 "Disable CacULE PDS/BMQ. We will re-enable later if _cpu_sched=1 or 2 is set"
+  msg2 "Disable PDS/BMQ. We will re-enable later if _cpu_sched=1 or 2 is set"
   scripts/config --disable CONFIG_SCHED_ALT
   scripts/config --disable CONFIG_PDS
   scripts/config --disable CONFIG_BMQ
