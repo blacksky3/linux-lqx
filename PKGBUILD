@@ -82,7 +82,7 @@ done
 pkgver=5.15.7_lqx1
 major=5.15
 pkgrel=1
-liquorixrel=7
+liquorixrel=9
 liquorixpatch=v5.15.7-lqx1
 arch=(x86_64)
 url="https://www.kernel.org/"
