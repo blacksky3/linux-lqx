@@ -10,6 +10,7 @@
 #Credits: Joan Figueras <ffigue at gmail dot com> ---> For the base PKFBUILD
 #Credits: Linus Torvalds ---> For the linux kernel
 #Credits: Steven Barrett <steven@liquorix.net> <https://liquorix.net> ---> For the Liquorix patch
+#Credits: Alfred Chen <https://gitlab.com/alfredchen/projectc> ---> For the BMQ/PDS CPU Scheduler patch
 
 ################# CPU Scheduler #################
 
