@@ -1,0 +1,204 @@
+From d49d79bc5da15f6418d073e1692d56095cdf635c Mon Sep 17 00:00:00 2001
+From: kevall474 <kevall474@tuta.io>
+Date: Mon, 20 Dec 2021 14:17:12 -0500
+Subject: [PATCH] clockevents, hrtimer: Make hrtimer granularity and minimum
+ hrtimeout configurable in sysctl. Set default granularity to 100us and min
+ timeout to 500us
+
+---
+ kernel/sysctl.c           | 38 ++++++++++++++++++++++--------
+ kernel/time/clockevents.c |  3 ++-
+ kernel/time/hrtimer.c     | 49 +++++++++++++++++++++++++++++++++++----
+ 3 files changed, 75 insertions(+), 15 deletions(-)
+
+diff --git a/kernel/sysctl.c b/kernel/sysctl.c
+index abcbbb317030..75bc3aea3f47 100644
+--- a/kernel/sysctl.c
++++ b/kernel/sysctl.c
+@@ -129,9 +129,9 @@ static int one_thousand = 1000;
+ static int __maybe_unused zero = 0;
+ extern int sched_yield_type;
+ #endif
+-#ifdef CONFIG_PRINTK
+ static int ten_thousand = 10000;
+-#endif
++extern int hrtimer_granularity_us;
++extern int hrtimeout_min_us;
+ #ifdef CONFIG_PERF_EVENTS
+ static int six_hundred_forty_kb = 640 * 1024;
+ #endif
+@@ -612,12 +612,12 @@ static int __do_proc_dointvec(void *tbl_data, struct ctl_table *table,
+ 	int *i, vleft, first = 1, err = 0;
+ 	size_t left;
+ 	char *p;
+-	
++
+ 	if (!tbl_data || !table->maxlen || !*lenp || (*ppos && !write)) {
+ 		*lenp = 0;
+ 		return 0;
+ 	}
+-	
++
+ 	i = (int *) tbl_data;
+ 	vleft = table->maxlen / sizeof(*i);
+ 	left = *lenp;
+@@ -849,7 +849,7 @@ int proc_dobool(struct ctl_table *table, int write, void *buffer,
+  * @ppos: file position
+  *
+  * Reads/writes up to table->maxlen/sizeof(unsigned int) integer
+- * values from/to the user buffer, treated as an ASCII string. 
++ * values from/to the user buffer, treated as an ASCII string.
+  *
+  * Returns 0 on success.
+  */
+@@ -1437,7 +1437,7 @@ static int do_proc_dointvec_ms_jiffies_conv(bool *negp, unsigned long *lvalp,
+  * @ppos: file position
+  *
+  * Reads/writes up to table->maxlen/sizeof(unsigned int) integer
+- * values from/to the user buffer, treated as an ASCII string. 
++ * values from/to the user buffer, treated as an ASCII string.
+  * The values read are assumed to be in seconds, and are converted into
+  * jiffies.
+  *
+@@ -1459,8 +1459,8 @@ int proc_dointvec_jiffies(struct ctl_table *table, int write,
+  * @ppos: pointer to the file position
+  *
+  * Reads/writes up to table->maxlen/sizeof(unsigned int) integer
+- * values from/to the user buffer, treated as an ASCII string. 
+- * The values read are assumed to be in 1/USER_HZ seconds, and 
++ * values from/to the user buffer, treated as an ASCII string.
++ * The values read are assumed to be in 1/USER_HZ seconds, and
+  * are converted into jiffies.
+  *
+  * Returns 0 on success.
+@@ -1482,8 +1482,8 @@ int proc_dointvec_userhz_jiffies(struct ctl_table *table, int write,
+  * @ppos: the current position in the file
+  *
+  * Reads/writes up to table->maxlen/sizeof(unsigned int) integer
+- * values from/to the user buffer, treated as an ASCII string. 
+- * The values read are assumed to be in 1/1000 seconds, and 
++ * values from/to the user buffer, treated as an ASCII string.
++ * The values read are assumed to be in 1/1000 seconds, and
+  * are converted into jiffies.
+  *
+  * Returns 0 on success.
+@@ -1796,6 +1796,24 @@ static struct ctl_table kern_table[] = {
+ #endif /* CONFIG_SMP */
+ #endif /* CONFIG_SCHED_DEBUG */
+ #else  /* !CONFIG_SCHED_ALT */
++	{
++		.procname	= "hrtimer_granularity_us",
++		.data		= &hrtimer_granularity_us,
++		.maxlen		= sizeof(int),
++		.mode		= 0644,
++		.proc_handler	= &proc_dointvec_minmax,
++		.extra1		= SYSCTL_ONE,
++		.extra2		= &ten_thousand,
++	},
++	{
++		.procname	= "hrtimeout_min_us",
++		.data		= &hrtimeout_min_us,
++		.maxlen		= sizeof(int),
++		.mode		= 0644,
++		.proc_handler	= &proc_dointvec_minmax,
++		.extra1		= SYSCTL_ONE,
++		.extra2		= &ten_thousand,
++	},
+ 	{
+ 		.procname	= "sched_child_runs_first",
+ 		.data		= &sysctl_sched_child_runs_first,
+diff --git a/kernel/time/clockevents.c b/kernel/time/clockevents.c
+index 003ccf338d20..45fdd88fe933 100644
+--- a/kernel/time/clockevents.c
++++ b/kernel/time/clockevents.c
+@@ -190,8 +190,9 @@ int clockevents_tick_resume(struct clock_event_device *dev)
+ 
+ #ifdef CONFIG_GENERIC_CLOCKEVENTS_MIN_ADJUST
+ 
++int __read_mostly hrtimer_granularity_us = 100;
+ /* Limit min_delta to a jiffie */
+-#define MIN_DELTA_LIMIT		(NSEC_PER_SEC / HZ)
++#define MIN_DELTA_LIMIT		(hrtimer_granularity_us * NSEC_PER_USEC)
+ 
+ /**
+  * clockevents_increase_min_delta - raise minimum delta of a clock event device
+diff --git a/kernel/time/hrtimer.c b/kernel/time/hrtimer.c
+index 8386840c1034..6a6c2552bb62 100644
+--- a/kernel/time/hrtimer.c
++++ b/kernel/time/hrtimer.c
+@@ -2394,7 +2394,7 @@ EXPORT_SYMBOL_GPL(schedule_hrtimeout);
+ long __sched schedule_msec_hrtimeout(long timeout)
+ {
+ 	struct hrtimer_sleeper t;
+-	int delta, secs, jiffs;
++	int delta, jiffs;
+ 	ktime_t expires;
+ 
+ 	if (!timeout) {
+@@ -2411,9 +2411,8 @@ long __sched schedule_msec_hrtimeout(long timeout)
+ 	if (jiffs > 4 || hrtimer_resolution >= NSEC_PER_SEC / HZ || pm_freezing)
+ 		return schedule_timeout(jiffs);
+ 
+-	secs = timeout / 1000;
+ 	delta = (timeout % 1000) * NSEC_PER_MSEC;
+-	expires = ktime_set(secs, delta);
++	expires = ktime_set(0, delta);
+ 
+ 	hrtimer_init_sleeper_on_stack(&t, CLOCK_MONOTONIC, HRTIMER_MODE_REL);
+ 	hrtimer_set_expires_range_ns(&t.timer, expires, delta);
+@@ -2435,9 +2434,51 @@ long __sched schedule_msec_hrtimeout(long timeout)
+ 
+ EXPORT_SYMBOL(schedule_msec_hrtimeout);
+ 
++#define USECS_PER_SEC 1000000
++extern int hrtimer_granularity_us;
++
++static inline long schedule_usec_hrtimeout(long timeout)
++{
++	struct hrtimer_sleeper t;
++	ktime_t expires;
++	int delta;
++
++	if (!timeout) {
++		__set_current_state(TASK_RUNNING);
++		return 0;
++	}
++
++	if (hrtimer_resolution >= NSEC_PER_SEC / HZ)
++		return schedule_timeout(usecs_to_jiffies(timeout));
++
++	if (timeout < hrtimer_granularity_us)
++		timeout = hrtimer_granularity_us;
++	delta = (timeout % USECS_PER_SEC) * NSEC_PER_USEC;
++	expires = ktime_set(0, delta);
++
++	hrtimer_init_sleeper_on_stack(&t, CLOCK_MONOTONIC, HRTIMER_MODE_REL);
++	hrtimer_set_expires_range_ns(&t.timer, expires, delta);
++
++	hrtimer_sleeper_start_expires(&t, HRTIMER_MODE_REL);
++
++	if (likely(t.task))
++		schedule();
++
++	hrtimer_cancel(&t.timer);
++	destroy_hrtimer_on_stack(&t.timer);
++
++	__set_current_state(TASK_RUNNING);
++
++	expires = hrtimer_expires_remaining(&t.timer);
++	timeout = ktime_to_us(expires);
++	return timeout < 0 ? 0 : timeout;
++}
++
++int __read_mostly hrtimeout_min_us = 500;
++
+ long __sched schedule_min_hrtimeout(void)
+ {
+-	return schedule_msec_hrtimeout(1);
++	return usecs_to_jiffies(schedule_usec_hrtimeout(hrtimeout_min_us));
+ }
+ 
+ EXPORT_SYMBOL(schedule_min_hrtimeout);
+-- 
+2.34.1
+
