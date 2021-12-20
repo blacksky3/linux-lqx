@@ -67,11 +67,11 @@ fi
 
 # This section set the pkgbase based on the cpu scheduler, so user can build different package based on the cpu scheduler.
 if [[ $_cpu_sched = "1" ]]; then
-  pkgbase=lqx-kernel-pds
+  pkgbase=linux-lqx-pds
 elif [[ $_cpu_sched = "2" ]]; then
-  pkgbase=lqx-kernel-bmq
+  pkgbase=linux-lqx-bmq
 else
-  pkgbase=lqx-kernel
+  pkgbase=linux-lqx
 fi
 pkgname=("$pkgbase" "$pkgbase-headers")
 for _p in "${pkgname[@]}"; do
