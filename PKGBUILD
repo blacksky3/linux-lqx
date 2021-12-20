@@ -11,6 +11,7 @@
 #Credits: Linus Torvalds ---> For the linux kernel
 #Credits: Steven Barrett <steven@liquorix.net> <https://liquorix.net> ---> For the Liquorix patch
 #Credits: Alfred Chen <https://gitlab.com/alfredchen/projectc> ---> For the BMQ/PDS CPU Scheduler patch
+#Credits: Con Kolivas <kernel@kolivas.org> <http://ck.kolivas.org/> ---> For hrtimer patches
 
 ################# CPU Scheduler #################
 
