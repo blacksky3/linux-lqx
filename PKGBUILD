@@ -105,7 +105,8 @@ source+=("0001-hrtimer-Create-highres-timeout-variants-of-schedule_.patch"
          "0004-hrtimer-Replace-all-schedule-timeout-1-with-schedule.patch"
          "0005-hrtimer-Replace-all-calls-to-schedule_timeout_interr.patch"
          "0006-hrtimer-Replace-all-calls-to-schedule_timeout_uninte.patch"
-         "0007-time-Don-t-use-hrtimer-overlay-when-pm_freezing-sinc.patch")
+         "0007-time-Don-t-use-hrtimer-overlay-when-pm_freezing-sinc.patch"
+         "0008-clockevents-hrtimer-Make-hrtimer-granularity-and-min.patch")
 md5sums+=("SKIP"
           "SKIP"
           "SKIP"
