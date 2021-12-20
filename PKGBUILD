@@ -99,6 +99,22 @@ source=("https://mirrors.edge.kernel.org/pub/linux/kernel/v5.x/linux-$major.tar.
 md5sums=("SKIP"
          "SKIP")
 
+source+=("0001-hrtimer-Create-highres-timeout-variants-of-schedule_.patch"
+         "0002-time-Special-case-calls-of-schedule_timeout-1-to-use.patch"
+         "0003-timer-Convert-msleep-to-use-hrtimers-when-active.patch"
+         "0004-hrtimer-Replace-all-schedule-timeout-1-with-schedule.patch"
+         "0005-hrtimer-Replace-all-calls-to-schedule_timeout_interr.patch"
+         "0006-hrtimer-Replace-all-calls-to-schedule_timeout_uninte.patch"
+         "0007-time-Don-t-use-hrtimer-overlay-when-pm_freezing-sinc.patch")
+md5sums+=("SKIP"
+          "SKIP"
+          "SKIP"
+          "SKIP"
+          "SKIP"
+          "SKIP"
+          "SKIP"
+          "SKIP")
+
 export KBUILD_BUILD_HOST=archlinux
 export KBUILD_BUILD_USER=$pkgbase
 export KBUILD_BUILD_TIMESTAMP="$(date -Ru${SOURCE_DATE_EPOCH:+d @$SOURCE_DATE_EPOCH})"
@@ -165,18 +181,18 @@ prepare(){
     #scripts/config --disable CONFIG_GCC_PLUGINS
 
     #sleep 2s
-    
+
     msg2 "Disable Fortify"
     scripts/config --disable CONFIG_FORTIFY_SOURCE
     scripts/config --disable CONFIG_ARCH_HAS_FORTIFY_SOURCE
-    
+
     plain ""
   fi
 
   sleep 2s
 
   plain ""
-  
+
   msg2 "Set kernel compression mode to ZSTD"
   scripts/config --enable CONFIG_HAVE_KERNEL_GZIP
   scripts/config --enable CONFIG_HAVE_KERNEL_BZIP2
@@ -301,7 +317,7 @@ prepare(){
   scripts/config --enable CONFIG_CC_OPTIMIZE_FOR_PERFORMANCE_O3
 
   sleep 2s
-  
+
   msg2 "Set timer frequency to 1000HZ"
   scripts/config --enable CONFIG_HZ_1000
   scripts/config --set-val CONFIG_HZ 1000
