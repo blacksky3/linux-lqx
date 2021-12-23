@@ -174,8 +174,8 @@ prepare(){
   plain ""
 
   # fix for GCC 12.0.0 (git version)
-  if [[ "$GCC_VERSION" = "12.0.0" ]] && [[ "$_compiler" = "1" ]]; then
-    plain ""
+  #if [[ "$GCC_VERSION" = "12.0.0" ]] && [[ "$_compiler" = "1" ]]; then
+    #plain ""
 
     #msg2 "Disable CONFIG_HAVE_GCC_PLUGINS/CONFIG_GCC_PLUGINS (Quick fix for gcc 12.0.0 git version)"
     #scripts/config --disable CONFIG_HAVE_GCC_PLUGINS
@@ -183,16 +183,16 @@ prepare(){
 
     #sleep 2s
 
-    msg2 "Disable Fortify"
-    scripts/config --disable CONFIG_FORTIFY_SOURCE
-    scripts/config --disable CONFIG_ARCH_HAS_FORTIFY_SOURCE
+    #msg2 "Disable Fortify"
+    #scripts/config --disable CONFIG_FORTIFY_SOURCE
+    #scripts/config --disable CONFIG_ARCH_HAS_FORTIFY_SOURCE
 
-    plain ""
-  fi
+    #plain ""
+  #fi
 
-  sleep 2s
+  #sleep 2s
 
-  plain ""
+  #plain ""
 
   msg2 "Set kernel compression mode to ZSTD"
   scripts/config --enable CONFIG_HAVE_KERNEL_GZIP
@@ -409,7 +409,7 @@ prepare(){
   scripts/config --enable CONFIG_LRU_GEN_STATS
 
   sleep 2s
-  
+
   msg2 "Enable LRNG"
   scripts/config --enable CONFIG_LRNG
   scripts/config --enable CONFIG_LRNG_OVERSAMPLE_ENTROPY_SOURCES
@@ -505,24 +505,6 @@ _package(){
   # remove build and source links
   msg2 "Remove build dir and source dir..."
   rm -rf "$modulesdir"/{source,build}
-
-  # workaround for missing header with winesync
-  #if [ -e "${srcdir}/linux-$pkgver/include/uapi/linux/winesync.h" ]; then
-  #  msg2 "Workaround missing winesync header"
-  #  install -Dm644 "${srcdir}/linux-$pkgver"/include/uapi/linux/winesync.h "${pkgdir}/usr/include/linux/winesync.h"
-  #fi
-
-  # load winesync module at boot
-  #if [ -e "${srcdir}/winesync.conf" ]; then
-  #  msg2 "Set the winesync module to be loaded at boot through /etc/modules-load.d"
-  #  install -Dm644 "${srcdir}"/winesync.conf "${pkgdir}/etc/modules-load.d/winesync.conf"
-  #fi
-
-  # install udev rule for winesync
-  #if [ -e "${srcdir}/winesync.rules" ]; then
-  #  msg2 "Installing udev rule for winesync"
-  #  install -Dm644 "${srcdir}"/winesync.rules "${pkgdir}/etc/udev/rules.d/winesync.rules"
-  #fi
 }
 
 _package-headers(){
