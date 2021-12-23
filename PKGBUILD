@@ -334,11 +334,6 @@ prepare(){
 
   sleep 2s
 
-  msg2 "Enable CONFIG_FORCE_IRQ_THREADING"
-  scripts/config --enable CONFIG_FORCE_IRQ_THREADING
-
-  sleep 2s
-
   msg2 "Set to full tickless"
   scripts/config --disable CONFIG_HZ_PERIODIC
   scripts/config --disable CONFIG_NO_HZ_IDLE
@@ -412,6 +407,16 @@ prepare(){
   scripts/config --enable CONFIG_LRU_GEN
   scripts/config --enable CONFIG_LRU_GEN_ENABLED
   scripts/config --enable CONFIG_LRU_GEN_STATS
+
+  sleep 2s
+  
+  msg2 "Enable LRNG"
+  scripts/config --enable CONFIG_LRNG
+  scripts/config --enable CONFIG_LRNG_OVERSAMPLE_ENTROPY_SOURCES
+  scripts/config --enable CONFIG_LRNG_CONTINUOUS_COMPRESSION_ENABLED
+  scripts/config --enable CONFIG_LRNG_ENABLE_CONTINUOUS_COMPRESSION
+  scripts/config --enable CONFIG_LRNG_SWITCHABLE_CONTINUOUS_COMPRESSION
+  scripts/config --enable CONFIG_LRNG_COLLECTION_SIZE_1024
 
   sleep 2s
 
