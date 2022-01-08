@@ -399,7 +399,7 @@ prepare(){
   sleep 2s
 
   msg2 "Enable OpenRGB SMBus access"
-  scripts/config --module CONFIG_I2C_NCT677
+  scripts/config --module CONFIG_I2C_NCT6775
 
   sleep 2s
 
