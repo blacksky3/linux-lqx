@@ -473,7 +473,7 @@ build(){
 }
 
 _package(){
-  pkgdesc="Liquorix kernel and modules"
+  pkgdesc="Liquorix kernel and modules with ck's hrtimer patches"
   depends=("coreutils" "kmod" "initramfs" "mkinitcpio")
   optdepends=("linux-firmware: firmware images needed for some devices"
               "crda: to set the correct wireless channels of your country")
