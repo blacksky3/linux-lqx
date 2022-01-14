@@ -171,7 +171,7 @@ prepare(){
 
   sleep 2s
 
-  plain ""
+  #plain ""
 
   # fix for GCC 12.0.0 (git version)
   #if [[ "$GCC_VERSION" = "12.0.0" ]] && [[ "$_compiler" = "1" ]]; then
@@ -192,7 +192,7 @@ prepare(){
 
   #sleep 2s
 
-  #plain ""
+  plain ""
 
   msg2 "Set kernel compression mode to ZSTD"
   scripts/config --enable CONFIG_HAVE_KERNEL_GZIP
@@ -270,12 +270,15 @@ prepare(){
 
   sleep 2s
 
-  msg2 "Disable CONFIG_USER_NS_UNPRIVILEGED"
-  scripts/config --enable CONFIG_USER_NS_UNPRIVILEGED
+  msg2 "Setting performance governor"
+  scripts/config --disable CONFIG_CPU_FREQ_DEFAULT_GOV_SCHEDUTIL
+  scripts/config --disable CONFIG_CPU_FREQ_GOV_SCHEDUTIL
+  scripts/config --enable CONFIG_CPU_FREQ_DEFAULT_GOV_PERFORMANCE
+  scripts/config --enable CONFIG_CPU_FREQ_GOV_PERFORMANCE
 
   sleep 2s
 
-  msg2 "Set CPU Frequency scaling CONFIG_CPU_FREQ_DEFAULT_GOV/CONFIG_CPU_FREQ_GOV for performance"
+  msg2 "Disabling uneeded governors"
   scripts/config --disable CONFIG_CPU_FREQ_DEFAULT_GOV_POWERSAVE
   scripts/config --disable CONFIG_CPU_FREQ_GOV_POWERSAVE
   scripts/config --disable CONFIG_CPU_FREQ_DEFAULT_GOV_USERSPACE
@@ -286,8 +289,6 @@ prepare(){
   scripts/config --disable CONFIG_CPU_FREQ_GOV_CONSERVATIVE
   scripts/config --disable CONFIG_CPU_FREQ_DEFAULT_GOV_SCHEDUTIL
   scripts/config --disable CONFIG_CPU_FREQ_GOV_SCHEDUTIL
-  scripts/config --enable CONFIG_CPU_FREQ_DEFAULT_GOV_PERFORMANCE
-  scripts/config --enable CONFIG_CPU_FREQ_GOV_PERFORMANCE
 
   sleep 2s
 
@@ -312,53 +313,52 @@ prepare(){
 
   sleep 2s
 
-  msg2 "Enable CONFIG_CC_OPTIMIZE_FOR_PERFORMANCE_O3"
-  scripts/config --disable CONFIG_CC_OPTIMIZE_FOR_PERFORMANCE
-  scripts/config --disable CONFIG_CC_OPTIMIZE_FOR_SIZE
-  scripts/config --enable CONFIG_CC_OPTIMIZE_FOR_PERFORMANCE_O3
-
-  sleep 2s
-
   msg2 "Set timer frequency to 1000HZ"
   scripts/config --enable CONFIG_HZ_1000
   scripts/config --set-val CONFIG_HZ 1000
 
   sleep 2s
 
-  msg2 "Enable PREEMPT"
-  scripts/config --disable CONFIG_PREEMPT_NONE
-  scripts/config --disable CONFIG_PREEMPT_VOLUNTARY
-  scripts/config --enable CONFIG_PREEMPT
-  scripts/config --enable CONFIG_PREEMPT_COUNT
-  scripts/config --enable CONFIG_PREEMPTION
 
-  sleep 2s
+  msg2 "Set to full tickless (by TK-Glitch)"
 
-  msg2 "Set to full tickless"
+  #periodic ticks
+  #scripts/config --disable CONFIG_NO_HZ_FULL_NODEF
+  #scripts/config --disable CONFIG_NO_HZ_IDLE
+  #scripts/config --disable CONFIG_NO_HZ_FULL
+  #scripts/config --disable CONFIG_NO_HZ
+  #scripts/config --disable CONFIG_NO_HZ_COMMON
+  #scripts/config --enable CONFIG_HZ_PERIODIC
+
+  #full tickless
   scripts/config --disable CONFIG_HZ_PERIODIC
   scripts/config --disable CONFIG_NO_HZ_IDLE
+  scripts/config --disable CONFIG_CONTEXT_TRACKING_FORCE
+  scripts/config --enable CONFIG_NO_HZ_FULL_NODEF
   scripts/config --enable CONFIG_NO_HZ_FULL
   scripts/config --enable CONFIG_NO_HZ
   scripts/config --enable CONFIG_NO_HZ_COMMON
-  #scripts/config --enable CONFIG_CONTEXT_TRACKING
-  #scripts/config --disable CONFIG_CONTEXT_TRACKING_FORCE
+  scripts/config --enable CONFIG_CONTEXT_TRACKING
+
+  #tickless idle
+  #scripts/config --disable CONFIG_NO_HZ_FULL_NODEF
+  #scripts/config --disable CONFIG_HZ_PERIODIC
+  #scripts/config --disable CONFIG_NO_HZ_FULL
+  #scripts/config --enable CONFIG_NO_HZ_IDLE
+  #scripts/config --enable CONFIG_NO_HZ
+  #scripts/config --enable CONFIG_NO_HZ_COMMON
 
   sleep 2s
 
-  msg2 "Enable ntfs"
-  scripts/config --module CONFIG_NTFS_FS
-  scripts/config --enable CONFIG_NTFS_RW
-
-  sleep 2s
-
-  msg2 "Enable BBR/BBR2 TCP"
-  scripts/config --module CONFIG_TCP_CONG_BBR
-  scripts/config --module CONFIG_TCP_CONG_BBR2
-
-  sleep 2s
-
-  msg2 "Enable CONFIG_VHBA"
-  scripts/config --module CONFIG_VHBA
+  msg2 "Disable some debugging (by TK-Glitch)"
+  scripts/config --disable CONFIG_SLUB_DEBUG
+  scripts/config --disable CONFIG_PM_DEBUG
+  scripts/config --disable CONFIG_PM_ADVANCED_DEBUG
+  scripts/config --disable CONFIG_PM_SLEEP_DEBUG
+  scripts/config --disable CONFIG_ACPI_DEBUG
+  scripts/config --disable CONFIG_SCHED_DEBUG
+  scripts/config --disable CONFIG_LATENCYTOP
+  scripts/config --disable CONFIG_DEBUG_PREEMPT
 
   sleep 2s
 
@@ -367,18 +367,45 @@ prepare(){
 
   sleep 2s
 
-  msg2 "Enable Deadline I/O scheduler"
+  msg2 "Enable Deadline I/O scheduler (We will enable MQ-Deadline-Nodefault I/O scheduler later) MQ-Deadline-Nodefault I/O scheduler depend on Deadline I/O scheduler"
   scripts/config --enable CONFIG_MQ_IOSCHED_DEADLINE
 
   sleep 2s
+
+  msg2 "Enable Intel Processor P-State driver"
+  scripts/config --enable CONFIG_X86_INTEL_PSTATE
+
+  sleep 2s
+
+  msg2 "Disable CONFIG_USER_NS_UNPRIVILEGED"
+  scripts/config --enable CONFIG_USER_NS_UNPRIVILEGED
+
+  sleep 2s
+
+  msg2 "Enable CONFIG_VHBA"
+  scripts/config --module CONFIG_VHBA
+
+  sleep 2
 
   msg2 "Enable MQ-Deadline-Nodefault I/O scheduler"
   scripts/config --enable CONFIG_MQ_IOSCHED_DEADLINE_NODEFAULT
 
   sleep 2s
 
-  msg2 "Enable CONFIG_BFQ_CGROUP_DEBUG"
-  scripts/config --enable CONFIG_BFQ_CGROUP_DEBUG
+  msg2 "Disable TCP_CONG_CUBIC"
+  scripts/config --module CONFIG_TCP_CONG_CUBIC
+  scripts/config --disable CONFIG_DEFAULT_CUBIC
+  msg2 "Enable TCP_CONG_BBR2"
+  scripts/config --enable CONFIG_TCP_CONG_BBR2
+  scripts/config --enable CONFIG_DEFAULT_BBR2
+  scripts/config --set-str CONFIG_DEFAULT_TCP_CONG bbr2
+
+  sleep 2s
+
+  msg2 "Enable CONFIG_CC_OPTIMIZE_FOR_PERFORMANCE_O3"
+  scripts/config --disable CONFIG_CC_OPTIMIZE_FOR_PERFORMANCE
+  scripts/config --disable CONFIG_CC_OPTIMIZE_FOR_SIZE
+  scripts/config --enable CONFIG_CC_OPTIMIZE_FOR_PERFORMANCE_O3
 
   sleep 2s
 
@@ -393,30 +420,25 @@ prepare(){
 
   sleep 2s
 
-  msg2 "Enable Futex2 support"
-  scripts/config --enable CONFIG_FUTEX2
-
-  sleep 2s
-
   msg2 "Enable OpenRGB SMBus access"
   scripts/config --module CONFIG_I2C_NCT6775
 
   sleep 2s
 
-  msg2 "Enable LRU"
+  #msg2 "Enable multigenerational LRU with zenkernel config..."
+  #scripts/config --enable CONFIG_ARCH_HAS_NONLEAF_PMD_YOUNG
+  #scripts/config --enable CONFIG_LRU_GEN
+  #scripts/config --set-val CONFIG_NR_LRU_GENS 7
+  #scripts/config --set-val CONFIG_TIERS_PER_GEN 4
+  #scripts/config --enable CONFIG_LRU_GEN_ENABLED
+  #scripts/config --disable CONFIG_LRU_GEN_STATS
+  msg2 "Enable multigenerational LRU with xanmod config"
+  scripts/config --enable CONFIG_ARCH_HAS_NONLEAF_PMD_YOUNG
   scripts/config --enable CONFIG_LRU_GEN
-  scripts/config --enable CONFIG_LRU_GEN_ENABLED
-  scripts/config --enable CONFIG_LRU_GEN_STATS
-
-  sleep 2s
-
-  msg2 "Enable LRNG"
-  scripts/config --enable CONFIG_LRNG
-  scripts/config --enable CONFIG_LRNG_OVERSAMPLE_ENTROPY_SOURCES
-  scripts/config --enable CONFIG_LRNG_CONTINUOUS_COMPRESSION_ENABLED
-  scripts/config --enable CONFIG_LRNG_ENABLE_CONTINUOUS_COMPRESSION
-  scripts/config --enable CONFIG_LRNG_SWITCHABLE_CONTINUOUS_COMPRESSION
-  scripts/config --enable CONFIG_LRNG_COLLECTION_SIZE_1024
+  scripts/config --set-val CONFIG_NR_LRU_GENS 4
+  scripts/config --set-val CONFIG_TIERS_PER_GEN 2
+  scripts/config --disable CONFIG_LRU_GEN_ENABLED
+  scripts/config --disable CONFIG_LRU_GEN_STATS
 
   sleep 2s
 
@@ -435,7 +457,7 @@ prepare(){
   fi
 
   sleep 2s
-  
+
   msg2 "Add anbox support"
   scripts/config --enable CONFIG_ASHMEM
   # CONFIG_ION is not set
@@ -459,6 +481,8 @@ prepare(){
   scripts/setlocalversion --save-scmversion
   echo "-${pkgbase}" > localversion
 
+  plain ""
+
   # Config
   if [[ "$_compiler" = "1" ]]; then
     make ARCH=${ARCH} CC=${CC} CXX=${CXX} HOSTCC=${HOSTCC} HOSTCXX=${HOSTCXX} olddefconfig
@@ -466,8 +490,12 @@ prepare(){
     make ARCH=${ARCH} CC=${CC} CXX=${CXX} LLVM=1 LLVM_IAS=1 HOSTCC=${HOSTCC} HOSTCXX=${HOSTCXX} olddefconfig
   fi
 
+  plain ""
+
   make -s kernelrelease > version
   msg2 "Prepared $pkgbase version $(<version)"
+
+  plain ""
 }
 
 build(){
