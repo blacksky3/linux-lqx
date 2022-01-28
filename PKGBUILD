@@ -13,6 +13,8 @@
 #Credits: Steven Barrett <steven@liquorix.net> <https://liquorix.net> ---> For the Liquorix patch
 #Credits: Alfred Chen <https://gitlab.com/alfredchen/projectc> ---> For the BMQ/PDS CPU Scheduler patch
 #Credits: Con Kolivas <kernel@kolivas.org> <http://ck.kolivas.org/> ---> For hrtimer patches
+#Credits: Piotr Górski <lucjan.lucjanov@gmail.com> <https://github.com/sirlucjan> ---> For AMD64 patches
+#Credits: Etienne Juvigny (Tk-Glitch) <tkg@froggi.es> <https://github.com/Tk-Glitch> ---> For config setings
 
 ################# CPU Scheduler #################
 
@@ -82,11 +84,11 @@ for _p in "${pkgname[@]}"; do
     _package${_p#$pkgbase}
   }"
 done
-pkgver=5.15.14_lqx1
+pkgver=5.15.17_lqx1
 major=5.15
 pkgrel=1
-liquorixrel=17
-liquorixpatch=v5.15.14-lqx1
+liquorixrel=21
+liquorixpatch=v5.15.17-lqx1
 arch=(x86_64)
 url="https://www.kernel.org/"
 license=(GPL-2.0)
@@ -99,17 +101,25 @@ options=('!strip')
 
 source=("https://mirrors.edge.kernel.org/pub/linux/kernel/v5.x/linux-$major.tar.xz"
         "https://github.com/damentz/liquorix-package/archive/$major-$liquorixrel.tar.gz")
-md5sums=("SKIP"
+md5sums=("071d49ff4e020d58c04f9f3f76d3b594"  #linux-5.15.tar.xz
          "SKIP")
 
-source+=("0001-hrtimer-Create-highres-timeout-variants-of-schedule_.patch"
-         "0002-time-Special-case-calls-of-schedule_timeout-1-to-use.patch"
-         "0003-timer-Convert-msleep-to-use-hrtimers-when-active.patch"
-         "0004-hrtimer-Replace-all-schedule-timeout-1-with-schedule.patch"
-         "0005-hrtimer-Replace-all-calls-to-schedule_timeout_interr.patch"
-         "0006-hrtimer-Replace-all-calls-to-schedule_timeout_uninte.patch"
-         "0007-time-Don-t-use-hrtimer-overlay-when-pm_freezing-sinc.patch"
-         "0008-clockevents-hrtimer-Make-hrtimer-granularity-and-min.patch")
+# Piotr Górski patches
+lucjanpath=https://raw.githubusercontent.com/sirlucjan/kernel-patches/master/$major
+# Amd64 patches
+source+=("${lucjanpath}/amd64-patches-v2/0001-amd64-patches.patch")
+md5sums+=("f8ed6fdfd78828d3e6296242ce5c24f4") #0001-amd64-patches.patch
+
+# XanMod patches (hrtimer)
+xanmodpath=https://raw.githubusercontent.com/xanmod/linux-patches/master/linux-$major.y-xanmod
+source+=("${xanmodpath}/0001-hrtimer-Create-highres-timeout-variants-of-schedule_.patch"
+         "${xanmodpath}/0002-time-Special-case-calls-of-schedule_timeout-1-to-use.patch"
+         "${xanmodpath}/0003-timer-Convert-msleep-to-use-hrtimers-when-active.patch"
+         "${xanmodpath}/0004-hrtimer-Replace-all-schedule-timeout-1-with-schedule.patch"
+         "${xanmodpath}/0005-hrtimer-Replace-all-calls-to-schedule_timeout_interr.patch"
+         "${xanmodpath}/0006-hrtimer-Replace-all-calls-to-schedule_timeout_uninte.patch"
+         "${xanmodpath}/0007-time-Don-t-use-hrtimer-overlay-when-pm_freezing-sinc.patch"
+         "${xanmodpath}/0008-clockevents-hrtimer-Make-hrtimer-granularity-and-min.patch")
 md5sums+=("SKIP"
           "SKIP"
           "SKIP"
@@ -152,20 +162,6 @@ prepare(){
 
   plain ""
 
-  msg2 "Disable LTO"
-  scripts/config --disable CONFIG_LTO
-  scripts/config --disable CONFIG_LTO_CLANG
-  scripts/config --disable CONFIG_ARCH_SUPPORTS_LTO_CLANG
-  scripts/config --disable CONFIG_ARCH_SUPPORTS_LTO_CLANG_THIN
-  scripts/config --disable CONFIG_HAS_LTO_CLANG
-  scripts/config --disable CONFIG_LTO_NONE
-  scripts/config --disable CONFIG_LTO_CLANG_FULL
-  scripts/config --disable CONFIG_LTO_CLANG_THIN
-
-  sleep 2s
-
-  plain ""
-
   # Disable PDS/BMQ. We will re-enable later if _cpu_sched=1 or 2 is set
   msg2 "Disable PDS/BMQ. We will re-enable later if _cpu_sched=1 or 2 is set"
   scripts/config --disable CONFIG_SCHED_ALT
@@ -174,28 +170,36 @@ prepare(){
 
   sleep 2s
 
-  #plain ""
+  plain ""
+
+  msg "Base config"
 
   # fix for GCC 12.0.0 (git version)
-  #if [[ "$GCC_VERSION" = "12.0.0" ]] && [[ "$_compiler" = "1" ]]; then
-    #plain ""
+  if [[ "$GCC_VERSION" = "12.0.0" ]] && [[ "$_compiler" = "1" ]]; then
+    msg2 "Disable CONFIG_HAVE_GCC_PLUGINS/CONFIG_GCC_PLUGINS (Quick fix for gcc 12.0.0 git version)"
+    scripts/config --disable CONFIG_HAVE_GCC_PLUGINS
+    scripts/config --disable CONFIG_GCC_PLUGINS
+    msg2 "Disable Fortify"
+    scripts/config --disable CONFIG_FORTIFY_SOURCE
+    scripts/config --disable CONFIG_ARCH_HAS_FORTIFY_SOURCE
 
-    #msg2 "Disable CONFIG_HAVE_GCC_PLUGINS/CONFIG_GCC_PLUGINS (Quick fix for gcc 12.0.0 git version)"
-    #scripts/config --disable CONFIG_HAVE_GCC_PLUGINS
-    #scripts/config --disable CONFIG_GCC_PLUGINS
+    sleep 2s
+  fi
 
-    #sleep 2s
+  # Disable LTO with clang
+  if [[ "$_compiler" = "2" ]]; then
+    msg2 "Disable LTO"
+    scripts/config --disable CONFIG_LTO
+    scripts/config --disable CONFIG_LTO_CLANG
+    scripts/config --disable CONFIG_ARCH_SUPPORTS_LTO_CLANG
+    scripts/config --disable CONFIG_ARCH_SUPPORTS_LTO_CLANG_THIN
+    scripts/config --disable CONFIG_HAS_LTO_CLANG
+    scripts/config --disable CONFIG_LTO_NONE
+    scripts/config --disable CONFIG_LTO_CLANG_FULL
+    scripts/config --disable CONFIG_LTO_CLANG_THIN
 
-    #msg2 "Disable Fortify"
-    #scripts/config --disable CONFIG_FORTIFY_SOURCE
-    #scripts/config --disable CONFIG_ARCH_HAS_FORTIFY_SOURCE
-
-    #plain ""
-  #fi
-
-  #sleep 2s
-
-  plain ""
+    sleep 2s
+  fi
 
   msg2 "Set kernel compression mode to ZSTD"
   scripts/config --enable CONFIG_HAVE_KERNEL_GZIP
@@ -322,7 +326,6 @@ prepare(){
 
   sleep 2s
 
-
   msg2 "Set to full tickless (by TK-Glitch)"
 
   #periodic ticks
@@ -370,18 +373,31 @@ prepare(){
 
   sleep 2s
 
-  msg2 "Enable Deadline I/O scheduler (We will enable MQ-Deadline-Nodefault I/O scheduler later) MQ-Deadline-Nodefault I/O scheduler depend on Deadline I/O scheduler"
-  scripts/config --enable CONFIG_MQ_IOSCHED_DEADLINE
-
-  sleep 2s
-
   msg2 "Enable Intel Processor P-State driver"
   scripts/config --enable CONFIG_X86_INTEL_PSTATE
 
   sleep 2s
 
-  msg2 "Disable CONFIG_USER_NS_UNPRIVILEGED"
-  scripts/config --enable CONFIG_USER_NS_UNPRIVILEGED
+  msg2 "Enable Fsync support"
+  scripts/config --enable CONFIG_FUTEX
+  scripts/config --enable CONFIG_FUTEX_PI
+
+  sleep 2s
+
+  msg2 "Enable Deadline I/O scheduler (We will enable MQ-Deadline-Nodefault I/O scheduler later) MQ-Deadline-Nodefault I/O scheduler depend on Deadline I/O scheduler"
+  scripts/config --enable CONFIG_MQ_IOSCHED_DEADLINE
+
+  sleep 2s
+
+  msg "Patch addition config"
+
+  msg2 "Enable MQ-Deadline-Nodefault I/O scheduler"
+  scripts/config --enable CONFIG_MQ_IOSCHED_DEADLINE_NODEFAULT
+
+  sleep 2s
+
+  msg2 "Enable ZEN_INTERACTIVE"
+  scripts/config --enable ZEN_INTERACTIVE
 
   sleep 2s
 
@@ -390,8 +406,8 @@ prepare(){
 
   sleep 2
 
-  msg2 "Enable MQ-Deadline-Nodefault I/O scheduler"
-  scripts/config --enable CONFIG_MQ_IOSCHED_DEADLINE_NODEFAULT
+  msg2 "Enable CONFIG_USER_NS_UNPRIVILEGED"
+  scripts/config --enable CONFIG_USER_NS_UNPRIVILEGED
 
   sleep 2s
 
@@ -412,22 +428,6 @@ prepare(){
 
   sleep 2s
 
-  msg2 "Enable ZEN_INTERACTIVE"
-  scripts/config --enable ZEN_INTERACTIVE
-
-  sleep 2s
-
-  msg2 "Enable Fsync support"
-  scripts/config --enable CONFIG_FUTEX
-  scripts/config --enable CONFIG_FUTEX_PI
-
-  sleep 2s
-
-  msg2 "Enable OpenRGB SMBus access"
-  scripts/config --module CONFIG_I2C_NCT6775
-
-  sleep 2s
-
   #msg2 "Enable multigenerational LRU with zenkernel config..."
   #scripts/config --enable CONFIG_ARCH_HAS_NONLEAF_PMD_YOUNG
   #scripts/config --enable CONFIG_LRU_GEN
@@ -445,19 +445,8 @@ prepare(){
 
   sleep 2s
 
-  if [[ $_cpu_sched = "1" ]]; then
-    msg2 "Enable CONFIG_SCHED_ALT, this feature enable alternative CPU scheduler"
-    scripts/config --enable CONFIG_SCHED_ALT
-    msg2 "Enable PDS CPU scheduler"
-    scripts/config --enable CONFIG_SCHED_PDS
-    scripts/config --disable CONFIG_SCHED_BMQ
-  elif [[ $_cpu_sched = "2" ]]; then
-    msg2 "Enable CONFIG_SCHED_ALT, this feature enable alternative CPU scheduler"
-    scripts/config --enable CONFIG_SCHED_ALT
-    msg2 "Enable BMQ CPU scheduler"
-    scripts/config --disable CONFIG_SCHED_PDS
-    scripts/config --enable CONFIG_SCHED_BMQ
-  fi
+  msg2 "Enable OpenRGB SMBus access"
+  scripts/config --module CONFIG_I2C_NCT6775
 
   sleep 2s
 
@@ -476,6 +465,7 @@ prepare(){
   scripts/config --enable CONFIG_GENERIC_CPU
 
   sleep 2s
+
 
   plain ""
 
@@ -515,7 +505,7 @@ build(){
 }
 
 _package(){
-  pkgdesc="Liquorix kernel and modules with ck's hrtimer patches"
+  pkgdesc="Liquorix kernel and modules with ck's hrtimer patches and Piotr Górski AMD64 patches"
   depends=("coreutils" "kmod" "initramfs" "mkinitcpio")
   optdepends=("linux-firmware: firmware images needed for some devices"
               "crda: to set the correct wireless channels of your country")
