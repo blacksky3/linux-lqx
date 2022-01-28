@@ -93,7 +93,7 @@ arch=(x86_64)
 url="https://www.kernel.org/"
 license=(GPL-2.0)
 makedepends=("bison" "flex" "valgrind" "git" "cmake" "make" "extra-cmake-modules" "libelf" "elfutils"
-             "python" "python-appdirs" "python-mako" "python-evdev" "python-sphinx_rtd_theme" "python-graphviz" "python-sphinx"
+             "python" "python-appdirs" "python-evdev" "python-sphinx_rtd_theme" "python-graphviz" "python-sphinx"
              "clang" "llvm" "llvm-libs" "lld" "gcc" "gcc-libs" "glibc" "binutils" "pahole" "patch" "bc" "kmod" "libmikmod" "xmlto" 
              "xmltoman" "graphviz" "imagemagick" "imagemagick-doc" "rsync" "cpio" "inetutils" "gzip" "zstd" "xz" "tar" "perl")
 options=('!strip')
