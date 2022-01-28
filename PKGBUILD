@@ -94,7 +94,7 @@ url="https://www.kernel.org/"
 license=(GPL-2.0)
 makedepends=("bison" "flex" "valgrind" "git" "cmake" "make" "extra-cmake-modules" "libelf" "elfutils"
              "python" "python-appdirs" "python-evdev" "python-sphinx_rtd_theme" "python-graphviz" "python-sphinx"
-             "gcc" "gcc-libs" "glibc" "binutils" "pahole" "patch" "bc" "kmod" "libmikmod" "xmlto" "xmltoman" "graphviz" 
+             "gcc" "gcc-libs" "glibc" "binutils" "pahole" "patch" "bc" "kmod" "libmikmod" "xmlto" "xmltoman" "graphviz"
              "imagemagick" "imagemagick-doc" "rsync" "cpio" "inetutils" "gzip" "zstd" "xz" "tar" "perl")
 if [[ "$_compiler" = "2" ]]; then
   makedepends+=("clang" "llvm" "llvm-libs" "lld")
@@ -120,16 +120,18 @@ source+=("${xanmodpath}/ck-hrtimer/0001-hrtimer-Create-highres-timeout-variants-
          "${xanmodpath}/ck-hrtimer/0004-hrtimer-Replace-all-schedule-timeout-1-with-schedule.patch"
          "${xanmodpath}/ck-hrtimer/0005-hrtimer-Replace-all-calls-to-schedule_timeout_interr.patch"
          "${xanmodpath}/ck-hrtimer/0006-hrtimer-Replace-all-calls-to-schedule_timeout_uninte.patch"
-         "${xanmodpath}/ck-hrtimer/0007-time-Don-t-use-hrtimer-overlay-when-pm_freezing-sinc.patch"
-         "${xanmodpath}/ck-hrtimer/0008-clockevents-hrtimer-Make-hrtimer-granularity-and-min.patch")
-md5sums+=("SKIP"
-          "SKIP"
-          "SKIP"
-          "SKIP"
-          "SKIP"
-          "SKIP"
-          "SKIP"
-          "SKIP")
+         "${xanmodpath}/ck-hrtimer/0007-time-Don-t-use-hrtimer-overlay-when-pm_freezing-sinc.patch")
+md5sums+=("f15dd31fe4c18e36792fd89eacfd2e53"  #0001-hrtimer-Create-highres-timeout-variants-of-schedule_.patch
+          "71db5187cc6facbdd32197476f2289ef"  #0002-time-Special-case-calls-of-schedule_timeout-1-to-use.patch
+          "a74c0d0687e58da49ec973709fff439d"  #0003-timer-Convert-msleep-to-use-hrtimers-when-active.patch
+          "727181767663c727a1346cc1b472c195"  #0004-hrtimer-Replace-all-schedule-timeout-1-with-schedule.patch
+          "11f40bd1c52112f9bf8b9d4562fae484"  #0005-hrtimer-Replace-all-calls-to-schedule_timeout_interr.patch
+          "75e737006159c9fc30c47bffd7fed2bb"  #0006-hrtimer-Replace-all-calls-to-schedule_timeout_uninte.patch
+          "c62f3ecfd5d4f5c0e1073ef6da9a8f00") #0007-time-Don-t-use-hrtimer-overlay-when-pm_freezing-sinc.patch
+
+# 0008-clockevents-hrtimer-Make-hrtimer-granularity-and-min.patch rebase for Liquorix kernel
+source+=("0008-clockevents-hrtimer-Make-hrtimer-granularity-and-min.patch")
+md5sums+=("5373412cddc6ddfcf907d9feb66885af") #0008-clockevents-hrtimer-Make-hrtimer-granularity-and-min.patch
 
 export KBUILD_BUILD_HOST=archlinux
 export KBUILD_BUILD_USER=$pkgbase
