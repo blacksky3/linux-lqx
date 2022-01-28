@@ -114,14 +114,14 @@ md5sums+=("f8ed6fdfd78828d3e6296242ce5c24f4") #0001-amd64-patches.patch
 
 # XanMod patches (hrtimer)
 xanmodpath=https://raw.githubusercontent.com/xanmod/linux-patches/master/linux-$major.y-xanmod
-source+=("${xanmodpath}/0001-hrtimer-Create-highres-timeout-variants-of-schedule_.patch"
-         "${xanmodpath}/0002-time-Special-case-calls-of-schedule_timeout-1-to-use.patch"
-         "${xanmodpath}/0003-timer-Convert-msleep-to-use-hrtimers-when-active.patch"
-         "${xanmodpath}/0004-hrtimer-Replace-all-schedule-timeout-1-with-schedule.patch"
-         "${xanmodpath}/0005-hrtimer-Replace-all-calls-to-schedule_timeout_interr.patch"
-         "${xanmodpath}/0006-hrtimer-Replace-all-calls-to-schedule_timeout_uninte.patch"
-         "${xanmodpath}/0007-time-Don-t-use-hrtimer-overlay-when-pm_freezing-sinc.patch"
-         "${xanmodpath}/0008-clockevents-hrtimer-Make-hrtimer-granularity-and-min.patch")
+source+=("${xanmodpath}/ck-hrtimer/0001-hrtimer-Create-highres-timeout-variants-of-schedule_.patch"
+         "${xanmodpath}/ck-hrtimer/0002-time-Special-case-calls-of-schedule_timeout-1-to-use.patch"
+         "${xanmodpath}/ck-hrtimer/0003-timer-Convert-msleep-to-use-hrtimers-when-active.patch"
+         "${xanmodpath}/ck-hrtimer/0004-hrtimer-Replace-all-schedule-timeout-1-with-schedule.patch"
+         "${xanmodpath}/ck-hrtimer/0005-hrtimer-Replace-all-calls-to-schedule_timeout_interr.patch"
+         "${xanmodpath}/ck-hrtimer/0006-hrtimer-Replace-all-calls-to-schedule_timeout_uninte.patch"
+         "${xanmodpath}/ck-hrtimer/0007-time-Don-t-use-hrtimer-overlay-when-pm_freezing-sinc.patch"
+         "${xanmodpath}/ck-hrtimer/0008-clockevents-hrtimer-Make-hrtimer-granularity-and-min.patch")
 md5sums+=("SKIP"
           "SKIP"
           "SKIP"
