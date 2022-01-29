@@ -5,9 +5,9 @@
 
 # gcc
 
-#makepkg -s
+makepkg -s
 
-#rm -rf pkg src
+rm -rf pkg src
 
 env _cpu_sched=1 makepkg -s
 
