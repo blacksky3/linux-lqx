@@ -473,6 +473,24 @@ prepare(){
 
   plain ""
 
+  if [[ $_cpu_sched = "1" ]]; then
+    msg2 "Enable CONFIG_SCHED_ALT, this feature enable alternative CPU scheduler"
+    scripts/config --enable CONFIG_SCHED_ALT
+    msg2 "Enable PDS CPU scheduler"
+    scripts/config --enable CONFIG_SCHED_PDS
+    scripts/config --disable CONFIG_SCHED_BMQ
+  elif [[ $_cpu_sched = "2" ]]; then
+    msg2 "Enable CONFIG_SCHED_ALT, this feature enable alternative CPU scheduler"
+    scripts/config --enable CONFIG_SCHED_ALT
+    msg2 "Enable BMQ CPU scheduler"
+    scripts/config --disable CONFIG_SCHED_PDS
+    scripts/config --enable CONFIG_SCHED_BMQ
+  fi
+
+  sleep 2s
+
+  plain ""
+
   # Setting localversion
   msg2 "Setting localversion..."
   scripts/setlocalversion --save-scmversion
