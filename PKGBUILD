@@ -91,12 +91,9 @@ liquorixpatch=v5.16.4-lqx2
 arch=(x86_64)
 url="https://www.kernel.org/"
 license=(GPL-2.0)
-makedepends=("bison" "flex" "valgrind" "git" "cmake" "make" "extra-cmake-modules" "libelf" "elfutils"
-             "python" "python-appdirs" "python-evdev" "python-sphinx_rtd_theme" "python-graphviz" "python-sphinx"
-             "gcc" "gcc-libs" "glibc" "binutils" "pahole" "patch" "bc" "kmod" "libmikmod" "xmlto" "xmltoman" "graphviz"
-             "imagemagick" "imagemagick-doc" "rsync" "cpio" "inetutils" "gzip" "zstd" "xz" "tar" "perl")
+makedepends=('bc' 'kmod' 'libelf' 'pahole' 'cpio' 'perl' 'tar' 'xz' 'zstd' 'xmlto' 'git' 'gcc' 'gcc-libs' 'glibc' 'binutils' 'make' 'patch')
 if [[ "$_compiler" = "2" ]]; then
-  makedepends+=("clang" "llvm" "llvm-libs" "lld")
+  makedepends+=('clang' 'llvm' 'llvm-libs' 'lld')
 fi
 options=('!strip')
 
