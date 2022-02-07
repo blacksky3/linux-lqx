@@ -506,7 +506,7 @@ _package(){
   depends=("coreutils" "kmod" "initramfs" "mkinitcpio")
   optdepends=("linux-firmware: firmware images needed for some devices"
               "crda: to set the correct wireless channels of your country")
-  provides=("VIRTUALBOX-GUEST-MODULES" "WIREGUARD-MODULE")
+  provides=("VHBA-MODULE" "VIRTUALBOX-GUEST-MODULES" "WIREGUARD-MODULE")
 
   cd linux-$major
 
