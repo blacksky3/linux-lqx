@@ -4,7 +4,7 @@ Liquorix kernel build for Archlinux.
 
 # Version
 
-- 5.16.4-lqx2
+- 5.16.7-lqx1
 
 # Build
 
@@ -102,10 +102,20 @@ selection to make PDS scalable with increasing cpu number.
 
     sudo grub-mkconfig -o /boot/grub/grub.cfg
 
-# Contact info
-
-kevall474@tuta.io if you have any problems or bugs report.
-
 # Info
 
 You can refer to this Archlinux page that have lots of useful information to build the kernel and debugging if you have some issues https://wiki.archlinux.org/index.php/Kernel/Traditional_compilation
+
+# Contact info
+
+blacksky3@tuta.io if you have any problems or bugs report.
+
+# Donation
+
+BTC : bc1quz6zcjjy769cn9fd42r89hfh9unr4u2w4sfxer
+
+ETH : 0xF8cBcA16f4eeDfF4a07D173B7fF53906a87b0476
+
+DAI : 0xF8cBcA16f4eeDfF4a07D173B7fF53906a87b0476
+
+LINK : 0xF8cBcA16f4eeDfF4a07D173B7fF53906a87b0476
