@@ -8,8 +8,8 @@ Liquorix kernel build for Archlinux.
 
 # Build
 
-    git clone https://github.com/kevall474/Liquorix.git
-    cd Liquorix
+    git clone https://github.com/blacksky3/linux-lqx.git
+    cd linux-lqx
     env _cpu_sched=(1 or 2) _compiler=(1 or 2) makepkg -s
 
 # Build variables
