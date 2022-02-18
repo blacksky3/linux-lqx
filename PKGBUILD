@@ -5,7 +5,7 @@
 #|_.__/|_|\__,_|\___|_|\_\___/_|\_\\__, |____/
 #                                  |___/
 
-#Maintainer: kevall474 <kevall474@tuta.io> <https://github.com/kevall474>
+#Maintainer: blacksky3 <blacksky3@tuta.io> <https://github.com/blacksky3>
 #Credits: Jan Alexander Steffens (heftig) <heftig@archlinux.org> ---> For the base PKGBUILD
 #Credits: Andreas Radke <andyrtr@archlinux.org> ---> For the base PKGBUILD
 #Credits: Joan Figueras <ffigue at gmail dot com> ---> For the base PKFBUILD
