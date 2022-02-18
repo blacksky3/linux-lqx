@@ -482,15 +482,6 @@ prepare(){
   plain ""
 
   # Config
-  
-  if [ -f $HOME/.config/modprobed.db ]; then
-    echo "Running Steven Rostedt's make localmodconfig now"
-    make LSMOD=$HOME/.config/modprobed.db localmodconfig
-  else
-    echo "No modprobed.db data found"
-    exit
-  fi
-  
   if [[ "$_compiler" = "1" ]]; then
     make ARCH=${ARCH} CC=${CC} CXX=${CXX} HOSTCC=${HOSTCC} HOSTCXX=${HOSTCXX} olddefconfig
   elif [[ "$_compiler" = "2" ]]; then
