@@ -12,7 +12,7 @@
 #Credits: Linus Torvalds ---> For the linux kernel
 #Credits: Steven Barrett <steven@liquorix.net> <https://liquorix.net> ---> For the Liquorix patch
 #Credits: Alfred Chen <https://gitlab.com/alfredchen/projectc> ---> For the BMQ/PDS CPU Scheduler patch
-#Credits: Piotr Górski <lucjan.lucjanov@gmail.com> <https://github.com/sirlucjan> ---> For AMD64 patches
+#Credits: Piotr Górski <lucjan.lucjanov@gmail.com> <https://github.com/sirlucjan> ---> For AMD64 and BLK patches
 #Credits: Etienne Juvigny (Tk-Glitch) <tkg@froggi.es> <https://github.com/Tk-Glitch> ---> For config setings
 
 ################# CPU Scheduler #################
@@ -107,6 +107,9 @@ lucjanpath=https://raw.githubusercontent.com/sirlucjan/kernel-patches/master/$ma
 # Amd64 patches
 source+=("${lucjanpath}/amd64-patches/0001-amd64-patches.patch")
 md5sums+=("dbdb6754a1f5b3ccf26321843a070406") #0001-amd64-patches.patch
+# BLK patches
+source+=("${lucjanpath}/blk-patches-v4/0001-blk-patches.patch")
+md5sums+=("874ff4035bbdca5f7d252f07fdb3b890") #0001-blk-patches.patch
 
 export KBUILD_BUILD_HOST=archlinux
 export KBUILD_BUILD_USER=$pkgbase
@@ -440,6 +443,11 @@ prepare(){
 
   sleep 2s
 
+  msg2 "Enable BLK_CGROUP_IOSTAT (IO statistics monitor per cgroup)"
+  scripts/config --module CONFIG_BLK_CGROUP_IOSTAT
+
+  sleep 2s
+
   msg2 "Set CONFIG_GENERIC_CPU"
   scripts/config --enable CONFIG_GENERIC_CPU
 
@@ -502,7 +510,7 @@ build(){
 }
 
 _package(){
-  pkgdesc="Liquorix kernel and modules with Piotr Górski AMD64 patches"
+  pkgdesc="Liquorix kernel and modules with Piotr Górski AMD64 and BLK patches"
   depends=("coreutils" "kmod" "initramfs" "mkinitcpio")
   optdepends=("linux-firmware: firmware images needed for some devices"
               "crda: to set the correct wireless channels of your country")
