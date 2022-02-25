@@ -113,7 +113,7 @@ md5sums+=("874ff4035bbdca5f7d252f07fdb3b890") #0001-blk-patches.patch
 
 # fix for gcc 12.x.x
 source+=("0001-gcc-12-fix.patch")
-md5sums+=("d6168cecfcb0b59d055d569f14a157d6") #0001-gcc-12-fix.patch
+md5sums+=("0090520fbe7e19d17e28bd142986b95f") #0001-gcc-12-fix.patch
 
 export KBUILD_BUILD_HOST=archlinux
 export KBUILD_BUILD_USER=$pkgbase
