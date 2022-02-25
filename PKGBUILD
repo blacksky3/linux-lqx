@@ -30,14 +30,6 @@ fi
 
 ARCH=x86
 
-################################# GCC ################################
-
-# Grap GCC version
-# Workarround with GCC 12.0.0. Pluggins don't work, so we have to grap GCC version
-# and disable CONFIG_HAVE_GCC_PLUGINS/CONFIG_GCC_PLUGINS
-
-GCC_VERSION=$(gcc -dumpversion)
-
 ################################# CC/CXX/HOSTCC/HOSTCXX ################################
 
 #Set compiler to build the kernel
@@ -159,18 +151,6 @@ prepare(){
   plain ""
 
   msg "Base config"
-
-  # fix for GCC 12.0.0 (git version)
-  if [[ "$GCC_VERSION" = "12.0.0" ]] && [[ "$_compiler" = "1" ]]; then
-    msg2 "Disable CONFIG_HAVE_GCC_PLUGINS/CONFIG_GCC_PLUGINS (Quick fix for gcc 12.0.0 git version)"
-    scripts/config --disable CONFIG_HAVE_GCC_PLUGINS
-    scripts/config --disable CONFIG_GCC_PLUGINS
-    msg2 "Disable Fortify"
-    scripts/config --disable CONFIG_FORTIFY_SOURCE
-    scripts/config --disable CONFIG_ARCH_HAS_FORTIFY_SOURCE
-
-    sleep 2s
-  fi
 
   # Disable LTO with clang
   if [[ "$_compiler" = "2" ]]; then
