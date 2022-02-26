@@ -81,27 +81,28 @@ pkgrel=1
 liquorixrel=10
 liquorixpatch=v5.16.11-lqx1
 arch=(x86_64)
-url="https://www.kernel.org/"
+url='https://www.kernel.org/'
 license=(GPL-2.0)
-makedepends=('bc' 'kmod' 'libelf' 'pahole' 'cpio' 'perl' 'tar' 'xz' 'zstd' 'xmlto' 'git' 'gcc' 'gcc-libs' 'glibc' 'binutils' 'make' 'patch')
+makedepends=(bc kmod libelf pahole cpio perl tar xz zstd xmlto git gcc gcc-libs glibc binutils make patch)
 if [[ "$_compiler" = "2" ]]; then
-  makedepends+=('clang' 'llvm' 'llvm-libs' 'lld')
+  makedepends+=(clang llvm llvm-libs lld)
 fi
-options=('!strip')
+options=(!strip)
 
-source=("https://mirrors.edge.kernel.org/pub/linux/kernel/v5.x/linux-$major.tar.xz"
-        "https://github.com/damentz/liquorix-package/archive/$major-$liquorixrel.tar.gz")
-md5sums=("e6680ce7c989a3efe58b51e3f3f0bf93"  #linux-5.16.tar.xz
-         "SKIP")
-
-# Piotr Górski patches
 lucjanpath=https://raw.githubusercontent.com/sirlucjan/kernel-patches/master/$major
-# Amd64 patches
-source+=("${lucjanpath}/amd64-patches/0001-amd64-patches.patch")
-md5sums+=("dbdb6754a1f5b3ccf26321843a070406") #0001-amd64-patches.patch
-# BLK patches
-source+=("${lucjanpath}/blk-patches-v4/0001-blk-patches.patch")
-md5sums+=("874ff4035bbdca5f7d252f07fdb3b890") #0001-blk-patches.patch
+
+source=(https://mirrors.edge.kernel.org/pub/linux/kernel/v5.x/linux-$major.tar.xz
+        https://github.com/damentz/liquorix-package/archive/$major-$liquorixrel.tar.gz
+        # Piotr Górski patches
+        # Amd64 patches
+        ${lucjanpath}/amd64-patches/0001-amd64-patches.patch
+        # BLK patches
+        ${lucjanpath}/blk-patches-v4/0001-blk-patches.patch)
+
+sha256sums=(027d7e8988bb69ac12ee92406c3be1fe13f990b1ca2249e226225cd1573308bb  #linux-5.16.tar.xz
+            SKIP                                                              #5.x-x.tar.gz # liquorix patch
+            1d5082af4e011cc7e693119b9c89eb621a05495bb4d1c238dd6bbeb7587dc8ff  #0001-amd64-patches.patch
+            f74c3222bd024ce7f9b4e881cd910e6ec71ceb8b612caef337f3cd0df9876b03) #0001-blk-patches.patch
 
 export KBUILD_BUILD_HOST=archlinux
 export KBUILD_BUILD_USER=$pkgbase
@@ -490,11 +491,11 @@ build(){
 }
 
 _package(){
-  pkgdesc="Liquorix kernel and modules with Piotr Górski AMD64 and BLK patches"
-  depends=("coreutils" "kmod" "initramfs" "mkinitcpio")
-  optdepends=("linux-firmware: firmware images needed for some devices"
-              "crda: to set the correct wireless channels of your country")
-  provides=("VHBA-MODULE" "VIRTUALBOX-GUEST-MODULES" "WIREGUARD-MODULE")
+  pkgdesc='Liquorix kernel and modules with Piotr Górski AMD64 and BLK patches'
+  depends=(coreutils kmod initramfs mkinitcpio)
+  optdepends=('linux-firmware: firmware images needed for some devices'
+              'crda: to set the correct wireless channels of your country')
+  provides=(VHBA-MODULE VIRTUALBOX-GUEST-MODULES WIREGUARD-MODULE)
 
   cd linux-$major
 
@@ -526,7 +527,7 @@ _package(){
 
 _package-headers(){
   pkgdesc="Headers and scripts for building modules for the $pkgbase package"
-  depends=("${pkgbase}" "pahole")
+  depends=("${pkgbase}" pahole)
 
   cd linux-$major
 
