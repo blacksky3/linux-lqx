@@ -40,7 +40,7 @@ You can add this repo to your pacman.conf
 
     [kernel]
     SigLevel = Optional TrustAll
-    Server = https://repo.archlinuxrepo.dev/$arch/$repo
+    Server = https://www.blacksky3.com/$arch/$repo
 
 # CPU Scheduler
 
