@@ -34,7 +34,7 @@ If not set it will build with GCC by default.
 
 # Prebuild package
 
-Prebuild package are available at https://repo.archlinuxrepo.dev/x86_64/kernel
+Prebuild package are available at https://www.blacksky3.com/x86_64/kernel
 
 You can add this repo to your pacman.conf
 
