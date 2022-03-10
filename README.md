@@ -4,7 +4,7 @@ Liquorix kernel build for Archlinux.
 
 # Version
 
-- 5.16.12-lqx2
+- 5.16.13-lqx4
 
 # Build
 
