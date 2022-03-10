@@ -347,6 +347,22 @@ prepare(){
 
   sleep 2s
 
+  msg2 "Add anbox support"
+  scripts/config --enable CONFIG_ASHMEM
+  # CONFIG_ION is not set
+  scripts/config --enable CONFIG_ANDROID
+  scripts/config --enable CONFIG_ANDROID_BINDER_IPC
+  scripts/config --enable CONFIG_ANDROID_BINDERFS
+  scripts/config --set-str CONFIG_ANDROID_BINDER_DEVICES "binder,hwbinder,vndbinder"
+  # CONFIG_ANDROID_BINDER_IPC_SELFTEST is not set
+
+  sleep 2s
+
+  msg2 "Set CONFIG_GENERIC_CPU"
+  scripts/config --enable CONFIG_GENERIC_CPU
+
+  sleep 2s
+
   msg "Patch addition config"
 
   msg2 "Enable MQ-Deadline-Nodefault I/O scheduler"
@@ -408,27 +424,10 @@ prepare(){
 
   sleep 2s
 
-  msg2 "Add anbox support"
-  scripts/config --enable CONFIG_ASHMEM
-  # CONFIG_ION is not set
-  scripts/config --enable CONFIG_ANDROID
-  scripts/config --enable CONFIG_ANDROID_BINDER_IPC
-  scripts/config --enable CONFIG_ANDROID_BINDERFS
-  scripts/config --set-str CONFIG_ANDROID_BINDER_DEVICES "binder,hwbinder,vndbinder"
-  # CONFIG_ANDROID_BINDER_IPC_SELFTEST is not set
-
-  sleep 2s
-
   msg2 "Enable BLK_CGROUP_IOSTAT (IO statistics monitor per cgroup)"
   scripts/config --module CONFIG_BLK_CGROUP_IOSTAT
 
   sleep 2s
-
-  msg2 "Set CONFIG_GENERIC_CPU"
-  scripts/config --enable CONFIG_GENERIC_CPU
-
-  sleep 2s
-
 
   plain ""
 
