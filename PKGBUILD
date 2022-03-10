@@ -104,8 +104,7 @@ export KBUILD_BUILD_USER=$pkgbase
 export KBUILD_BUILD_TIMESTAMP="$(date -Ru${SOURCE_DATE_EPOCH:+d @$SOURCE_DATE_EPOCH})"
 
 prepare(){
-
-  cd linux-$major
+  cd ${srcdir}/linux-$major
 
   # Apply liquorix patch
   msg2 "Apply liquorix patch $liquorixpatch"
@@ -472,8 +471,7 @@ prepare(){
 }
 
 build(){
-
-  cd linux-$major
+  cd ${srcdir}/linux-$major
 
   # make -j$(nproc) all
   msg2 "make -j$(nproc) all..."
@@ -491,7 +489,7 @@ _package(){
               'crda: to set the correct wireless channels of your country')
   provides=(VHBA-MODULE VIRTUALBOX-GUEST-MODULES WIREGUARD-MODULE)
 
-  cd linux-$major
+  cd ${srcdir}/linux-$major
 
   local kernver="$(<version)"
   local modulesdir="${pkgdir}"/usr/lib/modules/${kernver}
@@ -523,7 +521,7 @@ _package-headers(){
   pkgdesc="Headers and scripts for building modules for the $pkgbase package"
   depends=("${pkgbase}" pahole)
 
-  cd linux-$major
+  cd ${srcdir}/linux-$major
 
   local builddir="$pkgdir"/usr/lib/modules/"$(<version)"/build
 
