@@ -83,7 +83,7 @@ liquorixpatch=v5.16.14-lqx1
 arch=(x86_64)
 url='https://www.kernel.org/'
 license=(GPL-2.0)
-makedepends=(bc kmod libelf pahole cpio perl tar xz zstd xmlto git gcc gcc-libs glibc binutils make patch)
+makedepends=(bison flex bc kmod libelf pahole cpio perl tar xz zstd xmlto git gcc gcc-libs glibc binutils make patch)
 if [[ "$_compiler" = "2" ]]; then
   makedepends+=(clang llvm llvm-libs lld)
 fi
