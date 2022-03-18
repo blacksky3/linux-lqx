@@ -75,11 +75,11 @@ for _p in "${pkgname[@]}"; do
     _package${_p#$pkgbase}
   }"
 done
-pkgver=5.16.14_lqx1
+pkgver=5.16.15_lqx2
 major=5.16
 pkgrel=1
-liquorixrel=18
-liquorixpatch=v5.16.14-lqx1
+liquorixrel=21
+liquorixpatch=v5.16.15-lqx2
 arch=(x86_64)
 url='https://www.kernel.org/'
 license=(GPL-2.0)
@@ -600,6 +600,6 @@ _package-headers(){
 }
 
 sha256sums=(027d7e8988bb69ac12ee92406c3be1fe13f990b1ca2249e226225cd1573308bb
-            0633c209f106a65db4384d00f3f764aeee06d99d868be0ecdfaf7ca25ca0f7cf
+            b9f1ed6b6dc790bdb1a5bb33e1d777027924c67729b54016e4ffc6f90cb9e5b3
             1d5082af4e011cc7e693119b9c89eb621a05495bb4d1c238dd6bbeb7587dc8ff
             f74c3222bd024ce7f9b4e881cd910e6ec71ceb8b612caef337f3cd0df9876b03)
