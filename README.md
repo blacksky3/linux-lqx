@@ -1,10 +1,10 @@
 # Liquorix
 
-Liquorix kernel build for Archlinux with Piotr Górski AMD64 and CPU Freq patches and Graysky2 kernel_compiler_patch patch.
+Liquorix kernel build for Archlinux with Piotr Górski AMD64 patches and XanMod AMD P-State and CPU Power patches.
 
 # Version
 
-- 5.16.16-lqx2
+- 5.16.17-lqx1
 
 # Build
 
