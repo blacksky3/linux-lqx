@@ -79,7 +79,7 @@ source=(https://mirrors.edge.kernel.org/pub/linux/kernel/v5.x/linux-$major.tar.x
         # Piotr Górski patches
         # Amd64 patches
         ${lucjanpath}/amd64-patches/0001-amd64-patches.patch
-        # CPUfreq patches
+        # CPU Freq patches
         ${lucjanpath}/cpufreq-patches-v5/0001-cpufreq-patches.patch)
 
 export KBUILD_BUILD_HOST=archlinux
@@ -449,7 +449,7 @@ build(){
 }
 
 _package(){
-  pkgdesc='Liquorix kernel and modules with Piotr Górski AMD64 and CPUfreq patches and Graysky2 kernel_compiler_patch patch - PDS enabled'
+  pkgdesc='Liquorix kernel and modules with Piotr Górski AMD64 and CPU Freq patches and Graysky2 kernel_compiler_patch patch - PDS enabled'
   depends=(coreutils kmod initramfs mkinitcpio)
   optdepends=('linux-firmware: firmware images needed for some devices'
               'crda: to set the correct wireless channels of your country')
