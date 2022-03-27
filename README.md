@@ -4,7 +4,7 @@ Liquorix kernel build for Archlinux with Piotr Górski AMD64 patches and XanMod 
 
 # Version
 
-- 5.16.17-lqx1
+- 5.16.17-lqx2
 
 # Build
 
