@@ -1,6 +1,6 @@
 # linux-lqx
 
-Liquorix kernel build for Archlinux with Piotr Górski AMD64 patches and XanMod AMD P-State and CPU Power patches.
+Liquorix kernel build for Archlinux with AMD64, AMD P-State and CPU Power patches.
 
 # Version
 

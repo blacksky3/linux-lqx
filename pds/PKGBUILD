@@ -65,43 +65,41 @@ if [[ "$_compiler" = "2" ]]; then
 fi
 options=(!strip)
 
-lucjanpath=https://raw.githubusercontent.com/sirlucjan/kernel-patches/master/$major
-xanmodpath=https://raw.githubusercontent.com/xanmod/linux-patches/master/linux-$major.y-xanmod
+patchpath=https://raw.githubusercontent.com/blacksky3/patches/main/$major
 
 source=(https://mirrors.edge.kernel.org/pub/linux/kernel/v5.x/linux-$major.tar.xz
         https://github.com/damentz/liquorix-package/archive/$major-$liquorixrel.tar.gz
-        # Piotr Górski patches
         # AMD64 patches
-        ${lucjanpath}/amd64-patches/0001-amd64-patches.patch
+        ${patchpath}/amd64/0001-amd64-patches.patch
         # XanMod patches
         # AMD P-State patches
-        ${xanmodpath}/amd-pstate/0001-x86-cpufeatures-Add-AMD-Collaborative-Processor-Perf.patch
-        ${xanmodpath}/amd-pstate/0002-x86-msr-Add-AMD-CPPC-MSR-definitions.patch
-        ${xanmodpath}/amd-pstate/0003-ACPI-CPPC-Implement-support-for-SystemIO-registers.patch
-        #${xanmodpath}/amd-pstate/0004-ACPI-CPPC-Check-present-CPUs-for-determining-_CPC-is.patch
-        ${xanmodpath}/amd-pstate/0005-ACPI-CPPC-Add-CPPC-enable-register-function.patch
-        ${xanmodpath}/amd-pstate/0006-cpufreq-amd-pstate-Introduce-a-new-AMD-P-State-drive.patch
-        ${xanmodpath}/amd-pstate/0007-cpufreq-amd-pstate-Add-fast-switch-function-for-AMD-.patch
-        ${xanmodpath}/amd-pstate/0008-cpufreq-amd-pstate-Introduce-the-support-for-the-pro.patch
-        ${xanmodpath}/amd-pstate/0009-cpufreq-amd-pstate-Add-trace-for-AMD-P-State-module.patch
-        ${xanmodpath}/amd-pstate/0010-cpufreq-amd-pstate-Add-boost-mode-support-for-AMD-P-.patch
-        ${xanmodpath}/amd-pstate/0011-cpufreq-amd-pstate-Add-AMD-P-State-frequencies-attri.patch
-        ${xanmodpath}/amd-pstate/0012-cpufreq-amd-pstate-Add-AMD-P-State-performance-attri.patch
-        ${xanmodpath}/amd-pstate/0013-Documentation-amd-pstate-Add-AMD-P-State-driver-intr.patch
-        ${xanmodpath}/amd-pstate/0014-MAINTAINERS-Add-AMD-P-State-driver-maintainer-entry.patch
-        ${xanmodpath}/amd-pstate/0015-cpufreq-amd-pstate-Fix-the-dependence-issue-of-AMD-P.patch
-        #${xanmodpath}/amd-pstate/0016-x86-sched-Fix-the-undefined-reference-building-error.patch
+        ${patchpath}/amd-pstate/0001-x86-cpufeatures-Add-AMD-Collaborative-Processor-Perf.patch
+        ${patchpath}/amd-pstate/0002-x86-msr-Add-AMD-CPPC-MSR-definitions.patch
+        ${patchpath}/amd-pstate/0003-ACPI-CPPC-Implement-support-for-SystemIO-registers.patch
+        #${patchpath}/amd-pstate/0004-ACPI-CPPC-Check-present-CPUs-for-determining-_CPC-is.patch
+        ${patchpath}/amd-pstate/0005-ACPI-CPPC-Add-CPPC-enable-register-function.patch
+        ${patchpath}/amd-pstate/0006-cpufreq-amd-pstate-Introduce-a-new-AMD-P-State-drive.patch
+        ${patchpath}/amd-pstate/0007-cpufreq-amd-pstate-Add-fast-switch-function-for-AMD-.patch
+        ${patchpath}/amd-pstate/0008-cpufreq-amd-pstate-Introduce-the-support-for-the-pro.patch
+        ${patchpath}/amd-pstate/0009-cpufreq-amd-pstate-Add-trace-for-AMD-P-State-module.patch
+        ${patchpath}/amd-pstate/0010-cpufreq-amd-pstate-Add-boost-mode-support-for-AMD-P-.patch
+        ${patchpath}/amd-pstate/0011-cpufreq-amd-pstate-Add-AMD-P-State-frequencies-attri.patch
+        ${patchpath}/amd-pstate/0012-cpufreq-amd-pstate-Add-AMD-P-State-performance-attri.patch
+        ${patchpath}/amd-pstate/0013-Documentation-amd-pstate-Add-AMD-P-State-driver-intr.patch
+        ${patchpath}/amd-pstate/0014-MAINTAINERS-Add-AMD-P-State-driver-maintainer-entry.patch
+        ${patchpath}/amd-pstate/0015-cpufreq-amd-pstate-Fix-the-dependence-issue-of-AMD-P.patch
+        #${patchpath}/amd-pstate/0016-x86-sched-Fix-the-undefined-reference-building-error.patch
         # CPU Power patches
-        ${xanmodpath}/amd-pstate/cpupower/0001-cpupower-Add-AMD-P-State-capability-flag.patch
-        ${xanmodpath}/amd-pstate/cpupower/0002-cpupower-Add-the-function-to-check-AMD-P-State-enabl.patch
-        ${xanmodpath}/amd-pstate/cpupower/0003-cpupower-Initial-AMD-P-State-capability.patch
-        ${xanmodpath}/amd-pstate/cpupower/0004-cpupower-Add-the-function-to-get-the-sysfs-value-fro.patch
-        ${xanmodpath}/amd-pstate/cpupower/0005-cpupower-Introduce-ACPI-CPPC-library.patch
-        ${xanmodpath}/amd-pstate/cpupower/0006-cpupower-Add-AMD-P-State-sysfs-definition-and-access.patch
-        ${xanmodpath}/amd-pstate/cpupower/0007-cpupower-Enable-boost-state-support-for-AMD-P-State-.patch
-        ${xanmodpath}/amd-pstate/cpupower/0008-cpupower-Move-print_speed-function-into-misc-helper.patch
-        ${xanmodpath}/amd-pstate/cpupower/0009-cpupower-Add-function-to-print-AMD-P-State-performan.patch
-        ${xanmodpath}/amd-pstate/cpupower/0010-cpupower-Add-perf-option-to-print-AMD-P-State-inform.patch)
+        ${patchpath}/cpupower/0001-cpupower-Add-AMD-P-State-capability-flag.patch
+        ${patchpath}/cpupower/0002-cpupower-Add-the-function-to-check-AMD-P-State-enabl.patch
+        ${patchpath}/cpupower/0003-cpupower-Initial-AMD-P-State-capability.patch
+        ${patchpath}/cpupower/0004-cpupower-Add-the-function-to-get-the-sysfs-value-fro.patch
+        ${patchpath}/cpupower/0005-cpupower-Introduce-ACPI-CPPC-library.patch
+        ${patchpath}/cpupower/0006-cpupower-Add-AMD-P-State-sysfs-definition-and-access.patch
+        ${patchpath}/cpupower/0007-cpupower-Enable-boost-state-support-for-AMD-P-State-.patch
+        ${patchpath}/cpupower/0008-cpupower-Move-print_speed-function-into-misc-helper.patch
+        ${patchpath}/cpupower/0009-cpupower-Add-function-to-print-AMD-P-State-performan.patch
+        ${patchpath}/cpupower/0010-cpupower-Add-perf-option-to-print-AMD-P-State-inform.patch)
 
 export KBUILD_BUILD_HOST=archlinux
 export KBUILD_BUILD_USER=$pkgbase
@@ -470,7 +468,7 @@ build(){
 }
 
 _package(){
-  pkgdesc='Liquorix kernel and modules with Piotr Górski AMD64 patches and XanMod AMD P-State and CPU Power patches - PDS enabled'
+  pkgdesc='Liquorix kernel and modules with AMD64, AMD P-State and CPU Power patches - PDS enabled'
   depends=(coreutils kmod initramfs mkinitcpio)
   optdepends=('linux-firmware: firmware images needed for some devices'
               'crda: to set the correct wireless channels of your country')
