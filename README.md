@@ -1,10 +1,10 @@
 # linux-lqx
 
-Liquorix kernel build for Archlinux with AMD64, AMD P-State and CPU Power patches.
+Liquorix kernel build for Archlinux with CPU Power and Wine patches.
 
 # Version
 
-- 5.16.18-lqx1
+- 5.17.1-lqx1
 
 # Build
 
