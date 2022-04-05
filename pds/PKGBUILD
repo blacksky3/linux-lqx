@@ -449,7 +449,7 @@ _package(){
   pkgdesc='Liquorix kernel and modules with CPU Power and Wine patche - PDS enabled'
   depends=(coreutils kmod initramfs mkinitcpio)
   optdepends=('linux-firmware: firmware images needed for some devices'
-              'crda: to set the correct wireless channels of your country')
+              'wireless-regdb: to set the correct wireless channels of your country')
   provides=(VHBA-MODULE VIRTUALBOX-GUEST-MODULES WIREGUARD-MODULE)
 
   cd ${srcdir}/linux-$major
