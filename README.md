@@ -25,13 +25,13 @@ If not set it will build with GCC by default.
 
 # Prebuild package
 
-Prebuild package are available at https://www.blacksky3.com/x86_64/kernel
+Prebuild package are available at https://repo.blacksky3.com/x86_64/kernel
 
 You can add this repo to your pacman.conf
 
     [kernel]
     SigLevel = Optional TrustAll
-    Server = https://www.blacksky3.com/$arch/$repo
+    Server = https://repo.blacksky3.com/$arch/$repo
 
 # CPU Scheduler
 
