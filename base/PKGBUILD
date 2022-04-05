@@ -447,8 +447,8 @@ build(){
 _package(){
   pkgdesc='Liquorix kernel and modules with CPU Power and Wine patches'
   depends=(coreutils kmod initramfs mkinitcpio)
-  optdepends=('linux-firmware: firmware images needed for some devices'
-              'wireless-regdb: to set the correct wireless channels of your country')
+  optdepends=('wireless-regdb: to set the correct wireless channels of your country'
+              'linux-firmware: firmware images needed for some devices')
   provides=(VHBA-MODULE VIRTUALBOX-GUEST-MODULES WIREGUARD-MODULE)
 
   cd ${srcdir}/linux-$major
