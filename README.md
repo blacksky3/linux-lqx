@@ -4,7 +4,7 @@ Liquorix kernel build for Archlinux with CPU Power and Wine patches.
 
 # Version
 
-- 5.17.1-lqx2
+- 5.17.2-lqx3
 
 # Build
 

@@ -51,15 +51,15 @@ for _p in "${pkgname[@]}"; do
     _package${_p#$pkgbase}
   }"
 done
-pkgver=5.17.1_lqx2
+pkgver=5.17.2_lqx3
 major=5.17
 pkgrel=1
-liquorixrel=2
-liquorixpatch=v5.17.1-lqx2
+liquorixrel=5
+liquorixpatch=v5.17.2-lqx3
 arch=(x86_64)
 url='https://www.kernel.org/'
 license=(GPL-2.0)
-makedepends=(bison flex bc kmod libelf pahole cpio perl tar xz zstd xmlto git gcc gcc-libs glibc binutils make patch)
+makedepends=(bison flex bc libelf pahole cpio perl tar xz zstd xmlto git gcc gcc-libs glibc binutils make patch)
 if [[ "$_compiler" = "2" ]]; then
   makedepends+=(clang llvm llvm-libs lld)
 fi
@@ -469,9 +469,9 @@ _package(){
 
   msg2 "Installing modules..."
   if [[ "$_compiler" = "1" ]]; then
-    make ARCH=${ARCH} CC=${CC} CXX=${CXX} HOSTCC=${HOSTCC} HOSTCXX=${HOSTCXX} INSTALL_MOD_PATH="${pkgdir}"/usr INSTALL_MOD_STRIP=1 -j$(nproc) modules_install
+    make ARCH=${ARCH} CC=${CC} CXX=${CXX} HOSTCC=${HOSTCC} HOSTCXX=${HOSTCXX} INSTALL_MOD_PATH="${pkgdir}"/usr INSTALL_MOD_STRIP=1 -j$(nproc) DEPMOD=/doesnt/exist modules_install  # Suppress depmod
   elif [[ "$_compiler" = "2" ]]; then
-    make ARCH=${ARCH} CC=${CC} CXX=${CXX} LLVM=1 LLVM_IAS=1 HOSTCC=${HOSTCC} HOSTCXX=${HOSTCXX} INSTALL_MOD_PATH="${pkgdir}"/usr INSTALL_MOD_STRIP=1 -j$(nproc) modules_install
+    make ARCH=${ARCH} CC=${CC} CXX=${CXX} LLVM=1 LLVM_IAS=1 HOSTCC=${HOSTCC} HOSTCXX=${HOSTCXX} INSTALL_MOD_PATH="${pkgdir}"/usr INSTALL_MOD_STRIP=1 -j$(nproc) DEPMOD=/doesnt/exist modules_install  # Suppress depmod
   fi
 
   # remove build and source links
@@ -562,6 +562,6 @@ _package-headers(){
 }
 
 sha256sums=('555fef61dddb591a83d62dd04e252792f9af4ba9ef14683f64840e46fa20b1b1'
-            '848f471fd8fdc6f955774320d3462ae239a765f0f8265bd75cfeafd5d1b37b38'
+            '5b0e04180f042cee1fbb9d8f6ca912450bee94e3fecc1ec3d6387e91ae34a7f9'
             '05715dd3a05812c3a1185ca6831c8bd38cee3352dab343717ed77b49b4b527c0'
             '7a7fb14b0e2bef1f1b7b0b3cd1870062db504fdf6510ca913231cf901d89e92e')
