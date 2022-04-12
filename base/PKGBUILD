@@ -469,9 +469,9 @@ _package(){
 
   msg2 "Installing modules..."
   if [[ "$_compiler" = "1" ]]; then
-    make ARCH=${ARCH} CC=${CC} CXX=${CXX} HOSTCC=${HOSTCC} HOSTCXX=${HOSTCXX} INSTALL_MOD_PATH="${pkgdir}"/usr INSTALL_MOD_STRIP=1 -j$(nproc) DEPMOD=/doesnt/exist modules_install  # Suppress depmod
+    make ARCH=${ARCH} CC=${CC} CXX=${CXX} HOSTCC=${HOSTCC} HOSTCXX=${HOSTCXX} INSTALL_MOD_PATH="${pkgdir}"/usr INSTALL_MOD_STRIP=1 DEPMOD=/doesnt/exist -j$(nproc) modules_install  # Suppress depmod
   elif [[ "$_compiler" = "2" ]]; then
-    make ARCH=${ARCH} CC=${CC} CXX=${CXX} LLVM=1 LLVM_IAS=1 HOSTCC=${HOSTCC} HOSTCXX=${HOSTCXX} INSTALL_MOD_PATH="${pkgdir}"/usr INSTALL_MOD_STRIP=1 -j$(nproc) DEPMOD=/doesnt/exist modules_install  # Suppress depmod
+    make ARCH=${ARCH} CC=${CC} CXX=${CXX} LLVM=1 LLVM_IAS=1 HOSTCC=${HOSTCC} HOSTCXX=${HOSTCXX} INSTALL_MOD_PATH="${pkgdir}"/usr INSTALL_MOD_STRIP=1 DEPMOD=/doesnt/exist -j$(nproc) modules_install  # Suppress depmod
   fi
 
   # remove build and source links
