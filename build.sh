@@ -10,6 +10,7 @@
 #!/bin/bash
 
 source=$(pwd)
+major=5.18
 
 echo "${source}"
 
@@ -17,16 +18,16 @@ echo "${source}"
 
 # gcc
 
-cd 5.17/base && makepkg -s && rm -rf pkg/ src/ && cd ${source}
+cd ${major}/base && makepkg -s && rm -rf pkg/ src/ && cd ${source}
 
-cd 5.17/pds && makepkg -s && rm -rf pkg/ src/ && cd ${source}
+cd ${major}/pds && makepkg -s && rm -rf pkg/ src/ && cd ${source}
 
-cd 5.17/bmq && makepkg -s && rm -rf pkg/ src/ && cd ${source}
+cd ${major}/bmq && makepkg -s && rm -rf pkg/ src/ && cd ${source}
 
 # clang
 
-#cd 5.17/base && env _compiler=2 makepkg -s && rm -rf pkg/ src/ && cd ${source}
+#cd ${major}/base && env _compiler=2 makepkg -s && rm -rf pkg/ src/ && cd ${source}
 
-#cd 5.17/pds && env _compiler=2 makepkg -s && rm -rf pkg/ src/ && cd ${source}
+#cd ${major}/pds && env _compiler=2 makepkg -s && rm -rf pkg/ src/ && cd ${source}
 
-#cd 5.17/bmq && env _compiler=2 makepkg -s && rm -rf pkg/ src/ && cd ${source}
+#cd ${major}/bmq && env _compiler=2 makepkg -s && rm -rf pkg/ src/ && cd ${source}
