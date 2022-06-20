@@ -9,7 +9,7 @@ Liquorix kernel build for Archlinux with amd, BTRFS, CPU and Wine patches.
 # Build
 
     git clone https://github.com/blacksky3/linux-lqx.git
-    cd linux-lqx/5.17/{base,pds,bmq}
+    cd linux-lqx/5.18/{base,pds,bmq}
     env _compiler=(1 or 2) makepkg -s
 
 # Build variables
