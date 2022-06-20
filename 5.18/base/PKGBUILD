@@ -461,7 +461,7 @@ _package(){
   depends=(coreutils kmod initramfs mkinitcpio)
   optdepends=('wireless-regdb: to set the correct wireless channels of your country'
               'linux-firmware: firmware images needed for some devices')
-  provides=(VHBA-MODULE VIRTUALBOX-GUEST-MODULES WIREGUARD-MODULE)
+  provides=(VIRTUALBOX-GUEST-MODULES WIREGUARD-MODULE VHBA-MODULE UKSMD-BUILTIN)
 
   cd ${srcdir}/linux-$major
 
