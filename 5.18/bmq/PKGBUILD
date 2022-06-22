@@ -51,11 +51,11 @@ for _p in "${pkgname[@]}"; do
     _package${_p#$pkgbase}
   }"
 done
-pkgver=5.18.5_lqx1
+pkgver=5.18.6_lqx1
 major=5.18
 pkgrel=1
-liquorixrel=1
-liquorixpatch=v5.18.5-lqx1
+liquorixrel=2
+liquorixpatch=v5.18.6-lqx1
 arch=(x86_64)
 url='https://www.kernel.org/'
 license=(GPL-2.0)
@@ -72,7 +72,7 @@ source=(https://mirrors.edge.kernel.org/pub/linux/kernel/v5.x/linux-$major.tar.x
         # AMD patches
         ${patchpath}/amd/0001-amd-patches-v2.patch
         # BTRFS patches
-        ${patchpath}/btrfs/0001-btrfs-patches-v9.patch
+        ${patchpath}/btrfs/0001-btrfs-patches-v11.patch
         # CPU patches
         ${patchpath}/cpu/0004-Makefile-Turn-off-loop-vectorization-for-GCC-O3-opti.patch
         # Wine
@@ -572,8 +572,8 @@ _package-headers(){
 }
 
 sha256sums=('51f3f1684a896e797182a0907299cc1f0ff5e5b51dd9a55478ae63a409855cee'
-            '9dff112def83854e45eb79e174afd9027f170bcbb2997d203967b11a2b55c808'
+            '9174067424ca6db83a2cff8adccd81726f8b8571c235cfcff57fa0152a8ad364'
             '1bf652a04412a58b0254066a4731be869bfbe2cff15f0648e31e6b3d3e337a36'
-            '74de9a1f897c7fbd354c9d6beb74973fd70afead5ea2d2721e51ec3c1f688216'
+            'bb3102a564490c44441a5c16db96ab61374b62e1458f52e1244144200437ac84'
             '26fd09d627f83eb78ecd7e65356731d501b89fbc6cd339018aa1ccd708c4756f'
             '057631ecc148b41e0037d200a69cbbfbed8cdcf27eede3d8cd6936566b6ebc68')
