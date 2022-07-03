@@ -4,7 +4,7 @@ Liquorix kernel build for Archlinux with amd, BTRFS, CPU and Wine patches.
 
 # Version
 
-- 5.18.8-lqx1
+- 5.18.9-lqx1
 
 # Build
 
