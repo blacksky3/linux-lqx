@@ -68,11 +68,7 @@ options=(!strip)
 patchpath=https://raw.githubusercontent.com/blacksky3/patches/main/$major
 
 source=(https://mirrors.edge.kernel.org/pub/linux/kernel/v5.x/linux-$major.tar.xz
-        https://github.com/damentz/liquorix-package/archive/$major-$liquorixrel.tar.gz
-        # CPU Power patches
-        ${patchpath}/cpupower/0001-cpupower-update-for-Linux-5.18-rc1.patch
-        # Wine
-        ${patchpath}/wine/0001-winesync-Introduce-the-winesync-driver-and-character.patch)
+        https://github.com/damentz/liquorix-package/archive/$major-$liquorixrel.tar.gz)
 
 export KBUILD_BUILD_HOST=archlinux
 export KBUILD_BUILD_USER=$pkgbase
@@ -403,11 +399,6 @@ prepare(){
 
   sleep 2s
 
-  msg2 "Enable winesync"
-  scripts/config --enable CONFIG_WINESYNC
-
-  sleep 2s
-
   plain ""
 
   # Setting localversion
@@ -445,7 +436,7 @@ build(){
 }
 
 _package(){
-  pkgdesc='Liquorix kernel and modules with CPU Power and Wine patches'
+  pkgdesc='Liquorix kernel and modules'
   depends=(coreutils kmod initramfs mkinitcpio)
   optdepends=('wireless-regdb: to set the correct wireless channels of your country'
               'linux-firmware: firmware images needed for some devices')
@@ -562,6 +553,4 @@ _package-headers(){
 }
 
 sha256sums=('555fef61dddb591a83d62dd04e252792f9af4ba9ef14683f64840e46fa20b1b1'
-            '05fe2d183f53788ec8040e61dc4da099fb2c5bc76e41488626c3f94fcaaebfd1'
-            '05715dd3a05812c3a1185ca6831c8bd38cee3352dab343717ed77b49b4b527c0'
-            '7a7fb14b0e2bef1f1b7b0b3cd1870062db504fdf6510ca913231cf901d89e92e')
+            '05fe2d183f53788ec8040e61dc4da099fb2c5bc76e41488626c3f94fcaaebfd1')

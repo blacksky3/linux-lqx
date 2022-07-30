@@ -1,10 +1,10 @@
 # linux-lqx
 
-Liquorix kernel build for Archlinux with amd, BTRFS, CPU and Wine patches.
+Liquorix kernel build for Archlinux.
 
 # Version
 
-- 5.18.10-lqx1
+- 5.18.15-lqx1
 
 # Build
 

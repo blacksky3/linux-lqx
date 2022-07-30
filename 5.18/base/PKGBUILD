@@ -51,11 +51,11 @@ for _p in "${pkgname[@]}"; do
     _package${_p#$pkgbase}
   }"
 done
-pkgver=5.18.10_lqx1
+pkgver=5.18.15_lqx1
 major=5.18
 pkgrel=1
-liquorixrel=9
-liquorixpatch=v5.18.10-lqx1
+liquorixrel=17
+liquorixpatch=v5.18.15-lqx1
 arch=(x86_64)
 url='https://www.kernel.org/'
 license=(GPL-2.0)
@@ -68,15 +68,7 @@ options=(!strip)
 patchpath=https://raw.githubusercontent.com/blacksky3/patches/main/$major
 
 source=(https://mirrors.edge.kernel.org/pub/linux/kernel/v5.x/linux-$major.tar.xz
-        https://github.com/damentz/liquorix-package/archive/$major-$liquorixrel.tar.gz
-        # AMD patches
-        ${patchpath}/amd/0001-amd-patches-v2.patch
-        # BTRFS patches
-        ${patchpath}/btrfs/0001-btrfs-patches-v14.patch
-        # CPU patches
-        ${patchpath}/cpu/0004-Makefile-Turn-off-loop-vectorization-for-GCC-O3-opti.patch
-        # Wine
-        ${patchpath}/wine/tkg/0007-v5.18-winesync-v3.patch)
+        https://github.com/damentz/liquorix-package/archive/$major-$liquorixrel.tar.gz)
 
 export KBUILD_BUILD_HOST=archlinux
 export KBUILD_BUILD_USER=$pkgbase
@@ -407,15 +399,10 @@ prepare(){
 
   sleep 2s
 
-  msg2 "Enable PERF_EVENTS_AMD_BRS"
-  scripts/config --enable CONFIG_PERF_EVENTS_AMD_BRS
+  #msg2 "Enable PERF_EVENTS_AMD_BRS"
+  #scripts/config --enable CONFIG_PERF_EVENTS_AMD_BRS
 
-  sleep 2s
-
-  msg2 "Enable Winesync"
-  scripts/config --enable CONFIG_WINESYNC
-
-  sleep 2s
+  #sleep 2s
 
   plain ""
 
@@ -457,7 +444,7 @@ build(){
 }
 
 _package(){
-  pkgdesc='Liquorix kernel and modules with MAD, BTRFS, CPU and Wine patches'
+  pkgdesc='Liquorix kernel and modules'
   depends=(coreutils kmod initramfs mkinitcpio)
   optdepends=('wireless-regdb: to set the correct wireless channels of your country'
               'linux-firmware: firmware images needed for some devices')
@@ -574,8 +561,4 @@ _package-headers(){
 }
 
 sha256sums=('51f3f1684a896e797182a0907299cc1f0ff5e5b51dd9a55478ae63a409855cee'
-            '794c21510333aa5ee380860dcb128d1f6dd7e04aa0bb9a86cce7116c5c41f356'
-            '1bf652a04412a58b0254066a4731be869bfbe2cff15f0648e31e6b3d3e337a36'
-            '18ff5050e3e58501a50a66851ff5bf0f7ba720585e23d23a60f335ecc99a66c5'
-            '26fd09d627f83eb78ecd7e65356731d501b89fbc6cd339018aa1ccd708c4756f'
-            '057631ecc148b41e0037d200a69cbbfbed8cdcf27eede3d8cd6936566b6ebc68')
+            '0ae065d59632fde571eceeb5a9a094934dd7a9a829ac905b732a2c4307e2c256')
